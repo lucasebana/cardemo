@@ -1,2 +1,2 @@
 # cardemo
-Car demo (AI vs WILD) gamem
+Car demo (AI vs WILD) game
