@@ -1,0 +1,16 @@
+{
+  "name": "cartest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "OrbitControls.js",
+  "dependencies": {
+    "mathjs": "^8.1.0",
+    "three": "^0.123.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
