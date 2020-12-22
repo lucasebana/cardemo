@@ -6,6 +6,9 @@ import { RoomEnvironment } from './node_modules/three/examples/jsm/environments/
 import { Car } from './car.js'
 import { Traffic_Light } from './traffic_lights.js';
 
+import CameraControls from './node_modules/camera-controls/dist/camera-controls.module.js';
+
+CameraControls.install( { THREE: THREE } );
 
 //à remplacer par https://github.com/yomotsu/camera-controls
 
@@ -21,7 +24,6 @@ if(debug){
     demo.start = true;
 }
 else{
-
     document.querySelector("#home_start").addEventListener("click",function(){
         clearScreen();
         demo.start = true;
@@ -43,7 +45,8 @@ export class Demo{
 Demo.prototype.run = function() {
     console.log("DEMO v. 1.0")
     //this.ready = false; // all objects initialized = false
-    this.start = false; // player ready = false
+    this.start = false;
+    this.entryAnimation = false;
     this.initScene();
 }
 
@@ -83,10 +86,16 @@ Demo.prototype.initScene = async function(){
     this.camera.position.set( -11, 7, - 7 );
     
     
-    this.controls = new OrbitControls( this.camera, this.container );
+    //this.controls = new OrbitControls( this.camera, this.container );
+    this.cameraControls = new CameraControls( this.camera, this.container );
+    this.cameraControls.setTarget(0,0,0);
+    this.cameraControls.dolly(-80,true);
+    this.cameraControls.clock = new THREE.Clock();
+
     window.controls = this.controls;
-    this.controls.target.set( 0, 0.5, 0 );
-    this.controls.update();
+    //this.controls.target.set( 0, 0.5, 0 );
+    this.cameraControls.setTarget(0,0.5,0);
+    //this.controls.update();
 
     //Lights, environments, materials & shadows
     const light = new THREE.AmbientLight( 0x404040 ); // soft white light
@@ -196,6 +205,9 @@ Demo.prototype.initScene = async function(){
     this.manager.onProgress = function ( item, loaded, total ) {
 
         //console.log( item, loaded, total );
+        let loading_bar = document.querySelector("#loading_bar");
+        loading_bar.style.width=(loaded/total)*100+"%";
+        console.log((loaded/total)*100+"%")
         if(loaded == total){
             this.ready = true;
         }
@@ -203,10 +215,10 @@ Demo.prototype.initScene = async function(){
     };
 
     //Loading the car model
-    const dracoLoader = new DRACOLoader();
+    const dracoLoader = new DRACOLoader(this.manager);
     dracoLoader.setDecoderPath( './node_modules/three/examples/js/libs/draco/gltf/' );
 
-    this.loader = new GLTFLoader(this.manager);
+    this.loader = new GLTFLoader();
     this.loader.setDRACOLoader( dracoLoader );
 
     //Scene 1
@@ -279,25 +291,36 @@ Demo.prototype.initScene = async function(){
 Demo.prototype.render = function(){
     (()=>{
     const time = - performance.now() / 1000;
-
-    /* Objects context */
+    const delta = demo.cameraControls.clock.getDelta();
+    const hasControlsUpdated = demo.cameraControls.update( delta );
     
-    if(this.start && this.manager.ready){
+    
+
+    //requestAnimationFrame( demo.render );
+    /* Objects context */   
+    
+    if(demo.start && demo.manager.ready){
+        if(demo.entryAnimation == false){
+            let loading_bar = document.querySelector("#loading_bar");
+            loading_bar.classList.add("end_loadbar");
+            demo.cameraControls.dolly(70,true);
+            demo.entryAnimation = true;
+        }
     //console.log(this.scene.getObjectByName("carGroup"))
-    if(this.scene.getObjectByName("carGroup") != undefined){
+    if(demo.scene.getObjectByName("carGroup") != undefined){
         //if(this.car.carModel.parent.parent === this.scene){
             //if (window.block != undefined){
-            this.car.context(this.car,time);
-
+                demo.car.context(demo.car,time);
             //this.controls.target.copy(this.car.carModel.parent.position);
             //}
         //}
     }
     }
-    this.controls.update();
+    
+    //this.controls.update();
 
     //this.grid.position.z = - ( time ) % 5;
-    this.renderer.render( this.scene, this.camera );
+    demo.renderer.render( demo.scene, demo.camera );
     }).bind(window.demo)()
 }
 

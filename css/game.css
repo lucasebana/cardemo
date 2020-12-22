@@ -44,7 +44,8 @@ html, body {
   height: 100%;
   width: 100%;
   /*background-color:rgba(1,1,1,0.5607);*/
-  background-color: rgba(1, 1, 1, 0.66);
+  /*background-color:rgba(1,1,1,0.66);*/
+  background-color: #eeeeee;
   z-index: 1;
 }
 
@@ -63,7 +64,7 @@ html, body {
   height: 50px;
   text-align: center;
   /*color:rgb(39, 39, 39);*/
-  color: white;
+  color: black;
   font-size: 2rem;
   font-family: 'Frank Ruhl Libre', serif;
   font-weight: 900;
@@ -80,4 +81,23 @@ html, body {
   font-family: 'Oxygen', sans-serif;
   -webkit-box-shadow: rgba(0, 0, 0, 0.04) 0 2px 3px;
           box-shadow: rgba(0, 0, 0, 0.04) 0 2px 3px;
+}
+
+#loading_bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: inline-block;
+  height: 3px;
+  width: 0px;
+  background-color: red;
+  z-index: 2;
+  -webkit-transition-property: width,background-color;
+  transition-property: width,background-color;
+  -webkit-transition-duration: 1s;
+          transition-duration: 1s;
+}
+
+.end_loadbar {
+  background-color: transparent !important;
 }

@@ -4,6 +4,7 @@
   "description": "",
   "main": "OrbitControls.js",
   "dependencies": {
+    "camera-controls": "^1.25.3",
     "mathjs": "^8.1.0",
     "node-sass": "^5.0.0",
     "three": "^0.123.0"
