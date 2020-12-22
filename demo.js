@@ -4,6 +4,30 @@ import { GLTFLoader } from './node_modules/three/examples/jsm/loaders/GLTFLoader
 import { DRACOLoader } from './node_modules/three/examples/jsm/loaders/DRACOLoader.js';
 import { RoomEnvironment } from './node_modules/three/examples/jsm/environments/RoomEnvironment.js';
 import { Car } from './car.js'
+import { Traffic_Light } from './traffic_lights.js';
+
+
+/* DEBUG */
+let debug = false;
+
+let clearScreen = ()=>{
+    document.querySelector(".home_container").remove()
+    document.querySelector(".home_filter").remove()
+}
+if(debug){
+    clearScreen();
+}
+else{
+
+    document.querySelector("#home_start").addEventListener("click",function(){
+        clearScreen();
+    })
+}
+
+
+
+window.THREE = THREE
+window.continue = true
 
 export class Demo{
     constructor(){
@@ -34,7 +58,7 @@ Demo.prototype.initScene = async function(){
     this.renderer.toneMappingExposure = 0.85;
     this.container.appendChild( this.renderer.domElement );
 
-    //Scene
+    //Scene 1
     this.scene = new THREE.Scene();
     window.scene = this.scene;
 
@@ -92,8 +116,7 @@ Demo.prototype.initScene = async function(){
         );
        const lastLine = new THREE.LineCurve3(
         new THREE.Vector3( 5, 0, -15 ),
-        new THREE.Vector3( 5,0, -25
-             )
+        new THREE.Vector3( 5,0, -25)
         );
     
     const bezierLine = 
@@ -106,7 +129,39 @@ Demo.prototype.initScene = async function(){
     pointsPath.add(firstLine);
     pointsPath.add(bezierLine);
     pointsPath.add(lastLine);
-          
+    
+    /*
+    var devPoints = pointsPath.getSpacedPoints();
+    const derivativePath = new THREE.Path();
+    var h = 1e-5
+    
+    for(let i=0; i < devPoints.length; i++){
+        if (i > 0){
+            //let vec = (devPoints[i]-devPoints[i-1])/h
+            let v = new THREE.Vector3(devPoints[i].x-devPoints[i-1].x,devPoints[i].y-devPoints[i-1].y,devPoints[i].z-devPoints[i-1].z)
+            v.set(v.x/h,v.y/h,v.z/h)
+            path.lineTo(v);
+        }
+    }
+    */
+   
+    
+
+
+
+    /*
+    points.forEach((point, i)=> {
+        if (i > 0){
+            let vec = (point-points[i-1])/h
+
+
+
+
+            path.lineTo(vec);
+        }
+    });
+    */
+
     const material = new THREE.LineBasicMaterial({
         color: 0x9132a8
     });
@@ -125,36 +180,57 @@ Demo.prototype.initScene = async function(){
     this.loader = new GLTFLoader();
     this.loader.setDRACOLoader( dracoLoader );
 
+    //Scene 1
+    
+    let scene1 = async ()=>{
     this.car = new Car(pointsPath);
+    this.traffic_light = new Traffic_Light();
+
     var model;
 
 
     console.log("before")
 
-    function loadCarPromise(){
+    function loadCar(){
     return new Promise((resolve,reject)=>{
         window.demo.car.loadModel(window.demo.loader,window.demo.car,(data)=>resolve(data));
     });
     }
 
-
-    const carModel = await loadCarPromise();
-    console.log(carModel)
+    const carModel = await loadCar();
+    //console.log(carModel)
     this.car.carModel = carModel;
-    console.log("model successfully loaded!")
-
-    /*this.loadCarPromise.then((model)=>{
-    })*/
+    console.log("car model successfully loaded!")
     console.log("after")
 
-    let group = new THREE.Group();
-    group.name = "carGroup"
-    group.add(carModel)
-    group.position.z = 1.15531
-    this.scene.add(group)
-
+    function loadTL(){
+        return new Promise((resolve,reject)=>{
+            window.demo.traffic_light.loadModel(window.demo.loader,(data)=>resolve(data));
+        });
+        }
     
+
+    const TLmodel = await loadTL();
+    this.traffic_light.model = TLmodel;
+    /*this.loadCarPromise.then((model)=>{
+    })*/
+
+    this.carGroup = new THREE.Group();
+    this.carGroup.name = "carGroup"
+    this.carGroup.add(carModel)
+    //
+    //this.carGroup.position.z = -1.15531
+    this.carGroup.children[0].position.z = -1.15551
+    this.scene.add(this.carGroup)
+
+
+    this.scene.add(this.traffic_light.model)
+    }
+
+    scene1();
+
     //this.car.loadModel.bind(this.car,this.loader,this.scene)();
+    
     
 
 // TODO DEPLACER CIR AUX ROUES AVANT
@@ -187,13 +263,13 @@ Demo.prototype.render = function(){
     //
     
 
-    console.log(this.scene.getObjectByName("carGroup"))
+    //console.log(this.scene.getObjectByName("carGroup"))
     if(this.scene.getObjectByName("carGroup") != undefined){
         //if(this.car.carModel.parent.parent === this.scene){
             //if (window.block != undefined){
             this.car.context(this.car,time);
 
-            this.controls.target.copy(this.car.carModel.position);
+            //this.controls.target.copy(this.car.carModel.parent.position);
             //}
         //}
     }

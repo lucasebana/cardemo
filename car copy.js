@@ -27,7 +27,7 @@ export class Car{
 };
 
 
-Car.prototype.loadModel = async function(loader, car ,resolve){
+Car.prototype.loadModel = async function(loader, car,resolve){
     
         let tmpCarModel;
         var bodyMaterial_ = this.bodyMaterial;     
@@ -37,30 +37,18 @@ Car.prototype.loadModel = async function(loader, car ,resolve){
         var glassMaterial_ = this.glassMaterial;
         var shadow_ = this.shadow;
         
-        await loader.load('./ferrari.glb', function ( gltf ) {
+        //await loader.load('./ferrari.glb', function ( gltf ) {
+        await loader.load('./feu_tricolore.glb', function ( gltf ) {
         
         const carModel = gltf.scene.children[ 0 ];
 
-        carModel.name="car";
+        carModel.name="feu_tricolore";
 
-        carModel.getObjectByName( 'body' ).material = bodyMaterial_;
+        carModel.getObjectByName( 'bulb1' ).material = bodyMaterial_;
 
-        carModel.getObjectByName( 'rim_fl' ).material = detailsMaterial_;
-        carModel.getObjectByName( 'rim_fr' ).material = detailsMaterial_;
-        carModel.getObjectByName( 'rim_rr' ).material = detailsMaterial_;
-        carModel.getObjectByName( 'rim_rl' ).material = detailsMaterial_;
-        carModel.getObjectByName( 'trim' ).material = detailsMaterial_;
+        carModel.getObjectByName( 'bulb2' ).material = glassMaterial_;
 
-        carModel.getObjectByName( 'glass' ).material = glassMaterial_;
-
-        car.wheels.push(
-            carModel.getObjectByName( 'wheel_fl' ),
-            carModel.getObjectByName( 'wheel_fr' ),
-            carModel.getObjectByName( 'wheel_rl' ),
-            carModel.getObjectByName( 'wheel_rr' )
-        );
         
-        let wheel = car.wheels[0];
         
         // shadow
         const mesh = new THREE.Mesh(

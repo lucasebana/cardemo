@@ -3,20 +3,23 @@
 	<head>
 		<meta charset="utf-8">
 		<title>AI vs Wild demo</title>
-		<style>
-			body { margin: 0; }
-		</style>
+		<link href="css/game.css" rel="stylesheet">
 		<!--script src="math.js" type="text/javascript"></script-->
 
 	</head>
 	<body>
 		<div id="container"></div>
+		<div class="home_filter"> </div>
+		<div class="home_container">
+			<span class="home_logo">IA vs WILD</span>
+		<a href="#" class="home_button" >Mode Tutoriel</a>
+		<a href="#" class="home_button" id="home_start">Commencer</a>
+		</div>
 		<script type="module">
 			import {Demo} from './demo.js'
 			const demo = new Demo();
 			window.demo = demo;
 			demo.run();
-
 		</script>
 	</body>
 </html>

@@ -14,5 +14,13 @@
             "url": "http://localhost:8000",
             "webRoot": "${workspaceFolder}"
         }
+        "liveSassCompile.settings.formats": [
+    
+            {
+                "format": "expanded",
+                "extensionName": ".css",
+                "savePath": "/css"
+            }
+        ]
     ]
 }

@@ -5,6 +5,7 @@
   "main": "OrbitControls.js",
   "dependencies": {
     "mathjs": "^8.1.0",
+    "node-sass": "^5.0.0",
     "three": "^0.123.0"
   },
   "devDependencies": {},
