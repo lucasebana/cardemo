@@ -7,6 +7,8 @@ import { Car } from './car.js'
 import { Traffic_Light } from './traffic_lights.js';
 
 
+//à remplacer par https://github.com/yomotsu/camera-controls
+
 /* DEBUG */
 let debug = false;
 
@@ -16,11 +18,13 @@ let clearScreen = ()=>{
 }
 if(debug){
     clearScreen();
+    demo.start = true;
 }
 else{
 
     document.querySelector("#home_start").addEventListener("click",function(){
         clearScreen();
+        demo.start = true;
     })
 }
 
@@ -38,6 +42,8 @@ export class Demo{
 };
 Demo.prototype.run = function() {
     console.log("DEMO v. 1.0")
+    //this.ready = false; // all objects initialized = false
+    this.start = false; // player ready = false
     this.initScene();
 }
 
@@ -75,6 +81,7 @@ Demo.prototype.initScene = async function(){
     this.camera = new THREE.PerspectiveCamera( 40, window.
         innerWidth / window.innerHeight, 0.1, 100 );
     this.camera.position.set( -11, 7, - 7 );
+    
     
     this.controls = new OrbitControls( this.camera, this.container );
     window.controls = this.controls;
@@ -172,12 +179,34 @@ Demo.prototype.initScene = async function(){
     var path = new THREE.Line( geometry, material );
     this.scene.add(path);
 
-    //Loading the car model
+    //setting up the loading manager
 
+    function loadModel() {
+        /*
+        this.loadedObject.traverse((child)=>{
+            console.log(child.name + "loaded")
+        });
+        */
+        console.log("object loaded");
+    }
+
+    this.loadedObject = undefined;
+    this.manager = new THREE.LoadingManager( loadModel );
+    this.manager.ready = false;
+    this.manager.onProgress = function ( item, loaded, total ) {
+
+        //console.log( item, loaded, total );
+        if(loaded == total){
+            this.ready = true;
+        }
+
+    };
+
+    //Loading the car model
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath( './node_modules/three/examples/js/libs/draco/gltf/' );
 
-    this.loader = new GLTFLoader();
+    this.loader = new GLTFLoader(this.manager);
     this.loader.setDRACOLoader( dracoLoader );
 
     //Scene 1
@@ -252,17 +281,8 @@ Demo.prototype.render = function(){
     const time = - performance.now() / 1000;
 
     /* Objects context */
-
-    //console.log(this.scene);
-    //var cp = this.scene.getObjectByName("car").position;
-    /*controls.target.set(cp.x,cp.y,cp.z);
-    controls.update();
-    */
-
     
-    //
-    
-
+    if(this.start && this.manager.ready){
     //console.log(this.scene.getObjectByName("carGroup"))
     if(this.scene.getObjectByName("carGroup") != undefined){
         //if(this.car.carModel.parent.parent === this.scene){
@@ -272,6 +292,7 @@ Demo.prototype.render = function(){
             //this.controls.target.copy(this.car.carModel.parent.position);
             //}
         //}
+    }
     }
     this.controls.update();
 
