@@ -115,9 +115,9 @@ Car.prototype.context = function(car,time){
     
     
     if (window.continue==true){
-    this.fraction +=0.001;
+    //this.fraction +=0.001;
     if (this.fraction > 1) {
       this.fraction = 0;
-    }    
+    }
 }
 }
