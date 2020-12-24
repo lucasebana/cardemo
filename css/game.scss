@@ -126,7 +126,7 @@ html,body{
     from { 
         opacity: 0; 
         /*transform:translate(-50%,-50%) scale3D(2);*/
-        transform:perspective(500px) translate(-50%,-50%) translateZ(300px);
+        transform:perspective(200px) translate(-50%,-50%) translateZ(200px);
         box-shadow: 0 0 5px rgba(0,0,0,0.56)
         ;
     

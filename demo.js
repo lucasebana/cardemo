@@ -28,19 +28,17 @@ if (debug) {
     if(demo.manager.ready == true){
         clearScreen();
         demo.start = true;
+
     }
     })
-
 }
 
 
-
 window.THREE = THREE
-window.continue = true
+window.continue = true;
 
 export class Demo {
     constructor() {
-        //
         this.car = undefined;
     }
 
@@ -48,6 +46,7 @@ export class Demo {
 Demo.prototype.run = function () {
     console.log("DEMO v. 1.0")
     //this.ready = false; // all objects initialized = false
+    this.sceneComplete = false;
     this.start = false;
     this.entryAnimation = false;
     this.initScene();
@@ -85,21 +84,63 @@ Demo.prototype.initScene = async function () {
     this.grid.material.transparent = true;
     scene.add(this.grid);
 
-    //Camera and camera controls
+       
+
+    //Main camera and camera controls
     this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
     this.camera.position.set(-11, 7, -7);
 
 
     //this.controls = new OrbitControls( this.camera, this.container );
     this.cameraControls = new CameraControls(this.camera, this.container);
-    this.cameraControls.setTarget(0, 0, 0);
+    /*this.cameraControls.setTarget(0, 0, 0);*/
     this.cameraControls.dolly(-80, true);
     this.cameraControls.clock = new THREE.Clock();
 
     window.controls = this.controls;
     //this.controls.target.set( 0, 0.5, 0 );
-    this.cameraControls.setTarget(0, 0.5, 0);
+    //this.cameraControls.setTarget(0, 0.5, 0);
     //this.controls.update();
+
+    
+    this.default_viewport = this.renderer.getCurrentViewport();
+
+    //Extra viewports
+
+    this.extra_views = [{
+        left:0.65,
+        bottom:0.6,
+        width:0.25,
+        height:0.25,
+        /*background: new THREE.Color( 0.5, 0.5, 0.7 ),*/
+        fov:50,
+        eye:[-0.047728848457335965,0.6979747391771525,-1.2309553518891336],
+        wheelEye:[-0.347728848457336,0.7979747391771524,-0.9309553518891335],
+        up:[0,1,0],
+        updateCamera: function ( camera, scene ) {
+            /*
+            camera.position.x -= mouseX * 0.05;
+            camera.position.x = Math.max( Math.min( camera.position.x, 2000 ), - 2000 );
+            camera.lookAt( camera.position.clone().setY( 0 ) );
+            */
+           
+
+          }
+    }];
+
+    for ( let ii = 0; ii < this.extra_views.length; ++ ii ) {
+
+        const view = this.extra_views[ ii ];
+        const camera = new THREE.PerspectiveCamera( view.fov, window.innerWidth / window.innerHeight, 1, 10000 );
+        camera.position.fromArray( view.eye );
+        camera.up.fromArray( view.up );
+        camera.far = 100
+        camera.near = 0.1
+        camera.filmGauge = 35
+        camera.filmOffset = 0
+        view.camera = camera;
+    }
+
 
     //Lights, environments, materials & shadows
     const light = new THREE.AmbientLight(0x404040); // soft white light
@@ -203,21 +244,26 @@ Demo.prototype.initScene = async function () {
     }
 
     this.loadedObject = undefined;
-    this.manager = new THREE.LoadingManager(loadModel);
+    this.manager = new THREE.LoadingManager(loadModel.bind(this));
     this.manager.ready = false;
     this.manager.onProgress = function (item, loaded, total) {
 
         //console.log( item, loaded, total );
         let loading_bar = document.querySelector("#loading_bar");
         loading_bar.style.width = (loaded / total) * 100 + "%";
-        console.log((loaded / total) * 100 + "%")
-        if (loaded == total) {
-            this.ready = true;
-        }
+        console.log((loaded / total) * 100 + "%");
+        
+
+    }
+    this.manager.onLoad = function(){
+
+
+        this.ready = true;
         let start_button = document.querySelector("#home_start");
         start_button.classList.remove("disabled_button");
+        console.log("actually ready")
 
-    };
+    }
 
     //Loading the car model
     const dracoLoader = new DRACOLoader(this.manager);
@@ -263,14 +309,15 @@ Demo.prototype.initScene = async function () {
 
         this.carGroup = new THREE.Group();
         this.carGroup.name = "carGroup"
-        this.carGroup.add(carModel)
         //
         //this.carGroup.position.z = -1.15531
-        this.carGroup.children[0].position.z = -1.15551
+        this.carGroup.add(carModel)
+        this.car.carModel.position.set(0,0,-1.15551)
         this.scene.add(this.carGroup)
 
-
         this.scene.add(this.traffic_light.model)
+
+        this.sceneComplete = true;
     }
 
     scene1();
@@ -291,23 +338,23 @@ Demo.prototype.initScene = async function () {
 
 
 
-
-
 Demo.prototype.render = function () {
-    (() => {
         const time = -performance.now() / 1000;
         const delta = demo.cameraControls.clock.getDelta();
         const hasControlsUpdated = demo.cameraControls.update(delta);
 
-
-
         //requestAnimationFrame( demo.render );
         /* Objects context */
-
-        if (demo.start && demo.manager.ready) {
-            if (demo.entryAnimation == false) {
-                let loading_bar = document.querySelector("#loading_bar");
+    
+        if(demo.sceneComplete && demo.manager.ready){
+            let loading_bar = document.querySelector("#loading_bar");
+            if (!loading_bar.classList.contains("end_loadbar")){
                 loading_bar.classList.add("end_loadbar");
+            }
+        }
+        if (demo.start && demo.sceneComplete && demo.manager.ready) {
+            
+            if (demo.entryAnimation == false) {
                 demo.cameraControls.dolly(70, true);
                 demo.entryAnimation = true;
 
@@ -317,24 +364,58 @@ Demo.prototype.render = function () {
                 var container = document.querySelector("#container");
                 document.body.insertBefore(div,container);
 
-                demo.cameraControls.enabled = false;
+                demo.cameraControls.enabled = true;
             }
-            //console.log(this.scene.getObjectByName("carGroup"))
             if (demo.scene.getObjectByName("carGroup") != undefined) {
-                //if(this.car.carModel.parent.parent === this.scene){
-                //if (window.block != undefined){
                 demo.car.context(demo.car, time);
-                //this.controls.target.copy(this.car.carModel.parent.position);
-                //}
-                //}!
             }
+                
         }
 
         //this.controls.update();
 
-        this.grid.position.z = - ( time ) % 5;
+        //this.grid.position.z = - ( time ) % 5;
+        
+        demo.renderer.setViewport(demo.default_viewport);
+        demo.renderer.setScissor(demo.default_viewport);
+        
+        demo.renderer.setPixelRatio(window.devicePixelRatio);
+        demo.renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        //demo.renderer.setScissorTest( true );
         demo.renderer.render(demo.scene, demo.camera);
-    }).bind(window.demo)()
+
+        //Render extra viewports
+        for ( let ii = 0; ii < demo.extra_views.length; ++ ii ) {
+            
+            let windowWidth = window.innerWidth;
+            let windowHeight = window.innerHeight;
+
+            const view = demo.extra_views[ ii ];
+            const camera2 = view.camera;
+
+
+            view.updateCamera( camera2, scene);
+
+            const left = Math.floor( windowWidth * view.left );
+            const bottom = Math.floor( windowHeight * view.bottom );
+            const width = Math.floor( windowWidth * view.width );
+            const height = Math.floor( windowHeight * view.height );
+
+            
+            demo.renderer.setViewport( left, bottom, width, height );
+            demo.renderer.setScissor( left, bottom, width, height );
+            
+            demo.renderer.setScissorTest( true );
+            //demo.renderer.setClearColor( view.background );              
+            
+            camera2.aspect = width / height;
+            camera2.updateProjectionMatrix();
+
+            demo.renderer.render( demo.scene, camera2 );  
+            
+        }
+
 }
 
 
@@ -362,3 +443,4 @@ Demo.prototype.openFullscreen = function () {
     demo.renderer.setSize(window.innerWidth, window.innerHeight);
     
   }
+

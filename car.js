@@ -27,7 +27,7 @@ export class Car{
 };
 
 
-Car.prototype.loadModel = async function(loader, car ,resolve){
+Car.prototype.loadModel = async function(loader, car , resolve){
     
         let tmpCarModel;
         var bodyMaterial_ = this.bodyMaterial;     
@@ -51,6 +51,7 @@ Car.prototype.loadModel = async function(loader, car ,resolve){
         carModel.getObjectByName( 'rim_rl' ).material = detailsMaterial_;
         carModel.getObjectByName( 'trim' ).material = detailsMaterial_;
 
+        
         carModel.getObjectByName( 'glass' ).material = glassMaterial_;
 
         car.wheels.push(
@@ -117,6 +118,7 @@ Car.prototype.context = function(car,time){
     if (window.continue==true){
     //this.fraction +=0.001;
     if (this.fraction > 1) {
+        
       this.fraction = 0;
     }
 }
