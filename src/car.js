@@ -19,8 +19,7 @@ export class Car{
             color: 0xffffff, metalness: 0, roughness: 0.1, transmission: 0.9, transparent: true
         } );
     
-        this.shadow = new THREE.TextureLoader().load('../assets/images/ferrari_ao.png' );
-
+        this.shadow = new THREE.TextureLoader().load('./assets/images/ferrari_ao.png' );
         this.pointsPath = pointsPath;
         this.fraction = 0;
     }
