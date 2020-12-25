@@ -27,8 +27,9 @@ export class Car{
 };
 
 
-Car.prototype.loadModel = async function(loader, car , resolve){
-    
+Car.prototype.loadModel = async function(loader){
+        return new Promise(async (resolve,reject)=>{
+
         let tmpCarModel;
         var bodyMaterial_ = this.bodyMaterial;     
         
@@ -37,7 +38,7 @@ Car.prototype.loadModel = async function(loader, car , resolve){
         var glassMaterial_ = this.glassMaterial;
         var shadow_ = this.shadow;
         
-        await loader.load('./ferrari.glb', function ( gltf ) {
+        await loader.load('./ferrari.glb', ( gltf ) => {
         
         const carModel = gltf.scene.children[ 0 ];
 
@@ -54,14 +55,14 @@ Car.prototype.loadModel = async function(loader, car , resolve){
         
         carModel.getObjectByName( 'glass' ).material = glassMaterial_;
 
-        car.wheels.push(
+        this.wheels.push(
             carModel.getObjectByName( 'wheel_fl' ),
             carModel.getObjectByName( 'wheel_fr' ),
             carModel.getObjectByName( 'wheel_rl' ),
             carModel.getObjectByName( 'wheel_rr' )
         );
         
-        let wheel = car.wheels[0];
+        let wheel = this.wheels[0];
         
         // shadow
         const mesh = new THREE.Mesh(
@@ -70,18 +71,17 @@ Car.prototype.loadModel = async function(loader, car , resolve){
                 map: shadow_, blending: THREE.MultiplyBlending, toneMapped: false, transparent: true
             } )
         );
+
         mesh.rotation.x = - Math.PI / 2;
         mesh.renderOrder = 2;
         carModel.add( mesh );
         
-        //car.carModel = carModel;
-        //carModel.visible = true;
-        
-        resolve(carModel)
+        resolve(carModel);
        });     
+    });
 }
 
-Car.prototype.context = function(car,time){
+Car.prototype.context = function(time){
     const up = new THREE.Vector3( 0, 0, -1 );
     const axis = new THREE.Vector3( );
 
@@ -97,7 +97,7 @@ Car.prototype.context = function(car,time){
     
     const newPosition = this.pointsPath.getPoint(this.fraction);
     const tangent = this.pointsPath.getTangent(this.fraction);
-    //car.carModel.position.copy(newPosition);
+    //this.carModel.position.copy(newPosition);
     this.carModel.parent.position.copy(newPosition);
     
     axis.crossVectors( up, tangent ).normalize();
@@ -105,13 +105,14 @@ Car.prototype.context = function(car,time){
 
     const radians = Math.acos( up.dot( tangent ) );
     
-    demo.carGroup.quaternion.setFromAxisAngle( axis, radians );
+    //demo.carGroup.quaternion.setFromAxisAngle( axis, radians );
+    this.carModel.parent.quaternion.setFromAxisAngle(axis,radians);
     
     var axe = new THREE.Vector3(0,0-1.155);
     //this.wheels[0].rotateOnWorldAxis(axe,1);
 
-    for ( let i = 0; i < car.wheels.length; i ++ ) {
-        car.wheels[ i ].rotation.x = time * Math.PI;
+    for ( let i = 0; i < this.wheels.length; i ++ ) {
+        this.wheels[ i ].rotation.x = time * Math.PI;
     }
     
     
