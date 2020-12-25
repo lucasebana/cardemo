@@ -1,5 +1,5 @@
 import { Demo } from './demo.js';
-import * as THREE from './node_modules/three/build/three.module.js';
+import * as THREE from '../node_modules/three/build/three.module.js';
 
 
 export class Car{
@@ -19,7 +19,7 @@ export class Car{
             color: 0xffffff, metalness: 0, roughness: 0.1, transmission: 0.9, transparent: true
         } );
     
-        this.shadow = new THREE.TextureLoader().load('./assets/imagesferrari_ao.png' );
+        this.shadow = new THREE.TextureLoader().load('../assets/images/ferrari_ao.png' );
 
         this.pointsPath = pointsPath;
         this.fraction = 0;

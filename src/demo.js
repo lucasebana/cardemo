@@ -1,12 +1,12 @@
-import * as THREE from './node_modules/three/build/three.module.js';
-import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from './node_modules/three/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from './node_modules/three/examples/jsm/loaders/DRACOLoader.js';
-import { RoomEnvironment } from './node_modules/three/examples/jsm/environments/RoomEnvironment.js';
+import * as THREE from '../node_modules/three/build/three.module.js';
+import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from '../node_modules/three/examples/jsm/loaders/DRACOLoader.js';
+import { RoomEnvironment } from '../node_modules/three/examples/jsm/environments/RoomEnvironment.js';
 import { Car } from './car.js'
 import { Traffic_Light } from './traffic_lights.js';
 
-import CameraControls from './node_modules/camera-controls/dist/camera-controls.module.js';
+import CameraControls from '../node_modules/camera-controls/dist/camera-controls.module.js';
 import { Scenario } from './scenario.js';
 
 CameraControls.install( { THREE: THREE } );
@@ -72,7 +72,7 @@ Demo.prototype.initScene = async function () {
     this.scenario1 = new Scenario(this);
     this.scenario1.load();
     
-
+}
 
 
 

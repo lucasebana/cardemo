@@ -1,13 +1,14 @@
 //import { Demo } from './demo.js';
-import * as THREE from './node_modules/three/build/three.module.js';
-import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from './node_modules/three/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from './node_modules/three/examples/jsm/loaders/DRACOLoader.js';
-import { RoomEnvironment } from './node_modules/three/examples/jsm/environments/RoomEnvironment.js';
+import * as THREE from '../node_modules/three/build/three.module.js';
+import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from '../node_modules/three/examples/jsm/loaders/DRACOLoader.js';
+import { RoomEnvironment } from '../node_modules/three/examples/jsm/environments/RoomEnvironment.js';
+import CameraControls from '../node_modules/camera-controls/dist/camera-controls.module.js';
+
 import { Car } from './car.js'
 import { Traffic_Light } from './traffic_lights.js';
 
-import CameraControls from './node_modules/camera-controls/dist/camera-controls.module.js';
 
 export class Scenario{
     constructor(demo){
@@ -107,6 +108,7 @@ Scenario.prototype.load = async function () {
     this.axesHelper = new THREE.AxesHelper(3);
     this.axesHelper.translateX(1);
     this.scene.add(this.axesHelper);
+
 
 
     //Car Path

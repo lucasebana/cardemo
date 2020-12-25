@@ -1,5 +1,5 @@
 import { Demo } from './demo.js';
-import * as THREE from './node_modules/three/build/three.module.js';
+import * as THREE from '../node_modules/three/build/three.module.js';
 
 export class Traffic_Light {
     model = undefined;
@@ -35,8 +35,6 @@ export class Traffic_Light {
             transparent: true,
             clearcoat: 1
         });
-
-        this.shadow = new THREE.TextureLoader().load('ferrari_ao.png');
 
         this.pointsPath = pointsPath;
         this.fraction = 0;
