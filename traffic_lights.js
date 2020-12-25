@@ -53,7 +53,7 @@ Traffic_Light.prototype.loadModel = async function (loader) {
         var glassMaterial_ = this.glassMaterial;
         var shadow_ = this.shadow;
 
-        await loader.load('./feu_tricolore.glb', function (gltf) {
+        await loader.load('./assets/models/feu_tricolore.glb', function (gltf) {
 
             const model = gltf.scene.children[0];
 

@@ -39,7 +39,7 @@ Scenario.prototype.load = async function () {
     this.camera.position.set(-11, 7, -7);
 
 
-    this.cameraControls = new CameraControls(this.camera, this.container);
+    this.cameraControls = new CameraControls(this.camera, demo.container);
     /*this.cameraControls.setTarget(0, 0, 0);*/
     this.cameraControls.dolly(-80, false);
     this.cameraControls.clock = new THREE.Clock();
@@ -161,7 +161,7 @@ Scenario.prototype.load = async function () {
         this.ready = true;
         let start_button = document.querySelector("#home_start");
         start_button.classList.remove("disabled_button");
-        console.log("demo start")
+        console.log("Scenario start")
     }
 
     //Loading the car model
@@ -218,12 +218,21 @@ Scenario.prototype.render = function (time) {
         if (this.entryAnimation == false) {
             this.cameraControls.dolly(70, true);
             this.entryAnimation = true;
+            
+            let loading_bar = document.querySelector("#loading_bar");
+            if (!loading_bar.classList.contains("end_loadbar")){
+                loading_bar.
+                classList.add("end_loadbar");
+            }
+            
+            
+            //this.cameraControls.enabled = true;
             var div = document.createElement("div");
             div.innerHTML = "Bienvenue dans IA vs. WILD!<br/>";
             div.classList.add("dialog_textbox");
             var container = document.querySelector("#container");
             document.body.insertBefore(div, container);
-            this.cameraControls.enabled = true;
+            
         }
         if (this.scene.getObjectByName("carGroup") != undefined) {
             this.car.context.bind(this.car)(time);

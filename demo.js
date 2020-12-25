@@ -39,10 +39,9 @@ export class Demo {
     constructor() {
         this.car = undefined;
     }
-
 };
 Demo.prototype.run = function () {
-    console.log("DEMO v. 1.0")
+    console.log("IA vs. Wild - v. 1.0")
     //this.ready = false; // all objects initialized = false
     this.sceneComplete = false;
     this.start = false;
@@ -72,14 +71,15 @@ Demo.prototype.initScene = async function () {
     //Scene 1
     this.scenario1 = new Scenario(this);
     this.scenario1.load();
-}
+    
+
 
 
 
 Demo.prototype.render = function () {
 
     const time = -performance.now() / 1000;
-    console.log(time);
+    //console.log(time);
     if (demo.start && this.scenario1.loaded && this.scenario1.manager.ready) {
         this.scenario1.render(time);
     } else {

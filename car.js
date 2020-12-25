@@ -19,7 +19,7 @@ export class Car{
             color: 0xffffff, metalness: 0, roughness: 0.1, transmission: 0.9, transparent: true
         } );
     
-        this.shadow = new THREE.TextureLoader().load('ferrari_ao.png' );
+        this.shadow = new THREE.TextureLoader().load('./assets/imagesferrari_ao.png' );
 
         this.pointsPath = pointsPath;
         this.fraction = 0;
@@ -38,7 +38,7 @@ Car.prototype.loadModel = async function(loader){
         var glassMaterial_ = this.glassMaterial;
         var shadow_ = this.shadow;
         
-        await loader.load('./ferrari.glb', ( gltf ) => {
+        await loader.load('./assets/models/ferrari.glb', ( gltf ) => {
         
         const carModel = gltf.scene.children[ 0 ];
 
@@ -75,7 +75,7 @@ Car.prototype.loadModel = async function(loader){
         mesh.rotation.x = - Math.PI / 2;
         mesh.renderOrder = 2;
         carModel.add( mesh );
-        
+
         resolve(carModel);
        });     
     });
