@@ -8,6 +8,7 @@ import CameraControls from '../node_modules/camera-controls/dist/camera-controls
 
 import { Car } from './car.js'
 import { Traffic_Light } from './traffic_lights.js';
+import { Route } from './route.js';
 
 
 export class Scenario{
@@ -109,40 +110,48 @@ Scenario.prototype.load = async function () {
     this.axesHelper.translateX(1);
     this.scene.add(this.axesHelper);
 
+    //Path Builder
+    let vec3 = THREE.Vector3;
+    let a = [
+        [[0, 0, 0], [0, 0, -10]],
+        [[0, 0, -10],[0, 0, -12],[5.0, 0, -13],[5, 0, -15]],
+        [[5, 0, -15], [5, 0, -25]]
+    ];
+    
+    let b = [
+        [[0,0,-5], [0,0,-10], [0,0,-10], [5,0,-10]]
+    ]
+    //this.pathbuilder = new PathBuilder(a);
 
+    //this.path1 = makePath();
 
+    
     //Car Path
-    const pointsPath = new THREE.CurvePath();
-    const firstLine = new THREE.LineCurve3(
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(0, 0, -10)
-    );
-    const lastLine = new THREE.LineCurve3(
-        new THREE.Vector3(5, 0, -15),
-        new THREE.Vector3(5, 0, -25)
-    );
+    /*
+    let chemin = Route.makePath(a);//exportable avec curves.toJson();
+    let chemin2 = Route.makePath(b);
+    */
+    let route1 = new Route(a);
+    let route2 = new Route(b,[],route1);
 
-    const bezierLine =
-        new THREE.CubicBezierCurve3(
-            new THREE.Vector3(0, 0, -10),
-            new THREE.Vector3(0, 0, -12),
-            new THREE.Vector3(5.0, 0, -13),
-            new THREE.Vector3(5, 0, -15)
-        );
-    pointsPath.add(firstLine);
-    pointsPath.add(bezierLine);
-    pointsPath.add(lastLine);
-
+    //let r = new Route();
+    
 
     const material = new THREE.LineBasicMaterial({
         color: 0x9132a8
     });
-    const points = pointsPath.curves.reduce((p, d) => [...p, ...d.getPoints(20)], []);
+    
+    /*
+    var points = route2.path.curves.reduce((p, d) => [...p, ...d.getPoints(20)], []);
 
-    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    var geometry = new THREE.BufferGeometry().setFromPoints(points);
 
     var path = new THREE.Line(geometry, material);
     this.scene.add(path);
+    */
+
+
+    // => pour connaitre la distance entre la voiture et un point : curve.getUtoTmapping()
 
     //setting up the loading manager
 
@@ -175,7 +184,36 @@ Scenario.prototype.load = async function () {
 
     //Scene 1 specific
 
-    this.car = new Car(pointsPath);
+    
+    
+    this.scene.add(route1.getLine(material));
+    this.scene.add(route2.getLine(material));
+    
+
+    const pointsPath = new THREE.CurvePath();
+    const firstLine = new THREE.LineCurve3(
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(0, 0, -10)
+    );
+    const lastLine = new THREE.LineCurve3(
+        new THREE.Vector3(5, 0, -15),
+        new THREE.Vector3(5, 0, -25)
+    );
+
+    const bezierLine =
+        new THREE.CubicBezierCurve3(
+            new THREE.Vector3(0, 0, -10),
+            new THREE.Vector3(0, 0, -12),
+            new THREE.Vector3(5.0, 0, -13),
+            new THREE.Vector3(5, 0, -15)
+        );
+    pointsPath.add(firstLine);
+    pointsPath.add(bezierLine);
+    pointsPath.add(lastLine);
+
+    const points = pointsPath.curves.reduce((p, d) => [...p, ...d.getPoints(20)], []);
+
+    this.car = new Car(route2.path);
     this.traffic_light = new Traffic_Light();
 
     var model;

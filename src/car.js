@@ -107,6 +107,7 @@ Car.prototype.context = function(time){
     //demo.carGroup.quaternion.setFromAxisAngle( axis, radians );
     this.carModel.parent.quaternion.setFromAxisAngle(axis,radians);
     
+    
     var axe = new THREE.Vector3(0,0-1.155);
     //this.wheels[0].rotateOnWorldAxis(axe,1);
 
@@ -116,7 +117,7 @@ Car.prototype.context = function(time){
     
     
     if (window.continue==true){
-    //this.fraction +=0.001;
+    this.fraction +=0.001;
     if (this.fraction > 1) {
         
       this.fraction = 0;
