@@ -353,7 +353,7 @@ Scenario.prototype.blit = function () {
         camera2.aspect = width / height;
         camera2.updateProjectionMatrix();
 
-        demo.renderer.render(this.scene, camera2);
+        //demo.renderer.render(this.scene, camera2);
 
     }
 }

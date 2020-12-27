@@ -17,7 +17,8 @@ export class Route {
                 this.controlPoints.push(toVec3Array(controlPoints[i]));
             }
         } else {
-            this.controlPoints = controlPoints;
+            this.controlPoints = controlPoints; 
+            
         }
 
         this.exits = exits;
@@ -37,11 +38,12 @@ export class Route {
                 while (nth_segment < this.controlPoints.length && !stop) {
                     if (this.controlPoints[nth_segment][this.controlPoints[nth_segment].length - 1]
                         .equals(exit.controlPoints[0][0])) {
+                        this.exitInfo.push( {segment:nth_segment,route:exit});
                         stop = true;
                     }
                     nth_segment++;
+                    
                 }
-                this.exitInfo.push({segment:nth_segment-1,route:this.exits[i]});
         
             });
         }

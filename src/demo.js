@@ -46,8 +46,7 @@ Demo.prototype.run = function () {
     this.sceneComplete = false;
     this.start = false;
     this.entryAnimation = false;
-    this.initScene();
-}
+    this.initScene()}
 
 window.testvariable = "";
 

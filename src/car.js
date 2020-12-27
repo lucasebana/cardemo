@@ -5,14 +5,14 @@ export class Car {
     wheels = [];
 
 
-    constructor(routes, nth_route = 0, nth_segment = 0, exits_list=[0,1] ) {
+    constructor(routes, nth_route = 0, nth_segment = 0, exits_list=[1] ) {
 
         
         this.routes = routes;
         this.nth_route = nth_route;
         this.nth_segment = nth_segment;
 
-        this.nthroute0 = nth_route;
+        this.nth_route0 = nth_route;
         this.nth_segment0 = nth_segment;
         
         this.exits_list = exits_list;
@@ -152,7 +152,7 @@ Car.prototype.context = function (time) {
 
 
     if (window.continue == true) {
-        this.fraction += 0.01 / Math.sqrt(segment.getLength());
+        //this.fraction += 0.03 / (segment.getLength());
         if (this.fraction > 1) {
 
             this.fraction = 0;
@@ -164,7 +164,24 @@ Car.prototype.context = function (time) {
                 this.nth_segment = 0;
             }
             */
-            
+           
+           if(route.exitInfo.length > 0){
+           if(this.nth_segment == route.exitInfo[this.exits_list[this.nth_exit]].segment){
+            let next_route = route.exitInfo[this.exits_list[this.nth_exit]].route
+            this.nth_route = this.routes.indexOf(next_route);
+            if(this.nth_exit < this.exits_list.length -1){
+                this.nth_exit++;
+            }
+            else{
+                this.nth_exit = 0;
+            }
+           }
+            }
+            else{
+                this.nth_route = this.nth_route0;
+                
+                this.nth_segment = this.nth_segment0;
+            }
 
 
         }
