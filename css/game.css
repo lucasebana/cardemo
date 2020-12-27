@@ -56,6 +56,13 @@ html, body {
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
   z-index: 2;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 .home_container .home_logo {
@@ -84,6 +91,7 @@ html, body {
           box-shadow: rgba(0, 0, 0, 0.04) 0 2px 3px;
   -webkit-transition: .3s opacity ease-in-out;
   transition: .3s opacity ease-in-out;
+  margin: 5px auto;
 }
 
 .home_container .disabled_button {
@@ -139,8 +147,8 @@ html, body {
   from {
     opacity: 0;
     /*transform:translate(-50%,-50%) scale3D(2);*/
-    -webkit-transform: perspective(500px) translate(-50%, -50%) translateZ(300px);
-            transform: perspective(500px) translate(-50%, -50%) translateZ(300px);
+    -webkit-transform: perspective(200px) translate(-50%, -50%) translateZ(200px);
+            transform: perspective(200px) translate(-50%, -50%) translateZ(200px);
     -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.56);
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.56);
   }
@@ -158,8 +166,8 @@ html, body {
   from {
     opacity: 0;
     /*transform:translate(-50%,-50%) scale3D(2);*/
-    -webkit-transform: perspective(500px) translate(-50%, -50%) translateZ(300px);
-            transform: perspective(500px) translate(-50%, -50%) translateZ(300px);
+    -webkit-transform: perspective(200px) translate(-50%, -50%) translateZ(200px);
+            transform: perspective(200px) translate(-50%, -50%) translateZ(200px);
     -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.56);
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.56);
   }

@@ -113,13 +113,18 @@ Scenario.prototype.load = async function () {
     //Path Builder
     let vec3 = THREE.Vector3;
     let a = [
-        [[0, 0, 0], [0, 0, -10]],
+        [[0, 0, 0], [0, 0, -5]],
+        [[0, 0, -5], [0, 0, -10]],
         [[0, 0, -10],[0, 0, -12],[5.0, 0, -13],[5, 0, -15]],
         [[5, 0, -15], [5, 0, -25]]
     ];
     
     let b = [
         [[0,0,-5], [0,0,-10], [0,0,-10], [5,0,-10]]
+    ]
+    let c = [
+        [[0,0,-5], [0,0,(-10 + -5)/2], [(0 + 5) / 2,0,-10], [5,0,-10]],
+        [[5,0,-10],[20,0,-10]]
     ]
     //this.pathbuilder = new PathBuilder(a);
 
@@ -131,9 +136,19 @@ Scenario.prototype.load = async function () {
     let chemin = Route.makePath(a);//exportable avec curves.toJson();
     let chemin2 = Route.makePath(b);
     */
+
+    this.routes = [];
     let route1 = new Route(a);
     let route2 = new Route(b,[],route1);
+    let route3 = new Route(c,[],route1);
 
+
+    /*
+    route1.addExit(route2);
+    route1.addExit(route3);
+    */
+
+    this.routes = [route1,route2,route3];
     //let r = new Route();
     
 
@@ -185,9 +200,9 @@ Scenario.prototype.load = async function () {
     //Scene 1 specific
 
     
-    
     this.scene.add(route1.getLine(material));
     this.scene.add(route2.getLine(material));
+    this.scene.add(route3.getLine(material));
     
 
     const pointsPath = new THREE.CurvePath();
@@ -202,7 +217,8 @@ Scenario.prototype.load = async function () {
 
     const bezierLine =
         new THREE.CubicBezierCurve3(
-            new THREE.Vector3(0, 0, -10),
+            new THREE.Vector3(0, 0, 
+                -10),
             new THREE.Vector3(0, 0, -12),
             new THREE.Vector3(5.0, 0, -13),
             new THREE.Vector3(5, 0, -15)
@@ -213,7 +229,22 @@ Scenario.prototype.load = async function () {
 
     const points = pointsPath.curves.reduce((p, d) => [...p, ...d.getPoints(20)], []);
 
-    this.car = new Car(route2.path);
+
+    /*  */
+    var dotMaterial = new THREE.PointsMaterial( { size: 4, sizeAttenuation: false,color:0xff0a0f } );
+
+    var dotGeometry = new THREE.Geometry();
+    dotGeometry.vertices.push(new THREE.Vector3());
+    let p = new THREE.Points( dotGeometry, dotMaterial )
+    window.pos = p.position;
+    this.scene.add(p);
+
+
+    this.car = new Car(this.routes);
+
+    //
+    window.r = demo.scenario1.car.routes
+    //
     this.traffic_light = new Traffic_Light();
 
     var model;
