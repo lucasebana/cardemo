@@ -139,8 +139,8 @@ Scenario.prototype.load = async function () {
 
     this.routes = [];
     let route1 = new Route(a);
-    let route2 = new Route(b,[],route1);
-    let route3 = new Route(c,[],route1);
+    let route2 = new Route(b,route1,[],[]);
+    let route3 = new Route(c,route1,[],[]);
 
 
     /*

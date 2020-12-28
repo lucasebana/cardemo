@@ -5,9 +5,11 @@ import {
 
 
 export class Route {
-    constructor(controlPoints, exits = [], parent = null) {
+    constructor(controlPoints, parent = null, exits = [], defaultExits = []) {
         /* controlPoints : see make_path.js */
+        /* parents : Route*/
         /* exits : [Route] */
+        /* defaultExits : [int,int,etc.] */
         //ou [[n,Route]], troncon n
 
         this.controlPoints = [];
@@ -17,12 +19,15 @@ export class Route {
                 this.controlPoints.push(toVec3Array(controlPoints[i]));
             }
         } else {
-            this.controlPoints = controlPoints; 
-            
+            this.controlPoints = controlPoints;
+
         }
 
         this.exits = exits;
-
+        this.defaultExits = defaultExits;
+        if(defaultExits.length == 0){
+            this.defaultExits = new Array(controlPoints.length).fill(-1);
+        }
         this.parent = parent;
         this.path = makePath(this.controlPoints);
         this.count_exits = () => {
@@ -46,6 +51,7 @@ export class Route {
                 }
         
             });
+            
         }
         this.count_exits();
         if (this.parent != null) {
@@ -117,10 +123,17 @@ Route.prototype.getLine = function (material) {
     return L;
 }
 
-Route.prototype.getU = function (point, threshold = 1.e-2) {
-    //this.path
-
-    return;
+Route.prototype.getNext = function (nth_segment) {
+    if(this.exitInfo.length > 0){
+        let exit = this.defaultExits[nth_segment];
+        if(exit == -1){
+            return null;
+        }
+        else{
+            return this.exitInfo[exit].route;
+        }
+    }
+    return -1;
 }
 /*
 Route.prototype.getNext = function(n){

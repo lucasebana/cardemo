@@ -152,10 +152,11 @@ Car.prototype.context = function (time) {
 
 
     if (window.continue == true) {
-        //this.fraction += 0.03 / (segment.getLength());
+        
+        this.fraction += 0.03 / (segment.getLength());
         if (this.fraction > 1) {
-
             this.fraction = 0;
+
             //this.nth_segment++;
             /*
             if (route.exitInfo[0].segment == this.nth_segment) {
@@ -165,6 +166,8 @@ Car.prototype.context = function (time) {
             }
             */
            
+
+            /*
            if(route.exitInfo.length > 0){
            if(this.nth_segment == route.exitInfo[this.exits_list[this.nth_exit]].segment){
             let next_route = route.exitInfo[this.exits_list[this.nth_exit]].route
@@ -182,7 +185,28 @@ Car.prototype.context = function (time) {
                 
                 this.nth_segment = this.nth_segment0;
             }
+            */
+           let next_route = route.getNext(this.nth_segment);
+           if(next_route != null){
+           if(next_route != -1){
+            this.nth_route = this.routes.indexOf(next_route);
+           }
+           else{
+               this.nth_route = this.nth_route0;
 
+           }
+        }else{
+            if(this.nth_segment < route.controlPoints.length -1){
+            this.nth_segment++;
+
+            
+            }
+            else{
+                this.nth_segment = 0;
+            }
+
+        }
+            
 
         }
     }
