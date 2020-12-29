@@ -158,7 +158,7 @@ Car.prototype.context = function (time) {
 
         if(callback.active == true){
             console.log(this.fraction)
-            if(this.fraction>=1){
+            if(this.fraction>=1-0.1){
                 this.stopCar = true;
             }
             
@@ -233,7 +233,9 @@ Car.prototype.displayQuestion = function(game_event){
 
 
 Car.prototype.switchRoute = function(i,game_event){
-    return ()=>{
+    
+    return (event)=>{
+    event.preventDefault();
     this.stopCar = false;
 
     game_event.active = false;
