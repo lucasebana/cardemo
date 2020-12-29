@@ -54,6 +54,7 @@ Traffic_Light.prototype.loadModel = async function (loader) {
         await loader.load('./assets/models/feu_tricolore.glb', function (gltf) {
 
             const model = gltf.scene.children[0];
+            model.position.set(0,0,0);
 
             model.name = "feu_tricolore";
 
@@ -71,7 +72,7 @@ Traffic_Light.prototype.loadModel = async function (loader) {
                     transparent: true
                 })
             );
-            mesh.rotation.x = -Math.PI / 2;
+            //mesh.rotation.x = -Math.PI / 2;
             mesh.renderOrder = 2;
             model.add(mesh);
 

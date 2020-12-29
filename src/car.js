@@ -1,25 +1,30 @@
 import { Demo } from './demo.js';
 import * as THREE from '../node_modules/three/build/three.module.js';
+
+import { Route } from './route.js';
+import { GameEvent } from './game_event.js';
+
 export class Car {
     carModel = undefined;
     wheels = [];
 
 
-    constructor(routes, nth_route = 0, nth_segment = 0, exits_list=[1] ) {
+    constructor(routes, nth_route = 0, nth_segment = 0/*, exits_list = [1]*/) {
 
-        
+
         this.routes = routes;
         this.nth_route = nth_route;
         this.nth_segment = nth_segment;
 
         this.nth_route0 = nth_route;
         this.nth_segment0 = nth_segment;
-        
-        this.exits_list = exits_list;
+
+        //this.exits_list = exits_list;
         this.nth_exit = 0;
         //this.pointsPath = pointsPath;
 
         this.fraction = 0;
+        this.stopCar = false;
 
         this.bodyMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xff0000,
@@ -145,69 +150,103 @@ Car.prototype.context = function (time) {
     var axe = new THREE.Vector3(0, 0 - 1.155);
     //this.wheels[0].rotateOnWorldAxis(axe,1);
 
+    if(!this.stopCar){
     for (let i = 0; i < this.wheels.length; i++) {
         this.wheels[i].rotation.x = time * Math.PI;
+    }
+    }  
+    if (route.callbacks[this.nth_segment] != undefined) {
+        let callback = route.callbacks[this.nth_segment];
+        
+        if (callback.triggered == false) {
+            let distance = callback.trigger_distance / segment.getLength();
+
+            if (isNaN(segment.getUtoTmapping(this.fraction + distance, 0))) {
+                this.displayQuestion(callback);
+                callback.triggered = true;
+                callback.active = true;
+            }
+        }
+
+        if(callback.active == true){
+            console.log(this.fraction)
+            if(this.fraction>=1){
+                this.stopCar = true;
+            }
+            
+        }
+    
     }
 
 
 
+
     if (window.continue == true) {
-        
-        this.fraction += 0.03 / (segment.getLength());
+
         if (this.fraction > 1) {
             this.fraction = 0;
+            let next_route = route.getNext(this.nth_segment);
+            if (next_route != null) {
+                if (next_route != -1) {
+                    this.nth_route = this.routes.indexOf(next_route);
+                } else {
+                    this.nth_route = this.nth_route0;
+                }
+            } else {
+                if (this.nth_segment < route.controlPoints.length - 1) {
+                    this.nth_segment++;
 
-            //this.nth_segment++;
-            /*
-            if (route.exitInfo[0].segment == this.nth_segment) {
-                let r = route.exitInfo[2].route;
-                this.nth_route = this.routes.indexOf(r);
-                this.nth_segment = 0;
-            }
-            */
-           
 
-            /*
-           if(route.exitInfo.length > 0){
-           if(this.nth_segment == route.exitInfo[this.exits_list[this.nth_exit]].segment){
-            let next_route = route.exitInfo[this.exits_list[this.nth_exit]].route
-            this.nth_route = this.routes.indexOf(next_route);
-            if(this.nth_exit < this.exits_list.length -1){
-                this.nth_exit++;
+                } else {
+                    this.nth_segment = 0;
+                }
             }
-            else{
-                this.nth_exit = 0;
-            }
-           }
-            }
-            else{
-                this.nth_route = this.nth_route0;
-                
-                this.nth_segment = this.nth_segment0;
-            }
-            */
-           let next_route = route.getNext(this.nth_segment);
-           if(next_route != null){
-           if(next_route != -1){
-            this.nth_route = this.routes.indexOf(next_route);
-           }
-           else{
-               this.nth_route = this.nth_route0;
-
-           }
-        }else{
-            if(this.nth_segment < route.controlPoints.length -1){
-            this.nth_segment++;
-
-            
-            }
-            else{
-                this.nth_segment = 0;
-            }
-
         }
-            
+    }
+    if(!this.stopCar){
+        this.fraction += 0.05 / (segment.getLength());
+    }
+}
 
-        }
+Car.prototype.displayQuestion = function(game_event){
+    let questionDiv = document.createElement("div");
+    questionDiv.innerHTML = game_event.text;
+    questionDiv.classList.add("dialog_textbox");
+    let container = document.querySelector("#container");
+    document.body.insertBefore(questionDiv, container);
+
+    let answersDiv = document.createElement("div");
+    answersDiv.id = "answers_container";
+    for(let i=0; i < game_event.choices.length;i++){
+        let answerA = document.createElement("a");
+        answerA.style.setProperty('--idelay',i)
+
+        answerA.id = "answer_"+i
+        answerA.innerHTML = game_event.choices[i];
+        answerA.classList.add("answerA")
+        answerA.addEventListener("click",this.switchRoute(i,game_event));
+        answersDiv.appendChild(answerA);
+    }
+    
+    document.body.insertBefore(answersDiv, container);
+    
+
+    /*
+    var div = document.createElement("div");
+    div.innerHTML = "Bienvenue dans IA vs. WILD!<br/>";
+    div.classList.add("dialog_textbox");
+    var container = document.querySelector("#container");
+    document.body.insertBefore(div, container);
+    */
+}
+
+
+Car.prototype.switchRoute = function(i,game_event){
+    return ()=>{
+    this.stopCar = false;
+
+    game_event.active = false;
+    let r = game_event.route;
+    r.defaultExits[game_event.segment] = game_event.exits[i];
     }
 }

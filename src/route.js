@@ -57,6 +57,9 @@ export class Route {
         if (this.parent != null) {
             this.parent.addExit(this);
         }
+
+        this.callbacks = new Array(this.path.curves.length);
+
     }
 
     static makePath = makePath;
@@ -134,6 +137,12 @@ Route.prototype.getNext = function (nth_segment) {
         }
     }
     return -1;
+}
+
+Route.prototype.addCallback = function(i,callback){
+    this.callbacks[i] = callback;
+    callback.route = this;
+    callback.segment = i;
 }
 /*
 Route.prototype.getNext = function(n){

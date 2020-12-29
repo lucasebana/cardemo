@@ -9,6 +9,7 @@ import CameraControls from '../node_modules/camera-controls/dist/camera-controls
 import { Car } from './car.js'
 import { Traffic_Light } from './traffic_lights.js';
 import { Route } from './route.js';
+import { GameEvent } from './game_event.js';
 
 
 export class Scenario{
@@ -58,8 +59,8 @@ Scenario.prototype.load = async function () {
         width: 0.25,
         height: 0.25,
         ///*background: new THREE.Color( 0.5, 0.5, 0.7 ),
-        fov: 50,
-        eye: [-0.047728848457335965, 0.6979747391771525, -1.2309553518891336],
+        fov: 70,
+        eye: [-0.047728848457335965, 0.7979747391771525, -1.2309553518891336],
         wheelEye: [-0.347728848457336, 0.7979747391771524, -0.9309553518891335],
         up: [0, 1, 0],
         updateCamera: function (camera, scene) {
@@ -141,6 +142,16 @@ Scenario.prototype.load = async function () {
     let route1 = new Route(a);
     let route2 = new Route(b,route1,[],[]);
     let route3 = new Route(c,route1,[],[]);
+
+
+    let question1 = new GameEvent("Question 1",
+    ["Continuer","Tourner1","Tourner2"],
+    [-1,0,1],
+    2,
+    true
+    );
+
+    route1.addCallback(0,question1);
 
 
     /*
@@ -243,7 +254,7 @@ Scenario.prototype.load = async function () {
     this.car = new Car(this.routes);
 
     //
-    window.r = demo.scenario1.car.routes
+    window.r = demo.scenario1.car.routes;
     //
     this.traffic_light = new Traffic_Light();
 
@@ -255,11 +266,17 @@ Scenario.prototype.load = async function () {
 
     const TLmodel = await this.traffic_light.loadModel(this.loader);
     this.traffic_light.model = TLmodel;
+    this.traffic_light.model.position.set(1,0,-5)
+
 
     this.carGroup = new THREE.Group();
     this.carGroup.name = "carGroup"
     //this.carGroup.position.z = -1.15531
     this.carGroup.add(carModel)
+
+    this.carGroup.add(this.extra_views[0].camera);
+
+
     this.car.carModel.position.set(0, 0, -1.15551)
     this.scene.add(this.carGroup)
 
@@ -298,12 +315,13 @@ Scenario.prototype.render = function (time) {
             
             
             //this.cameraControls.enabled = true;
+            /*
             var div = document.createElement("div");
             div.innerHTML = "Bienvenue dans IA vs. WILD!<br/>";
             div.classList.add("dialog_textbox");
             var container = document.querySelector("#container");
             document.body.insertBefore(div, container);
-            
+            */
         }
         if (this.scene.getObjectByName("carGroup") != undefined) {
             this.car.context.bind(this.car)(time);
@@ -353,7 +371,8 @@ Scenario.prototype.blit = function () {
         camera2.aspect = width / height;
         camera2.updateProjectionMatrix();
 
-        //demo.renderer.render(this.scene, camera2);
+        
+        demo.renderer.render(this.scene, camera2);
 
     }
 }
