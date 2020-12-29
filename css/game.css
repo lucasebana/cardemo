@@ -245,3 +245,28 @@ html, body {
     opacity: 1;
   }
 }
+
+.fadeout {
+  -webkit-animation: fadeout .3s;
+          animation: fadeout .3s;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

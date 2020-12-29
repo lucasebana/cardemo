@@ -33,7 +33,6 @@ if (debug) {
 }
 
 window.THREE = THREE
-window.continue = true;
 
 export class Demo {
     constructor() {

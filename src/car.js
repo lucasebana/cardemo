@@ -26,6 +26,10 @@ export class Car {
         this.fraction = 0;
         this.stopCar = false;
 
+        this.lastTime = -1; 
+        this.speed = 5;// unité/s
+        this.slowmo_factor = 1;
+
         this.bodyMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xff0000,
             metalness: 0.6,
@@ -112,10 +116,14 @@ Car.prototype.loadModel = async function (loader) {
 }
 
 Car.prototype.context = function (time) {
+    if(this.lastTime === -1){
+        var deltaTime = 1/60;
+    }
+    else{
+        var deltaTime =-time - this.lastTime;
+    }
     const up = new THREE.Vector3(0, 0, -1);
     const axis = new THREE.Vector3();
-
-    
 
     let route = this.routes[this.nth_route];
     let segment = route.path.curves[this.nth_segment];
@@ -132,13 +140,12 @@ Car.prototype.context = function (time) {
     this.carModel.parent.quaternion.setFromAxisAngle(axis, radians);
 
 
-    var axe = new THREE.Vector3(0, 0 - 1.155);
     //this.wheels[0].rotateOnWorldAxis(axe,1);
     
 
     if(!this.stopCar){
     for (let i = 0; i < this.wheels.length; i++) {
-        this.wheels[i].rotation.x = time * Math.PI;
+        this.wheels[i].rotation.x = time * Math.PI * this.slowmo_factor;
     }
     }
     
@@ -154,6 +161,11 @@ Car.prototype.context = function (time) {
                 callback.triggered = true;
                 callback.active = true;
             }
+            if(callback.active && callback.slowmo){
+                if(this.slowmo_factor > 0.1){
+                    this.slowmo_factor /= 8
+                }
+            }
         }
 
         if(callback.active == true){
@@ -168,11 +180,10 @@ Car.prototype.context = function (time) {
 
     
     if(!this.stopCar){
-        this.fraction += 0.05 / (segment.getLength());
+        this.fraction += deltaTime * this.speed * this.slowmo_factor / (segment.getLength()) ;
     }
 
 
-    if (window.continue == true) {
 
         if (this.fraction > 1) {
             this.fraction = 0;
@@ -193,10 +204,9 @@ Car.prototype.context = function (time) {
                 }
             }
         }
-    }
+    
 
-    
-    
+    this.lastTime = - time;
 }
 
 Car.prototype.displayQuestion = function(game_event){
@@ -215,7 +225,7 @@ Car.prototype.displayQuestion = function(game_event){
         answerA.id = "answer_"+i
         answerA.innerHTML = game_event.choices[i];
         answerA.classList.add("answerA")
-        answerA.addEventListener("click",this.switchRoute(i,game_event));
+        answerA.addEventListener("click",this.switchRoute(i,game_event,questionDiv,answersDiv));
         answersDiv.appendChild(answerA);
     }
     
@@ -232,15 +242,27 @@ Car.prototype.displayQuestion = function(game_event){
 }
 
 
-Car.prototype.switchRoute = function(i,game_event){
+Car.prototype.switchRoute = function(i,game_event,questionDiv,answersDiv){
     
     return (event)=>{
     event.preventDefault();
     this.stopCar = false;
-    
 
     game_event.active = false;
+    this.slowmo_factor = 1;
+
+
     let r = game_event.route;
     r.defaultExits[game_event.segment] = game_event.exits[i];
+
+    questionDiv.classList.add("fadeout");
+    answersDiv.classList.add("fadeout");
+
+    setTimeout(()=>{
+        questionDiv.style.display="none";
+        answersDiv.style.display="none";
+    },1000)
+
+    
     }
 }

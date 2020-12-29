@@ -24,8 +24,9 @@
 		<script type="module">
 			import {Demo} from './src/demo.js'
 			const demo = new Demo();
-			window.demo.openFullscreen();
+			
 			window.demo = demo;
+			//if mobile: window.demo.openFullscreen();
 			demo.run();
 		</script>
 	</body>

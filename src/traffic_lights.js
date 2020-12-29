@@ -83,7 +83,4 @@ Traffic_Light.prototype.loadModel = async function (loader) {
 
 Traffic_Light.prototype.context = function (car, time) {
 
-    if (window.continue == true) {
-
-    }
 }
