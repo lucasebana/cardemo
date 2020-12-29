@@ -89,7 +89,7 @@ Route.prototype.getExits = function (point) {
 
 
 Route.prototype.getLine = function (material) {
-    var points = this.path.curves.reduce((p, d) => [...p, ...d.getPoints(20)], []);
+    var points = this.path.curves.reduce((p, d) => [...p, ...d.getPoints(40)], []);
     var geometry = new THREE.BufferGeometry().setFromPoints(points);
 
     var L = new THREE.Line(geometry, material);
