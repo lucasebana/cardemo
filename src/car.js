@@ -237,6 +237,7 @@ Car.prototype.switchRoute = function(i,game_event){
     return (event)=>{
     event.preventDefault();
     this.stopCar = false;
+    
 
     game_event.active = false;
     let r = game_event.route;
