@@ -115,10 +115,25 @@ Car.prototype.context = function (time) {
     const up = new THREE.Vector3(0, 0, -1);
     const axis = new THREE.Vector3();
 
+    
+
     let route = this.routes[this.nth_route];
     let segment = route.path.curves[this.nth_segment];
     let exitPoints = route.exitPoints;
 
+    const newPosition = route.path.curves[this.nth_segment].getPoint(this.fraction);
+    const tangent = route.path.curves[this.nth_segment].getTangent(this.fraction);
+    this.carModel.parent.position.copy(newPosition);
+
+    axis.crossVectors(up, tangent).normalize();
+    
+    //wheels rotation
+    const radians = Math.acos(up.dot(tangent));
+    this.carModel.parent.quaternion.setFromAxisAngle(axis, radians);
+
+
+    var axe = new THREE.Vector3(0, 0 - 1.155);
+    //this.wheels[0].rotateOnWorldAxis(axe,1);
     
 
     if(!this.stopCar){
@@ -181,19 +196,7 @@ Car.prototype.context = function (time) {
     }
 
     
-    const newPosition = route.path.curves[this.nth_segment].getPoint(this.fraction);
-    const tangent = route.path.curves[this.nth_segment].getTangent(this.fraction);
-    this.carModel.parent.position.copy(newPosition);
-
-    axis.crossVectors(up, tangent).normalize();
     
-    //wheels rotation
-    const radians = Math.acos(up.dot(tangent));
-    this.carModel.parent.quaternion.setFromAxisAngle(axis, radians);
-
-
-    var axe = new THREE.Vector3(0, 0 - 1.155);
-    //this.wheels[0].rotateOnWorldAxis(axe,1);
 }
 
 Car.prototype.displayQuestion = function(game_event){
