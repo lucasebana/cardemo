@@ -22,16 +22,25 @@ function makePath(controlPoints) {
 }
 
 
+function toVec2Array(array){
+    let p = [];
+    for (let j = 0; j < array.length; j++) {
+        p.push(new THREE.Vector2().fromArray(array[j]));
+    }
+    //array = p;
+    return p;
+}
+
 function toVec3Array(array){
     let p = [];
     for (let j = 0; j < array.length; j++) {
         p.push(new THREE.Vector3().fromArray(array[j]));
     }
-    array = p;
-    return array;
+    //array = p;
+    return p;
 }
 
-export {makePath, toVec3Array};
+export {makePath, toVec2Array, toVec3Array};
 /*
 export function quickpath([],gridSize = 5){
 

@@ -27,7 +27,7 @@ export class Car {
         this.stopCar = false;
 
         this.lastTime = -1; 
-        this.speed = 5;// unité/s
+        this.speed = 4;// unité/s
         this.slowmo_factor = 1;
 
         this.bodyMaterial = new THREE.MeshPhysicalMaterial({
@@ -145,7 +145,10 @@ Car.prototype.context = function (time) {
 
     if(!this.stopCar){
     for (let i = 0; i < this.wheels.length; i++) {
-        this.wheels[i].rotation.x = time * Math.PI * this.slowmo_factor;
+        this.wheels[i].rotation.x = time * this.speed * this.slowmo_factor/0.34;
+        //radius : 3.4
+        //this.wheels[i].rotation.x += this.fraction * segment.getLength() / (0.34*this.slowmo_factor)
+
     }
     }
     
@@ -169,7 +172,7 @@ Car.prototype.context = function (time) {
         }
 
         if(callback.active == true){
-            console.log(this.fraction)
+            //g(this.fraction)
             if(this.fraction>=1-0.1){
                 this.stopCar = true;
             }
@@ -197,8 +200,6 @@ Car.prototype.context = function (time) {
             } else {
                 if (this.nth_segment < route.controlPoints.length - 1) {
                     this.nth_segment++;
-
-
                 } else {
                     this.nth_segment = 0;
                 }
@@ -264,5 +265,7 @@ Car.prototype.switchRoute = function(i,game_event,questionDiv,answersDiv){
     },1000)
 
     
-    }
+
+
+}
 }

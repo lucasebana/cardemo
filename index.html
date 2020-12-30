@@ -26,6 +26,11 @@
 			const demo = new Demo();
 			
 			window.demo = demo;
+			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+				console.log("mobile");
+			  }else{
+				console.log("not mobile");
+			  }
 			//if mobile: window.demo.openFullscreen();
 			demo.run();
 		</script>

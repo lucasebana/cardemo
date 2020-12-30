@@ -1,6 +1,7 @@
 import {
     makePath,
-    toVec3Array
+    toVec3Array,
+    toVec2Array
 } from './make_path.js'
 
 
@@ -63,6 +64,7 @@ export class Route {
     }
 
     static makePath = makePath;
+    static toVec2Array = toVec2Array;
     static toVec3Array = toVec3Array;
 }
 

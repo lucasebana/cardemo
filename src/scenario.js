@@ -8,6 +8,7 @@ import CameraControls from '../node_modules/camera-controls/dist/camera-controls
 
 import { Car } from './car.js'
 import { Traffic_Light } from './traffic_lights.js';
+import { Segment } from './segment.js';
 import { Route } from './route.js';
 import { GameEvent } from './game_event.js';
 
@@ -107,8 +108,8 @@ Scenario.prototype.load = async function () {
     //*/
 
     //Axes
-    this.axesHelper = new THREE.AxesHelper(3);
-    this.axesHelper.translateX(1);
+    this.axesHelper = new THREE.AxesHelper(5);
+    //this.axesHelper.translateX(1);
     this.scene.add(this.axesHelper);
 
     //Path Builder
@@ -137,6 +138,8 @@ Scenario.prototype.load = async function () {
     let chemin = Route.makePath(a);//exportable avec curves.toJson();
     let chemin2 = Route.makePath(b);
     */
+
+    let segment = new Segment();
 
     this.routes = [];
     let route1 = new Route(a);
