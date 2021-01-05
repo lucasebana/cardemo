@@ -129,14 +129,12 @@ Route.prototype.getLine = function (material) {
 }
 
 Route.prototype.getNext = function (nth_segment) {
-    if(this.exitInfo.length > 0){
-        let exit = this.defaultExits[nth_segment];
+    let exit = this.defaultExits[nth_segment];
         if(exit == -1){
             return null;
         }
-        else{
+    if(this.exitInfo.length > 0){
             return this.exitInfo[exit].route;
-        }
     }
     return -1;
 }

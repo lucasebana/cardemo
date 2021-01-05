@@ -10,6 +10,7 @@ import { Car } from './car.js'
 import { Traffic_Light } from './traffic_lights.js';
 import { Segment } from './segment.js';
 import { Route } from './route.js';
+import { GameMap } from './game_map.js';
 import { GameEvent } from './game_event.js';
 
 
@@ -29,17 +30,19 @@ Scenario.prototype.load = async function () {
     window.scene = this.scene;
 
     this.scene.background = new THREE.Color(0xeeeeee);
-    this.scene.fog = new THREE.Fog(0xeeeeee, 10, 90);
+    //this.scene.fog = new THREE.Fog(0xeeeeee, 10, 90);
+    
 
     this.grid = new THREE.GridHelper(200, 40, 0x000000, 0x000000);
     this.grid.material.opacity = 0.1;
     this.grid.material.depthWrite = false;
     this.grid.material.transparent = true;
+    
     this.scene.add(this.grid);
 
 
     //Main camera and camera controls
-    this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
+    this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 600);
     this.camera.position.set(-11, 7, -7);
 
 
@@ -79,7 +82,7 @@ Scenario.prototype.load = async function () {
         const camera = new THREE.PerspectiveCamera(view.fov, window.innerWidth / window.innerHeight, 1, 10000);
         camera.position.fromArray(view.eye);
         camera.up.fromArray(view.up);
-        camera.far = 100
+        camera.far = 10000
         camera.near = 0.1
         camera.filmGauge = 35
         camera.filmOffset = 0
@@ -138,15 +141,36 @@ Scenario.prototype.load = async function () {
     let chemin = Route.makePath(a);//exportable avec curves.toJson();
     let chemin2 = Route.makePath(b);
     */
+    
 
-    let segment = new Segment();
+    //Create map
+    let options = {
+        road_keyPoints:[]
+    }
 
-    this.routes = [];
+    this.map = new GameMap();
+    await this.map.init();
+
+    this.segment = new Segment(options);
+    //let segment2 = new Segment();
+    /*
+    segment2.roadmesh.position.z = -4*5
+    segment2.sidewalkmesh1.position.z = -4*5
+    segment2.sidewalkmesh2.position.z = -4*5
+    */
+
+    this.routes = this.map.routes;
+
+    //this.routes.push(this.segment.route);
+    //this.routes.push(this.map.routes[0])
+
+    /*
     let route1 = new Route(a);
     let route2 = new Route(b,route1,[],[]);
     let route3 = new Route(c,route1,[],[]);
+    */
 
-
+    /*
     let question1 = new GameEvent("Question 1",
     ["Continuer","Tourner1","Tourner2"],
     [-1,0,1],
@@ -155,14 +179,14 @@ Scenario.prototype.load = async function () {
     );
 
     route1.addCallback(0,question1);
-
+    */
 
     /*
     route1.addExit(route2);
     route1.addExit(route3);
     */
 
-    this.routes = [route1,route2,route3];
+    //this.routes = [route1,route2,route3];
     //let r = new Route();
     
 
@@ -214,9 +238,17 @@ Scenario.prototype.load = async function () {
     //Scene 1 specific
 
     
+    /*
     this.scene.add(route1.getLine(material));
     this.scene.add(route2.getLine(material));
     this.scene.add(route3.getLine(material));
+    */
+    
+    
+    this.routes.forEach((route)=>{
+        this.scene.add(route.getLine(material));
+    });
+    
     
 
     const pointsPath = new THREE.CurvePath();

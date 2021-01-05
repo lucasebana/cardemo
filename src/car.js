@@ -9,7 +9,7 @@ export class Car {
     wheels = [];
 
 
-    constructor(routes, nth_route = 0, nth_segment = 0/*, exits_list = [1]*/) {
+    constructor(routes, nth_route = 0, nth_segment = 9/*, exits_list = [1]*/) {
 
 
         this.routes = routes;
