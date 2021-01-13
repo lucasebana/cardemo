@@ -8,8 +8,8 @@
     "@tilewidth": "64",
     "@tileheight": "64",
     "@infinite": "0",
-    "@nextlayerid": "11",
-    "@nextobjectid": "30",
+    "@nextlayerid": "12",
+    "@nextobjectid": "37",
     "tileset": {
        "@firstgid": "1",
        "@name": "tileset",
@@ -49,13 +49,14 @@
        {
           "@id": "7",
           "@name": "routes",
+          "@locked": "1",
           "object": [
              {
                 "@id": "7",
                 "@x": "1696",
                 "@y": "2528",
                 "polygon": {
-                   "@points": "0,0 0,-256 0,-640 576,-640 576,-1664 -704,-1664 -704,-960 -1024,-960 -1024,128 0,128 0,64"
+                   "@points": "0,0 0,-256 0,-640 576,-640 576,-1664 -704,-1664 -704,-1406.67 -704,-960 -1024,-960 -1024,128 0,128 0,64"
                 }
              },
              {
@@ -87,6 +88,7 @@
        {
           "@id": "8",
           "@name": "exits",
+          "@locked": "1",
           "object": [
              {
                 "@id": "9",
@@ -192,6 +194,206 @@
                       "@name": "to",
                       "@type": "int",
                       "@value": "7"
+                   }
+                ],
+                "point": []
+             }
+          ]
+       },
+       {
+          "@id": "11",
+          "@name": "questions",
+          "object": [
+             {
+                "@id": "30",
+                "@x": "1696",
+                "@y": "2272",
+                "properties": [
+                   {
+                      "@name": "e1",
+                      "@value": ""
+                   },
+                   {
+                      "@name": "e2",
+                      "@value": "turn 16"
+                   },
+                   {
+                      "@name": "nth_segment",
+                      "@type": "int",
+                      "@value": "0"
+                   },
+                   {
+                      "@name": "question",
+                      "@value": "Choisissez la route à emprunter."
+                   },
+                   {
+                      "@name": "r1",
+                      "@value": "Continuer tout droit"
+                   },
+                   {
+                      "@name": "r2",
+                      "@value": "Tourner à droite"
+                   },
+                   {
+                      "@name": "routeId",
+                      "@type": "int",
+                      "@value": "7"
+                   }
+                ],
+                "point": []
+             },
+             {
+                "@id": "31",
+                "@x": "2272",
+                "@y": "864",
+                "properties": [
+                   {
+                      "@name": "e1",
+                      "@value": ""
+                   },
+                   {
+                      "@name": "e2",
+                      "@value": ""
+                   },
+                   {
+                      "@name": "nth_segment",
+                      "@type": "int",
+                      "@value": "3"
+                   },
+                   {
+                      "@name": "question",
+                      "@value": "Que faire ?"
+                   },
+                   {
+                      "@name": "r1",
+                      "@value": "Tourner à gauche ?"
+                   },
+                   {
+                      "@name": "r2",
+                      "@value": "Reprendre la main et s'arrêter au f"
+                   },
+                   {
+                      "@name": "routeId",
+                      "@type": "int",
+                      "@value": "7"
+                   }
+                ],
+                "point": []
+             },
+             {
+                "@id": "33",
+                "@x": "992",
+                "@y": "1120",
+                "properties": [
+                   {
+                      "@name": "e1",
+                      "@value": ""
+                   },
+                   {
+                      "@name": "e2",
+                      "@value": ""
+                   },
+                   {
+                      "@name": "nth_segment",
+                      "@type": "int",
+                      "@value": "5"
+                   },
+                   {
+                      "@name": "question",
+                      "@value": "Que faire ? (piège)"
+                   },
+                   {
+                      "@name": "r1",
+                      "@value": "Continuer"
+                   },
+                   {
+                      "@name": "r2",
+                      "@value": "Reprendre la main et s'arrêter au passage piéton"
+                   },
+                   {
+                      "@name": "r3",
+                      "@value": "Reprendre la main et prendre à droite"
+                   },
+                   {
+                      "@name": "routeId",
+                      "@type": "int",
+                      "@value": "7"
+                   }
+                ],
+                "point": []
+             },
+             {
+                "@id": "34",
+                "@x": "672",
+                "@y": "2656",
+                "properties": [
+                   {
+                      "@name": "e1",
+                      "@value": ""
+                   },
+                   {
+                      "@name": "e2",
+                      "@value": ""
+                   },
+                   {
+                      "@name": "nth_segment",
+                      "@type": "int",
+                      "@value": "3"
+                   },
+                   {
+                      "@name": "question",
+                      "@value": "Que faire ?"
+                   },
+                   {
+                      "@name": "r1",
+                      "@value": "Se fier au GPS"
+                   },
+                   {
+                      "@name": "r2",
+                      "@value": "Reprendre la main et tourner à gauche"
+                   },
+                   {
+                      "@name": "routeId",
+                      "@type": "int",
+                      "@value": "7"
+                   }
+                ],
+                "point": []
+             },
+             {
+                "@id": "35",
+                "@x": "3360",
+                "@y": "2400",
+                "properties": [
+                   {
+                      "@name": "e1",
+                      "@value": ""
+                   },
+                   {
+                      "@name": "e2",
+                      "@value": ""
+                   },
+                   {
+                      "@name": "nth_segment",
+                      "@type": "int",
+                      "@value": "3"
+                   },
+                   {
+                      "@name": "question",
+                      "@value": "Que faire ?"
+                   },
+                   {
+                      "@name": "r1",
+                      "@value": "Se fier"
+                   },
+                   {
+                      "@name": "r2",
+                      "@value": "Prendre à gauche"
+                   },
+                   {
+                      "@name": "routeId",
+                      "@type": "int",
+                      "@value": "24"
                    }
                 ],
                 "point": []

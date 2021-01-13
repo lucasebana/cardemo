@@ -30,10 +30,10 @@ Scenario.prototype.load = async function () {
     window.scene = this.scene;
 
     this.scene.background = new THREE.Color(0xeeeeee);
-    //this.scene.fog = new THREE.Fog(0xeeeeee, 10, 90);
+    this.scene.fog = new THREE.Fog(0xeeeeee, 10, 400);
     
-
-    this.grid = new THREE.GridHelper(200, 40, 0x000000, 0x000000);
+    this.gridSize = 600;
+    this.grid = new THREE.GridHelper(this.gridSize, this.gridSize/5, 0x000000, 0x000000);
     this.grid.material.opacity = 0.1;
     this.grid.material.depthWrite = false;
     this.grid.material.transparent = true;

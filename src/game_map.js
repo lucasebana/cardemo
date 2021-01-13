@@ -87,6 +87,7 @@ GameMap.prototype.init = async function () {
 GameMap.prototype.makeRoutes = function () {
   this.routeData = this.mapdata.objectgroup.find((el)=>{return el["@name"]=="routes"});
   this.exitsData = this.mapdata.objectgroup.find((el)=>{return el["@name"]=="exits"});
+  this.questionsData = this.mapdata.objectgroup.find((el)=>{return el["@name"]=="questions"});
   var dotMaterial = new THREE.PointsMaterial({
     size: 7,
     sizeAttenuation: false,
@@ -150,6 +151,7 @@ GameMap.prototype.makeRoutes = function () {
     R.route_id =  id;
     this.routesMap[id] = R;
     this.routes.push(R);
+
   }
 
 
@@ -158,6 +160,16 @@ GameMap.prototype.makeRoutes = function () {
     let from = parseFloat(object[i].properties.find((el)=>{return el["@name"]=="from"})['@value'])
     let to = parseFloat(object[i].properties.find((el)=>{return el["@name"]=="to"})['@value'])
     this.routesMap[from].addExit(this.routesMap[to]);
+  }
+
+
+  for(let i = 0; i < this.questionsData.object.length;i++){
+    let object = this.questionsData.object[i];
+    let question = object.properties.find((el)=>{return el["@name"]=="question"});
+    if(question != undefined){
+      question = question["@value"];
+    }
+    console.log(this.questionsData.object[i].properties)
   }
 
 }
