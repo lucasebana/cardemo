@@ -5,6 +5,7 @@ import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoade
 import { DRACOLoader } from '../node_modules/three/examples/jsm/loaders/DRACOLoader.js';
 import { RoomEnvironment } from '../node_modules/three/examples/jsm/environments/RoomEnvironment.js';
 import CameraControls from '../node_modules/camera-controls/dist/camera-controls.module.js';
+import * as MW from '../node_modules/meshwalk/dist/meshwalk.module.js';
 
 import { Car } from './car.js'
 import { Traffic_Light } from './traffic_lights.js';
@@ -50,6 +51,15 @@ Scenario.prototype.load = async function () {
     /*this.cameraControls.setTarget(0, 0, 0);*/
     this.cameraControls.dolly(-80, false);
     this.cameraControls.clock = new THREE.Clock();
+
+    
+    this.bb = new THREE.Box3(
+		new THREE.Vector3( -5.0, 0, -5.0 ),
+		new THREE.Vector3( 5.0, 0, 5.0 )
+    );
+    this.cameraControls.setBoundary( this.bb );
+    this.cameraControls.boundaryEnclosesCamera = true;
+    this.cameraControls.boundaryFriction = 4;
 
     window.controls = this.controls;
 
@@ -358,6 +368,28 @@ Scenario.prototype.render = function (time) {
             document.body.insertBefore(div, container);
             */
         }
+        /*const DEG90 = Math.PI * 0.5;
+        this.cameraControls.rotateTo( 0, DEG90, true );
+        new TWEEN.Tween( this.grid.position ).to( { x: 0, y: 0, z:  0.5 }, 800 ).start();
+        new TWEEN.Tween( this.grid.rotation ).to( { x: - DEG90, y: 0, z: 0 }, 800 ).start();
+        this.cameraControls.fitToBox( this.car, true, { paddingLeft: 0, paddingRight: 0, paddingBottom: 1, paddingTop: 2 } )
+        */
+
+        //this.cameraControls.fitToBox(this.car.carModel,true,);
+        let x = this.carGroup.position.x;
+        let y = this.carGroup.position.y;
+        let z = this.carGroup.position.z;
+        
+        this.cameraControls.setTarget(x,y,z);
+        //this.bb.position.copy(this.carGroup.position);
+
+        
+        this.bb.min = new THREE.Vector3( -15.0 + x, 1, -15.0 +z );
+        this.bb.max = new THREE.Vector3( 15.0 +x, 15, 15.0 +z);
+
+        this.cameraControls.setBoundary(this.bb);
+        
+
         if (this.scene.getObjectByName("carGroup") != undefined) {
             this.car.context.bind(this.car)(time);
         }

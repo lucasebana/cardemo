@@ -1,4 +1,5 @@
 import * as THREE from '../node_modules/three/build/three.module.js';
+import { GameEvent } from './game_event.js';
 
 import { Route } from './route.js';
 
@@ -166,9 +167,24 @@ GameMap.prototype.makeRoutes = function () {
   for(let i = 0; i < this.questionsData.object.length;i++){
     let object = this.questionsData.object[i];
     let question = object.properties.find((el)=>{return el["@name"]=="question"});
+    let nth_segment = object.properties.find((el)=>{return el["@name"]=="nth_segment"});
+    let r1 = object.properties.find((el)=>{return el["@name"]=="r1"});
+    let r2 = object.properties.find((el)=>{return el["@name"]=="r2"});
+    let routeId = object.properties.find((el)=>{return el["@name"]=="routeId"});
     if(question != undefined){
       question = question["@value"];
     }
+    nth_segment = parseInt(nth_segment["@value"]);
+    r1 = (r1["@value"]);
+    r2 = (r2["@value"]);
+    routeId = parseInt(routeId["@value"]);
+
+
+
+    let choix = [r1,r2]
+    let callback = new GameEvent(question,choix,[-1,0],3,true);
+    this.routesMap[routeId].addCallback(nth_segment,callback);
+
     console.log(this.questionsData.object[i].properties)
   }
 

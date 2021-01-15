@@ -9,7 +9,7 @@ export class Car {
     wheels = [];
 
 
-    constructor(routes, nth_route = 0, nth_segment = 9/*, exits_list = [1]*/) {
+    constructor(routes, nth_route = 0, nth_segment = 7/*, exits_list = [1]*/) {
 
 
         this.routes = routes;
@@ -27,7 +27,7 @@ export class Car {
         this.stopCar = false;
 
         this.lastTime = -1; 
-        this.speed = 4;// unité/s
+        this.speed = 1;// unité/s
         this.slowmo_factor = 1;
 
         this.bodyMaterial = new THREE.MeshPhysicalMaterial({
