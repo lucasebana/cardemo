@@ -149,7 +149,7 @@ GameMap.prototype.makeRoutes = function () {
     }
 
     let id = object["@id"];
-    R.route_id =  id;
+    R.route_id =  parseInt(id);
     this.routesMap[id] = R;
     this.routes.push(R);
 
@@ -170,6 +170,12 @@ GameMap.prototype.makeRoutes = function () {
     let nth_segment = object.properties.find((el)=>{return el["@name"]=="nth_segment"});
     let r1 = object.properties.find((el)=>{return el["@name"]=="r1"});
     let r2 = object.properties.find((el)=>{return el["@name"]=="r2"});
+    //let r3 = object.properties.find((el)=>{return el["@name"]=="r2"});
+
+    let e1 = object.properties.find((el)=>{return el["@name"]=="e1"});
+    let e2 = object.properties.find((el)=>{return el["@name"]=="e2"});
+
+
     let routeId = object.properties.find((el)=>{return el["@name"]=="routeId"});
     if(question != undefined){
       question = question["@value"];
@@ -177,12 +183,16 @@ GameMap.prototype.makeRoutes = function () {
     nth_segment = parseInt(nth_segment["@value"]);
     r1 = (r1["@value"]);
     r2 = (r2["@value"]);
+
+
+    e1 = (e1["@value"]);
+    e2 = (e2["@value"]);
     routeId = parseInt(routeId["@value"]);
 
 
 
     let choix = [r1,r2]
-    let callback = new GameEvent(question,choix,[-1,0],3,true);
+    let callback = new GameEvent(question,choix,[-1,0],10,true);
     this.routesMap[routeId].addCallback(nth_segment,callback);
 
     console.log(this.questionsData.object[i].properties)

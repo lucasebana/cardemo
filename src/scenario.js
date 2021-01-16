@@ -5,7 +5,7 @@ import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoade
 import { DRACOLoader } from '../node_modules/three/examples/jsm/loaders/DRACOLoader.js';
 import { RoomEnvironment } from '../node_modules/three/examples/jsm/environments/RoomEnvironment.js';
 import CameraControls from '../node_modules/camera-controls/dist/camera-controls.module.js';
-import * as MW from '../node_modules/meshwalk/dist/meshwalk.module.js';
+//import * as MW from '../node_modules/meshwalk/dist/meshwalk.module.js';
 
 import { Car } from './car.js'
 import { Traffic_Light } from './traffic_lights.js';
@@ -14,6 +14,8 @@ import { Route } from './route.js';
 import { GameMap } from './game_map.js';
 import { GameEvent } from './game_event.js';
 
+
+//MW.install( THREE );
 
 export class Scenario{
     constructor(demo){
@@ -49,7 +51,9 @@ Scenario.prototype.load = async function () {
 
     this.cameraControls = new CameraControls(this.camera, demo.container);
     /*this.cameraControls.setTarget(0, 0, 0);*/
+    this.cameraControls.setTarget(0,0,-1);
     this.cameraControls.dolly(-80, false);
+    this.cameraControls.dampingFactor=1;
     this.cameraControls.clock = new THREE.Clock();
 
     
@@ -57,9 +61,8 @@ Scenario.prototype.load = async function () {
 		new THREE.Vector3( -5.0, 0, -5.0 ),
 		new THREE.Vector3( 5.0, 0, 5.0 )
     );
-    this.cameraControls.setBoundary( this.bb );
-    this.cameraControls.boundaryEnclosesCamera = true;
-    this.cameraControls.boundaryFriction = 4;
+    //this.cameraControls.setBoundary( this.bb );
+    //this.cameraControls.boundaryEnclosesCamera = true;
 
     window.controls = this.controls;
 
@@ -74,7 +77,8 @@ Scenario.prototype.load = async function () {
         height: 0.25,
         ///*background: new THREE.Color( 0.5, 0.5, 0.7 ),
         fov: 70,
-        eye: [-0.047728848457335965, 0.7979747391771525, -1.2309553518891336],
+        eye: [-0.157728848457335965, 0.9979747391771525, -1.2309553518891336],
+        //eye: [-0.047728848457335965, 0.7979747391771525, -1.2309553518891336],
         wheelEye: [-0.347728848457336, 0.7979747391771524, -0.9309553518891335],
         up: [0, 1, 0],
         updateCamera: function (camera, scene) {
@@ -380,15 +384,32 @@ Scenario.prototype.render = function (time) {
         let y = this.carGroup.position.y;
         let z = this.carGroup.position.z;
         
-        this.cameraControls.setTarget(x,y,z);
+        if(this.car.moved == true){
+            this.cameraControls.setTarget(x,y-0.02,z);
+            this.car.moved = false;
+        }
         //this.bb.position.copy(this.carGroup.position);
 
-        
+        /*
         this.bb.min = new THREE.Vector3( -15.0 + x, 1, -15.0 +z );
         this.bb.max = new THREE.Vector3( 15.0 +x, 15, 15.0 +z);
 
         this.cameraControls.setBoundary(this.bb);
         
+        */
+           let dp = this.carGroup.position;
+           this.cameraControls.moveTo(dp.x,dp.y,dp.z);
+            let dist = this.camera.position.distanceTo(this.carGroup.position);
+            if( dist > 25 ){
+                if(dist < 5){}
+                else{
+                this.cameraControls.dolly(dist-26);
+                }
+            }
+            if(dist> 35){
+            }
+           
+       
 
         if (this.scene.getObjectByName("carGroup") != undefined) {
             this.car.context.bind(this.car)(time);

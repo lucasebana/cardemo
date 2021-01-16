@@ -9,7 +9,7 @@ export class Car {
     wheels = [];
 
 
-    constructor(routes, nth_route = 0, nth_segment = 7/*, exits_list = [1]*/) {
+    constructor(routes, nth_route = 0, nth_segment = 0/*, exits_list = [1]*/) {
 
 
         this.routes = routes;
@@ -27,7 +27,7 @@ export class Car {
         this.stopCar = false;
 
         this.lastTime = -1; 
-        this.speed = 1;// unité/s
+        this.speed = 12;// unité/s
         this.slowmo_factor = 1;
 
         this.bodyMaterial = new THREE.MeshPhysicalMaterial({
@@ -118,10 +118,29 @@ Car.prototype.loadModel = async function (loader) {
 Car.prototype.context = function (time) {
     if(this.lastTime === -1){
         var deltaTime = 1/60;
+        this.deltaTimeCount = 0;
+        this.deltaTimeAvg = 1/60;
+        this.deltaTimeN = 0;
     }
     else{
         var deltaTime =-time - this.lastTime;
     }
+
+
+    if(this.deltaTimeN<60*1000){
+    this.deltaTimeN++;
+    this.deltaTimeCount+=deltaTime;
+    }
+    else{
+        this.deltaTimeAvg = this.deltaTimeCount / this.deltaTimeN;
+        this.deltaTimeN = 0;
+        this.deltaTimeCount = 0;
+    }
+
+
+    //// Update car position
+
+
     const up = new THREE.Vector3(0, 0, -1);
     const axis = new THREE.Vector3();
 
@@ -129,9 +148,12 @@ Car.prototype.context = function (time) {
     let segment = route.path.curves[this.nth_segment];
     let exitPoints = route.exitPoints;
 
-    const newPosition = route.path.curves[this.nth_segment].getPoint(this.fraction);
+    
+    this.newPosition = route.path.curves[this.nth_segment].getPoint(this.fraction);
     const tangent = route.path.curves[this.nth_segment].getTangent(this.fraction);
-    this.carModel.parent.position.copy(newPosition);
+    
+
+    this.carModel.parent.position.copy(this.newPosition);
 
     axis.crossVectors(up, tangent).normalize();
     
@@ -183,17 +205,22 @@ Car.prototype.context = function (time) {
 
     
     if(!this.stopCar){
-        this.fraction += deltaTime * this.speed * this.slowmo_factor / (segment.getLength()) ;
+        //console.log(deltaTime * this.speed * this.slowmo_factor / (segment.getLength()));
+        this.fraction += this.deltaTimeAvg * this.speed * this.slowmo_factor / (segment.getLength()) ;
+        this.moved = true;
     }
 
 
 
         if (this.fraction > 1) {
             this.fraction = 0;
-            let next_route = route.getNext(this.nth_segment);
+            let next = route.getNext(this.nth_segment);
+            let next_route = next[0];
+            let next_segment = next[1];
             if (next_route != null) {
                 if (next_route != -1) {
                     this.nth_route = this.routes.indexOf(next_route);
+                    this.nth_segment = next_segment;
                 } else {
                     this.nth_route = this.nth_route0;
                 }

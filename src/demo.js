@@ -16,8 +16,13 @@ CameraControls.install( { THREE: THREE } );
 let debug = false;
 
 let clearScreen = () => {
-    document.querySelector(".home_container").remove()
-    document.querySelector(".home_filter").remove()
+    document.querySelector(".home_container").classList.add("fadeout2");
+    document.querySelector(".home_filter").classList.add("fadeout2");
+
+    setTimeout(()=>{
+        document.querySelector(".home_container").remove();
+        document.querySelector(".home_filter").remove();
+    },200);
 }
 if (debug) {
     clearScreen();

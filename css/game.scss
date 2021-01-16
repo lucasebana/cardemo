@@ -41,14 +41,19 @@ html,body{
     width:100%;
     /*background-color:rgba(1,1,1,0.5607);*/
     /*background-color:rgba(1,1,1,0.66);*/
-    background-color:rgba(238,238,238,1);
+    background-color:rgba(238,238,238,0.1);
     z-index:1;
     }
+
 .home_container{
     position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
+    top:0;
+    left:0;
+    height:100%;
+    background-color:rgba(196,196,196,0.33);
+    
+    backdrop-filter: blur(15px);
+    width:calc(min(31%));
     z-index:2;
     display:flex;
     flex-direction:column;
@@ -56,7 +61,7 @@ html,body{
     .home_logo{
         @extend .noselect;
         display:block;
-        margin:auto;
+        margin:30% auto;
         height:50px;
         text-align:center;
         /*color:rgb(39, 39, 39);*/
@@ -64,22 +69,55 @@ html,body{
         font-size:2rem;
         font-family: 'Frank Ruhl Libre', serif;
         font-weight:900;
-        margin-bottom:10px;
-        text-shadow:1px 2px 2px white;
+        float:right;
+        width:100%;
+    }
+
+    .home_demo{
+        color:black;
+        font-size:1.3rem;
+        font-family: 'Frank Ruhl Libre', serif;
+        font-weight:400;
+        float:left;
+        text-align: left;
+        padding-left:90px;
+    }
+    .home_title{
+        color:black;
+        font-size:3.4rem;
+        font-family: 'Frank Ruhl Libre', serif;
+        font-weight:500;
+        width:100%;
+        text-align:left;
+        float:left;
+        padding-left:90px;
+        white-space: nowrap;
+    }
+
+    .home_btn_container{
+        margin:40% auto;
+        display:flex;
+        flex-direction: column;
     }
 
     .home_button{
         background-color:white;
         font-size:1.3rem;
-        padding:8px 10px;
-        border-radius:7px;
+        padding:7px 16px;
+        border-radius:30px;
         text-decoration:none;
         color: black;
         font-family: 'Oxygen', sans-serif;
         box-shadow:rgba(0,0,0,0.04) 0 2px 3px;
         transition:.3s opacity ease-in-out;
-        margin:
-        5px auto;
+        margin: 5px auto;
+        min-width:160px;
+        text-align:center;
+        transition:opacity 0.2s;
+    }
+
+    .home_button:hover{
+        opacity:0.9;
     }
 
     .disabled_button{
@@ -149,20 +187,26 @@ html,body{
     position:absolute;
     left:50%;
     top:90%;
+    display:flex;
+
     transform:translate(-50%,-50%);
     font-size:1.4rem;
     font-family: 'Oxygen', sans-serif;
     /*animation: fadein .6s;*/
     transform-origin:top left;
+    align-items: center;
+    
 }
 
 #answers_container a.answerA{
+    margin:5px;
     display:inline-block;
     background-color:rgba(255, 255, 255, 0.8);
     text-decoration: none;
     margin:10px;
     border-radius:10px;
     color:rgb(13, 14, 13);
+    white-space: nowrap;
     font-size:1.3rem;
     text-align:center;
     padding:10px 20px;
@@ -170,6 +214,7 @@ html,body{
     line-height:100%;
     cursor:pointer;
     box-shadow: 0 0 5px rgba(0,0,0,0.13);
+    
     
     
     animation:fadein_answer;
@@ -209,5 +254,18 @@ html,body{
     0% {opacity:1;
     }
     100% {opacity:0;}
+
+}
+
+.fadeout2{
+    animation:fadeout .2s;
+    animation-fill-mode: forwards;
+    pointer-events: none;
+}
+
+@keyframes fadeout2 {
+    0% {opacity:1;
+    }
+    100% {opacity:0;display:none;}
 
 }

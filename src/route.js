@@ -33,7 +33,7 @@ export class Route {
         this.path = makePath(this.controlPoints);
         this.count_exits = () => {
             this.exitPoints = [];
-            this.exitInfo = new Array();
+            this.exitInfo = new Map();
             
             
             this.exits.forEach((exit,i) => {
@@ -42,11 +42,26 @@ export class Route {
                 let nth_segment = 0;
                 let stop = false;
                 while (nth_segment < this.controlPoints.length && !stop) {
-                    if (this.controlPoints[nth_segment][this.controlPoints[nth_segment].length - 1]
-                        .equals(exit.controlPoints[0][0])) {
-                        this.exitInfo.push( {segment:nth_segment,route:exit});
+                    
+                    let nth_segment2 = 0;
+                    while (nth_segment2 < exit.controlPoints.length && !stop){
+                    let cp = this.controlPoints[nth_segment];
+                    let l = cp.length;
+                    
+                    if(this != exit){
+                    if (cp[l-1].equals(exit.controlPoints[nth_segment2][0])) {
+                        //this.exitInfo.push( {segment:nth_segment,route:exit});
+                        if(this.exitInfo.has(nth_segment)){
+                            this.exitInfo.get(nth_segment).push[exit,nth_segment2];
+                        }
+                        else{
+                            this.exitInfo.set(nth_segment,[[exit,nth_segment2]]);
+                        }
                         stop = true;
                     }
+                }
+                    nth_segment2++;
+                }
                     nth_segment++;
                     
                 }
@@ -129,14 +144,23 @@ Route.prototype.getLine = function (material) {
 }
 
 Route.prototype.getNext = function (nth_segment) {
+
     let exit = this.defaultExits[nth_segment];
-        if(exit == -1){
-            return null;
+    if(this.exitInfo.size > 0){
+        if(exit == -1 && nth_segment != this.controlPoints.length-1){
+            return [null,null];
         }
-    if(this.exitInfo.length > 0){
-            return this.exitInfo[exit].route;
+        if(this.exitInfo.has(nth_segment)){
+            if(exit == -1){
+                return this.exitInfo.get(nth_segment)[exit+1];
+            }
+            return this.exitInfo.get(nth_segment)[exit];
+        }
     }
-    return -1;
+    
+    
+
+    return [-1,-1];
 }
 
 Route.prototype.addCallback = function(i,callback){
