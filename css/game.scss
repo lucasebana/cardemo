@@ -41,10 +41,13 @@ html,body{
     width:100%;
     /*background-color:rgba(1,1,1,0.5607);*/
     /*background-color:rgba(1,1,1,0.66);*/
-    background-color:rgba(238,238,238,0.1);
-    z-index:1;
     }
 
+@-moz-document url-prefix() {
+    .home_container{
+        background-color:rgba(196,196,196,0.5) !important;
+    }
+}
 .home_container{
     position:absolute;
     top:0;
@@ -52,7 +55,8 @@ html,body{
     height:100%;
     background-color:rgba(196,196,196,0.33);
     
-    backdrop-filter: blur(15px);
+    
+    
     width:calc(min(31%));
     z-index:2;
     display:flex;

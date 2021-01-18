@@ -214,7 +214,7 @@
                   },
                   {
                      "@name": "e2",
-                     "@value": "turn 16"
+                     "@value": ""
                   },
                   {
                      "@name": "nth_segment",
@@ -252,7 +252,7 @@
                   },
                   {
                      "@name": "e2",
-                     "@value": "stop"
+                     "@value": "*stopTrafficLights"
                   },
                   {
                      "@name": "nth_segment",
@@ -293,6 +293,10 @@
                      "@value": ""
                   },
                   {
+                     "@name": "e3",
+                     "@value": ""
+                  },
+                  {
                      "@name": "nth_segment",
                      "@type": "int",
                      "@value": "6"
@@ -328,7 +332,7 @@
                "properties": [
                   {
                      "@name": "e1",
-                     "@value": ""
+                     "@value": "0"
                   },
                   {
                      "@name": "e2",

@@ -145,7 +145,8 @@ GameMap.prototype.makeRoutes = function () {
     }
     let R = new Route(L);
     if(object.polygon != undefined){
-      R.addExit(R);
+      //R.addExit(R);
+      R.loopBack();
     }
 
     let id = object["@id"];
@@ -163,6 +164,10 @@ GameMap.prototype.makeRoutes = function () {
     this.routesMap[from].addExit(this.routesMap[to]);
   }
 
+  var checkUndefined = function(arg){
+    if(arg){return true;}else{return false;}
+  };
+
 
   for(let i = 0; i < this.questionsData.object.length;i++){
     let object = this.questionsData.object[i];
@@ -170,10 +175,12 @@ GameMap.prototype.makeRoutes = function () {
     let nth_segment = object.properties.find((el)=>{return el["@name"]=="nth_segment"});
     let r1 = object.properties.find((el)=>{return el["@name"]=="r1"});
     let r2 = object.properties.find((el)=>{return el["@name"]=="r2"});
+    let r3 = object.properties.find((el)=>{return el["@name"]=="r3"});
     //let r3 = object.properties.find((el)=>{return el["@name"]=="r2"});
 
     let e1 = object.properties.find((el)=>{return el["@name"]=="e1"});
     let e2 = object.properties.find((el)=>{return el["@name"]=="e2"});
+    let e3 = object.properties.find((el)=>{return el["@name"]=="e3"});
 
 
     let routeId = object.properties.find((el)=>{return el["@name"]=="routeId"});
@@ -181,18 +188,61 @@ GameMap.prototype.makeRoutes = function () {
       question = question["@value"];
     }
     nth_segment = parseInt(nth_segment["@value"]);
-    r1 = (r1["@value"]);
-    r2 = (r2["@value"]);
+    let nquestions = 0;
+    
+    var rep = []
+    var quest = []
+    if(checkUndefined(e1)){
+      r1 = (r1["@value"]);e1 = (e1["@value"]);rep.push(e1);quest.push(r1);
+      if(checkUndefined(e2)){
+        r2 = (r2["@value"]);e2 = (e2["@value"]); rep.push(e2);quest.push(r2);
+        if(checkUndefined(e3)){ r3 = (r3["@value"]);e3 = (e3["@value"]);rep.push(e3);quest.push(r3); }
+      }
+    }
 
+    
+    
 
-    e1 = (e1["@value"]);
-    e2 = (e2["@value"]);
     routeId = parseInt(routeId["@value"]);
 
+    var events = [];
+    var choices = [];
+    /*
+    if(rep.every((i)=>{return !isNan(i)})){
+      for(let i = 0; i< nquestions;i++){
+        events.push(rep[i]);
+      }
+    }
+    else if(rep.every((i)=>i == "")){
+      console.log(rep.length);
+      for(let i = 0; i< nquestions;i++){
+        events.push(i-1);//changements de routes par defaut dans l'ordre de definition dans le json...
+      }
+    }
+    else if(rep.every((i)=>{i[0] == "*"})){
+      console.log("evenement special");
+    }
+    */
+
+    for(let i = 0; i < rep.length; i++){
+      
+      if(rep[i] == ""){//si vide
+        events.push(i-1);//changements de routes par defaut dans l'ordre de definition dans le json...
+      }
+      else if(!isNaN(rep[i])){//si c'est un nombre
+        events.push(parseInt(rep[i]));
+      }
+      else{
+        events.push(rep[i]);//event special... stop car ou evenement_n_i => appelle une fct, etc..
+      }
+      choices.push(quest[i]);
+    }
+    
 
 
-    let choix = [r1,r2]
-    let callback = new GameEvent(question,choix,[-1,0],10,true);
+
+    //let choix = [r1,r2]
+    let callback = new GameEvent(question,choices,events,10,true);
     this.routesMap[routeId].addCallback(nth_segment,callback);
 
     console.log(this.questionsData.object[i].properties)

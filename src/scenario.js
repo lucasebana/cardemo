@@ -386,6 +386,19 @@ Scenario.prototype.render = function (time) {
         
         if(this.car.moved == true){
             this.cameraControls.setTarget(x,y-0.02,z);
+
+            let dp = this.carGroup.position;
+           this.cameraControls.moveTo(dp.x,dp.y,dp.z);
+            let dist = this.camera.position.distanceTo(this.carGroup.position);
+            if( dist > 25 ){
+                if(dist < 5){}
+                else{
+                this.cameraControls.dolly(dist-26);
+                }
+            }
+            if(dist> 35){
+            }
+            
             this.car.moved = false;
         }
         //this.bb.position.copy(this.carGroup.position);
@@ -397,17 +410,7 @@ Scenario.prototype.render = function (time) {
         this.cameraControls.setBoundary(this.bb);
         
         */
-           let dp = this.carGroup.position;
-           this.cameraControls.moveTo(dp.x,dp.y,dp.z);
-            let dist = this.camera.position.distanceTo(this.carGroup.position);
-            if( dist > 25 ){
-                if(dist < 5){}
-                else{
-                this.cameraControls.dolly(dist-26);
-                }
-            }
-            if(dist> 35){
-            }
+           
            
        
 

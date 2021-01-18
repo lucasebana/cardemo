@@ -27,7 +27,7 @@ export class Car {
         this.stopCar = false;
 
         this.lastTime = -1; 
-        this.speed = 12;// unité/s
+        this.speed = 8;// unité/s
         this.slowmo_factor = 1;
 
         this.bodyMaterial = new THREE.MeshPhysicalMaterial({
@@ -142,7 +142,7 @@ Car.prototype.context = function (time) {
 
 
     const up = new THREE.Vector3(0, 0, -1);
-    const axis = new THREE.Vector3();
+    var axis = new THREE.Vector3();
 
     let route = this.routes[this.nth_route];
     let segment = route.path.curves[this.nth_segment];
@@ -156,6 +156,9 @@ Car.prototype.context = function (time) {
     this.carModel.parent.position.copy(this.newPosition);
 
     axis.crossVectors(up, tangent).normalize();
+    if(axis.equals(new THREE.Vector3(0,0,0))){
+        axis = new THREE.Vector3(0,1,0);
+    }
     
     //wheels rotation
     const radians = Math.acos(up.dot(tangent));
@@ -281,7 +284,13 @@ Car.prototype.switchRoute = function(i,game_event,questionDiv,answersDiv){
 
 
     let r = game_event.route;
-    r.defaultExits[game_event.segment] = game_event.exits[i];
+    let exit = game_event.exits[i];
+    if(isNaN(exit)){
+        this.specialEvent(exit);
+    }
+    else{
+            r.defaultExits[game_event.segment] = exit;
+    }
 
     questionDiv.classList.add("fadeout");
     answersDiv.classList.add("fadeout");
@@ -290,9 +299,15 @@ Car.prototype.switchRoute = function(i,game_event,questionDiv,answersDiv){
         questionDiv.style.display="none";
         answersDiv.style.display="none";
     },1000)
-
-    
-
-
 }
+}
+
+Car.prototype.specialEvent = function(event){
+    switch(event){
+        case "*stopTrafficLights":
+            alert("stop bg");
+        
+        default:
+            console.log("evenement inconnu");
+    }
 }

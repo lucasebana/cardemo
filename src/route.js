@@ -34,7 +34,7 @@ export class Route {
         this.count_exits = () => {
             this.exitPoints = [];
             this.exitInfo = new Map();
-            
+            if(this.loopback) this.loopBack();
             
             this.exits.forEach((exit,i) => {
                 this.exitPoints.push(exit.controlPoints[0][0]);
@@ -158,8 +158,6 @@ Route.prototype.getNext = function (nth_segment) {
         }
     }
     
-    
-
     return [-1,-1];
 }
 
@@ -173,3 +171,13 @@ Route.prototype.getNext = function(n){
     return this.exits[n];
 }
 */
+Route.prototype.loopBack = function(){
+    this.loopback = true;
+    let L = this.controlPoints.length;
+    if(this.exitInfo.has(L-1)){
+        this.exitInfo.get(L-1).push[this,0];
+    }
+    else{
+        this.exitInfo.set(L-1,[[this,0]]);
+    }
+}
