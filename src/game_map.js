@@ -21,6 +21,7 @@ GameMap.prototype.init = async function () {
   this.gridSize = 5;
   this.data = JSON.parse("[" + this.mapdata.layer[0].data["#text"] + "]");
   this.extras = JSON.parse("[" + this.mapdata.layer[1].data["#text"] + "]");
+  this.sidewalk = JSON.parse("[" + this.mapdata.layer[2].data["#text"] + "]");
   this.height = parseFloat(this.mapdata["@height"])
   this.width = parseFloat(this.mapdata["@width"])
   this.map = []
@@ -45,17 +46,31 @@ GameMap.prototype.init = async function () {
   this.squareShape.lineTo(0, 0);
 
   this.geometry = new THREE.ShapeGeometry(this.squareShape, 20);
-  this.material = new THREE.MeshBasicMaterial({
-    color: 0x00ff00
-  });
-  this.mapGroup = new THREE.Group();
-
+  this.squareshape = new THREE.Shape();
+  this.squareshape.moveTo(0,0)
+  this.squareshape.lineTo(1*this.gridSize,0*this.gridSize)
+  this.squareshape.lineTo(1*this.gridSize,1*this.gridSize)
+  this.squareshape.lineTo(0*this.gridSize,1*this.gridSize)
+  this.squareshape.lineTo(0*this.gridSize,0*this.gridSize)
 
   const extrudeSettings = {
     steps: 10,
-    depth: 0.1,
+    depth: 0.3,
     bevelEnabled: false
   };
+  this.geometry2 = new THREE.ExtrudeGeometry( this.squareshape ,extrudeSettings);
+
+  this.road_material = new THREE.MeshBasicMaterial({
+    color: 0x41413F
+  });
+  this.sideroad_material = new THREE.MeshPhongMaterial({
+    color: 0x63635B,
+    shininess:0.1
+    });
+  this.mapGroup = new THREE.Group();
+
+
+  
 
   for (let y = 0; y < this.height; y++) {
     for (let x = 0; x < this.width; x++) {
@@ -63,12 +78,23 @@ GameMap.prototype.init = async function () {
       //if(this.map[y][x] == 1){
       if (this.data[y * this.width + x] == 1) {
 
-        let squareMesh = new THREE.Mesh(this.geometry, this.material);
+        let squareMesh = new THREE.Mesh(this.geometry, this.road_material);
 
+        //let squareMesh = new THREE.ExtrudeGeometry( this.squareshape ,extrudeSettings);
+        squareMesh.position.set(-(x * g - (this.offsetX - 1) * g), y * g - (this.offsetY + 1) * g, 0);
+        this.mapGroup.add(squareMesh);
+      }
+
+      if (this.sidewalk[y * this.width + x] == 2) {
+
+        //let squareMesh = new THREE.Mesh(this.geometry, this.sideroad_material);
+
+        let squareMesh = new THREE.Mesh( this.geometry2, this.sideroad_material ) ;
         //let squareMesh = new THREE.ExtrudeGeometry( this.geometry ,extrudeSettings);
         squareMesh.position.set(-(x * g - (this.offsetX - 1) * g), y * g - (this.offsetY + 1) * g, 0);
         this.mapGroup.add(squareMesh);
       }
+
     }
   }
 

@@ -55,7 +55,7 @@ html,body{
     height:100%;
     background-color:rgba(196,196,196,0.33);
     
-    
+    backdrop-filter: blur(15px);
     
     width:calc(min(31%));
     z-index:2;

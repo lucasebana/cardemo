@@ -59,6 +59,8 @@ html, body {
   left: 0;
   height: 100%;
   background-color: rgba(196, 196, 196, 0.33);
+  -webkit-backdrop-filter: blur(15px);
+          backdrop-filter: blur(15px);
   width: calc(min(31%));
   z-index: 2;
   display: -webkit-box;

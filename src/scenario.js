@@ -5,6 +5,8 @@ import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoade
 import { DRACOLoader } from '../node_modules/three/examples/jsm/loaders/DRACOLoader.js';
 import { RoomEnvironment } from '../node_modules/three/examples/jsm/environments/RoomEnvironment.js';
 import CameraControls from '../node_modules/camera-controls/dist/camera-controls.module.js';
+import { Sky } from '../node_modules/three/examples/jsm/objects/Sky.js';
+
 //import * as MW from '../node_modules/meshwalk/dist/meshwalk.module.js';
 
 import { Car } from './car.js'
@@ -116,6 +118,32 @@ Scenario.prototype.load = async function () {
     this.scene.environment = pmremGenerator.fromScene(environment).texture;
 
 
+
+    this.sky = new Sky();
+    this.sky.scale.setScalar( 200000 );
+    this.scene.add( this.sky );
+    this.sun = new THREE.Vector3();
+    this.effectController = {
+        turbidity: 5.5,
+        rayleigh: 0,
+        //rayleigh:0.283,
+        //rayleigh:0.283,
+        mieCoefficient: 0.005,
+        mieDirectionalG: 0.7,
+        //inclination: 0.49, // elevation / inclination
+        inclination:0.2009,
+        azimuth: 0.3743, // Facing front,
+        exposure: demo.renderer.toneMappingExposure
+    };
+
+    this.uniforms = this.sky.material.uniforms;
+	const theta = Math.PI * ( this.effectController.inclination - 0.5 );
+    const phi = 2 * Math.PI * ( this.effectController.azimuth - 0.5 );
+
+    this.sun.x = Math.cos( phi );
+    this.sun.y = Math.sin( phi ) * Math.sin( theta );
+    this.sun.z = Math.sin( phi ) * Math.cos( theta );
+    this.uniforms[ "sunPosition" ].value.copy( this.sun );
     //*
     //const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
     //hemiLight.color.setHSL( 0.6, 1, 0.6 );
@@ -401,6 +429,14 @@ Scenario.prototype.render = function (time) {
             
             this.car.moved = false;
         }
+
+        if(this.camera.position.y < 0.4){
+            this.camera.position.y = 0.4;
+            this.cameraControls.setTarget(x,y-0.02,z);
+            let dp = this.carGroup.position;
+           this.cameraControls.moveTo(dp.x,dp.y,dp.z);
+        }
+
         //this.bb.position.copy(this.carGroup.position);
 
         /*
