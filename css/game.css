@@ -53,15 +53,29 @@ html, body {
   }
 }
 
-.home_container {
+.home_ui {
   position: absolute;
+  width: 100%;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 31% 69%;
+      grid-template-columns: 31% 69%;
   top: 0;
-  left: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+.home_container {
+  /*
+    position:absolute;
+    top:0;
+    left:0;
+    height:100%;
+    */
   height: 100%;
   background-color: rgba(196, 196, 196, 0.33);
   -webkit-backdrop-filter: blur(15px);
           backdrop-filter: blur(15px);
-  width: calc(min(31%));
   z-index: 2;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -109,7 +123,7 @@ html, body {
 }
 
 .home_container .home_btn_container {
-  margin: 40% auto;
+  margin: auto;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -136,6 +150,7 @@ html, body {
   text-align: center;
   -webkit-transition: opacity 0.2s;
   transition: opacity 0.2s;
+  pointer-events: all;
 }
 
 .home_container .home_button:hover {
@@ -146,6 +161,10 @@ html, body {
   color: #6b6b6b;
   opacity: 0.4;
   cursor: default;
+}
+
+.home_container .disabled_button:hover {
+  opacity: 0.4 !important;
 }
 
 #loading_bar {
@@ -353,4 +372,84 @@ html, body {
     opacity: 0;
     display: none;
   }
+}
+
+.home_tutorial_box {
+  height: 100%;
+  padding: 10%;
+  display: none;
+}
+
+.home_tutorial_box .tutbox {
+  height: 100%;
+  width: 100%;
+  -webkit-backdrop-filter: blur(15px);
+          backdrop-filter: blur(15px);
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 0px 7px 0px;
+          box-shadow: rgba(0, 0, 0, 0.1) 0 0px 7px 0px;
+  font-family: 'Oxygen', sans-serif;
+  padding: 10px;
+  font-size: 1.1rem;
+  text-align: justify;
+  display: -ms-grid;
+  display: grid;
+  pointer-events: all;
+  -ms-grid-rows: 90% 10%;
+      grid-template-rows: 90% 10%;
+}
+
+.home_tutorial_box .tutbox .home_tut_container {
+  display: none;
+}
+
+.home_tutorial_box .tutbox .home_tut_container span:first-child {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 1.3rem;
+  padding: 10px 0;
+  text-align: center;
+  width: 100%;
+}
+
+.home_tutorial_box .tutbox .home_tut_container .b {
+  font-weight: bold;
+}
+
+.home_tutorial_box .tutbox .home_tut_container p {
+  padding: 5px;
+}
+
+.home_tutorial_box .tutbox .home_tut_next {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.home_tutorial_box .tutbox .home_tut_next a {
+  background-color: #FFF;
+  border-radius: 20px;
+  line-height: 40px;
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
+  height: 40px;
+  padding: 0 25px;
+}
+
+.home_tutorial_box .tutbox .home_tut_next span {
+  -webkit-box-flex: 1;
+      -ms-flex: auto;
+          flex: auto;
+}
+
+.visible {
+  display: block !important;
+}
+
+.invisible {
+  display: none !important;
 }

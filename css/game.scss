@@ -48,16 +48,29 @@ html,body{
         background-color:rgba(196,196,196,0.5) !important;
     }
 }
+
+.home_ui{
+    position:absolute;
+    width:100%;
+    display:grid;
+    grid-template-columns: 31% 69%;
+    top:0;
+    height:100%;
+    pointer-events: none;
+
+}
 .home_container{
+    /*
     position:absolute;
     top:0;
     left:0;
+    height:100%;
+    */
     height:100%;
     background-color:rgba(196,196,196,0.33);
     
     backdrop-filter: blur(15px);
     
-    width:calc(min(31%));
     z-index:2;
     display:flex;
     flex-direction:column;
@@ -99,7 +112,7 @@ html,body{
     }
 
     .home_btn_container{
-        margin:40% auto;
+        margin: auto;
         display:flex;
         flex-direction: column;
     }
@@ -118,6 +131,7 @@ html,body{
         min-width:160px;
         text-align:center;
         transition:opacity 0.2s;
+        pointer-events: all;
     }
 
     .home_button:hover{
@@ -128,6 +142,9 @@ html,body{
         color:rgb(107, 107, 107);
         opacity:0.4;
         cursor: default;
+    }
+    .disabled_button:hover{
+        opacity:0.4 !important;
     }
 }
 #loading_bar{
@@ -241,6 +258,8 @@ html,body{
     transform:scale(1.2);
     
 }
+
+
 @keyframes fadein_answer {
     0% {opacity:0;
     }
@@ -272,4 +291,74 @@ html,body{
     }
     100% {opacity:0;display:none;}
 
+}
+
+
+.home_tutorial_box{
+    height:100%;
+    padding:10%;
+    display:none;
+    .tutbox{
+        height:100%;
+        width:100%;
+        backdrop-filter: blur(15px);
+        background-color:rgba(255,255,255,0.7);
+        border-radius:20px;
+        box-shadow:rgba(0,0,0,0.1) 0 0px 7px 0px;
+        font-family: 'Oxygen', sans-serif;
+        padding:10px;
+        font-size:1.1rem;
+        text-align:justify;
+        display:grid;
+        pointer-events:all;
+        grid-template-rows: 90% 10%;
+        
+        .home_tut_container{
+            display:none;
+            span:first-child{
+                display:inline-block;
+                font-weight:bold;
+                font-size:1.3rem;
+                padding: 10px 0;
+                text-align:center;
+                width:100%;
+            }
+            .b{
+                font-weight:bold;
+            }
+            p{
+                padding:5px;
+            }
+        }
+        .home_tut_next{
+            display:flex;
+            a{
+                background-color:#FFF;
+                border-radius:20px;
+                line-height:40px;
+                text-decoration: none;
+                color:#000;
+                font-weight:bold;
+                display:inline-block;
+                text-align:center;
+                height:40px;
+                padding:0 25px;
+            }
+            span{
+                flex:auto;
+            }
+        }
+        
+
+    }
+
+}
+
+
+.visible{
+    display: block !important;
+}
+
+.invisible{
+    display:none !important;
 }

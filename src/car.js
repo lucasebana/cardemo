@@ -107,12 +107,15 @@ Car.prototype.loadModel = async function (loader) {
             );
 
             mesh.rotation.x = -Math.PI / 2;
+            
+            
             mesh.renderOrder = 2;
             carModel.add(mesh);
 
             resolve(carModel);
         });
     });
+
 }
 
 Car.prototype.context = function (time) {

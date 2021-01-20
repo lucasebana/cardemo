@@ -38,7 +38,7 @@ Scenario.prototype.load = async function () {
     this.scene.fog = new THREE.Fog(0xeeeeee, 10, 400);
     
     this.gridSize = 600;
-    this.grid = new THREE.GridHelper(this.gridSize, this.gridSize/5, 0x000000, 0x000000);
+    this.grid = new THREE.GridHelper(this.gridSize, this.gridSize/4, 0x000000, 0x000000);
     this.grid.material.opacity = 0.1;
     this.grid.material.depthWrite = false;
     this.grid.material.transparent = true;
@@ -48,15 +48,21 @@ Scenario.prototype.load = async function () {
 
     //Main camera and camera controls
     this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 600);
-    this.camera.position.set(-11, 7, -7);
+    
 
 
     this.cameraControls = new CameraControls(this.camera, demo.container);
+    this.cameraControls.moveTo(-2.495755842728247, 2.700472170003647, -11.591061791313235,true);
+    
     /*this.cameraControls.setTarget(0, 0, 0);*/
-    this.cameraControls.setTarget(0,0,-1);
-    this.cameraControls.dolly(-80, false);
-    this.cameraControls.dampingFactor=1;
+    
     this.cameraControls.clock = new THREE.Clock();
+    //this.cameraControls.setTarget(2.5,0,-4.5);
+    //this.cameraControls.dolly(-5, false);
+    //this.cameraControls.truck(1,0);
+
+    this.cameraControls.rotateTo( 0, Math.PI * 0.25, true );
+    this.cameraControls.dampingFactor=1;
 
     
     this.bb = new THREE.Box3(
@@ -98,8 +104,8 @@ Scenario.prototype.load = async function () {
         const camera = new THREE.PerspectiveCamera(view.fov, window.innerWidth / window.innerHeight, 1, 10000);
         camera.position.fromArray(view.eye);
         camera.up.fromArray(view.up);
-        camera.far = 10000
-        camera.near = 0.1
+        camera.far = 100
+        camera.near = 0.2
         camera.filmGauge = 35
         camera.filmOffset = 0
         view.camera = camera;
@@ -125,7 +131,7 @@ Scenario.prototype.load = async function () {
     this.sun = new THREE.Vector3();
     this.effectController = {
         turbidity: 5.5,
-        rayleigh: 0,
+        rayleigh: .5,
         //rayleigh:0.283,
         //rayleigh:0.283,
         mieCoefficient: 0.005,
@@ -329,6 +335,8 @@ Scenario.prototype.load = async function () {
 
 
     this.car = new Car(this.routes);
+    
+
 
     //
     window.r = demo.scenario1.car.routes;
@@ -352,15 +360,26 @@ Scenario.prototype.load = async function () {
     this.carGroup.add(carModel)
 
     this.carGroup.add(this.extra_views[0].camera);
+    this.car.carModel.position.set(0, 0, -1.15551);
+    let newPosition = this.routes[0].path.curves[0].getPoint(0);
+    this.carGroup.position.copy(newPosition);
 
 
-    this.car.carModel.position.set(0, 0, -1.15551)
-    this.scene.add(this.carGroup)
+    this.scene.add(this.carGroup);
 
-    this.scene.add(this.traffic_light.model)
+
+
+
+
+    this.scene.add(this.traffic_light.model);
 
     this.loaded = true;
 
+
+
+    this.cameraControls.fitToBox( this.car.carModel, true, { paddingLeft: 0, paddingRight: 2, paddingBottom: 1, paddingTop: 6 } )
+    let dp = this.carGroup.position;
+    this.cameraControls.setTarget(dp.x,dp.y-0.02,dp.z);
     // TODO DEPLACER CIR AUX ROUES AVANT
     // IE DEPLACER CENTRE (AUTOUR DUQUEL ON PIVOTE) A UN POINT MILLIEU DE LAXE DES ROUES
     //AU LIEU DU CENTRE DE GRAVITE
@@ -379,86 +398,59 @@ Scenario.prototype.render = function (time) {
 
     //Objects context 
     {
-
+        window.entryAnimation = this.entryAnimation;
         if (this.entryAnimation == false) {
-            this.cameraControls.dolly(70, true);
+            //this.cameraControls.dolly(70, true);
             this.entryAnimation = true;
-            
             let loading_bar = document.querySelector("#loading_bar");
             if (!loading_bar.classList.contains("end_loadbar")){
-                loading_bar.
-                classList.add("end_loadbar");
+                loading_bar.classList.add("end_loadbar");
             }
             
-            
-            //this.cameraControls.enabled = true;
-            /*
-            var div = document.createElement("div");
-            div.innerHTML = "Bienvenue dans IA vs. WILD!<br/>";
-            div.classList.add("dialog_textbox");
-            var container = document.querySelector("#container");
-            document.body.insertBefore(div, container);
-            */
         }
-        /*const DEG90 = Math.PI * 0.5;
-        this.cameraControls.rotateTo( 0, DEG90, true );
-        new TWEEN.Tween( this.grid.position ).to( { x: 0, y: 0, z:  0.5 }, 800 ).start();
-        new TWEEN.Tween( this.grid.rotation ).to( { x: - DEG90, y: 0, z: 0 }, 800 ).start();
-        this.cameraControls.fitToBox( this.car, true, { paddingLeft: 0, paddingRight: 0, paddingBottom: 1, paddingTop: 2 } )
-        */
-
-        //this.cameraControls.fitToBox(this.car.carModel,true,);
-        let x = this.carGroup.position.x;
-        let y = this.carGroup.position.y;
-        let z = this.carGroup.position.z;
         
-        if(this.car.moved == true){
-            this.cameraControls.setTarget(x,y-0.02,z);
-
-            let dp = this.carGroup.position;
-           this.cameraControls.moveTo(dp.x,dp.y,dp.z);
-            let dist = this.camera.position.distanceTo(this.carGroup.position);
-            if( dist > 25 ){
-                if(dist < 5){}
-                else{
-                this.cameraControls.dolly(dist-26);
-                }
+        if(this.demo.start){
+            if (this.scene.getObjectByName("carGroup") != undefined) {
+                this.car.context.bind(this.car)(time);
+                this.adjustCamera()
             }
-            if(dist> 35){
-            }
-            
-            this.car.moved = false;
-        }
 
-        if(this.camera.position.y < 0.4){
-            this.camera.position.y = 0.4;
-            this.cameraControls.setTarget(x,y-0.02,z);
-            let dp = this.carGroup.position;
-           this.cameraControls.moveTo(dp.x,dp.y,dp.z);
-        }
-
-        //this.bb.position.copy(this.carGroup.position);
-
-        /*
-        this.bb.min = new THREE.Vector3( -15.0 + x, 1, -15.0 +z );
-        this.bb.max = new THREE.Vector3( 15.0 +x, 15, 15.0 +z);
-
-        this.cameraControls.setBoundary(this.bb);
-        
-        */
-           
-           
-       
-
-        if (this.scene.getObjectByName("carGroup") != undefined) {
-            this.car.context.bind(this.car)(time);
         }
 
     }
 
     //this.grid.position.z = - ( time ) % 5;
 
-    this.blit();
+    this.blit.bind(this)();
+}
+
+Scenario.prototype.adjustCamera = function(){
+    if(this.car.moved == true){
+            
+        let dp = this.carGroup.position;
+        this.cameraControls.setTarget(dp.x,dp.y-0.02,dp.z);
+
+       this.cameraControls.moveTo(dp.x,dp.y,dp.z);
+        let dist = this.camera.position.distanceTo(this.carGroup.position);
+        if( dist > 25 ){
+            if(dist < 5){}
+            else{
+            this.cameraControls.dolly(dist-26);
+            }
+        }
+        if(dist> 35){
+        }
+        
+        this.car.moved = false;
+    }
+
+    if(this.camera.position.y < 0.4){
+        this.camera.position.y = 0.4;
+        
+        let dp = this.carGroup.position;
+        this.cameraControls.setTarget(dp.x,dp.y-0.02,dp.z);
+       this.cameraControls.moveTo(dp.x,dp.y,dp.z);
+    }
 }
 
 Scenario.prototype.blit = function () {
@@ -469,9 +461,15 @@ Scenario.prototype.blit = function () {
     demo.renderer.setSize(window.innerWidth, window.innerHeight);
 
     //demo.renderer.setScissorTest( true );
-    demo.renderer.render(this.scene, this.camera);
-
+    
+    if(demo.scenario1.manager !=undefined){
+        if(this.demo.scenario1.manager.ready){
+        demo.renderer.render(this.scene, this.camera);
+        }
+    }
+    
     //Render extra viewports
+    if (this.demo.start){
     for (let ii = 0; ii < this.extra_views.length; ++ii) {
 
         let windowWidth = window.innerWidth;
@@ -500,6 +498,8 @@ Scenario.prototype.blit = function () {
 
         
         demo.renderer.render(this.scene, camera2);
-
     }
 }
+    demo.stats.update();
+}
+

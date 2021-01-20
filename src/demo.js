@@ -1,4 +1,5 @@
 import * as THREE from '../node_modules/three/build/three.module.js';
+import Stats from '../node_modules/three/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from '../node_modules/three/examples/jsm/loaders/DRACOLoader.js';
@@ -16,26 +17,97 @@ CameraControls.install( { THREE: THREE } );
 let debug = false;
 
 let clearScreen = () => {
-    document.querySelector(".home_container").classList.add("fadeout2");
-    document.querySelector(".home_filter").classList.add("fadeout2");
+    document.querySelector(".home_container").classList.add("fadeout");
+    //document.querySelector(".home_filter").classList.add("fadeout2");
 
     setTimeout(()=>{
-        document.querySelector(".home_container").remove();
-        document.querySelector(".home_filter").remove();
+        //document.querySelector(".home_container").remove();
+        //document.querySelector(".home_filter").remove();
     },200);
 }
 if (debug) {
     clearScreen();
     demo.start = true;
 } else {
-    document.querySelector("#home_start").addEventListener("click", function () {
-
+    var home_start = function () {
         if (demo.scenario1.loaded) {
             clearScreen();
             demo.start = true;
         }
-    })
-}
+        document.removeEventListener("#home_start",home_start);
+    }
+    document.querySelector("#home_start").addEventListener("click",home_start);
+    var home_tut = function () {
+
+        //clearScreen();
+        let tut = document.querySelector(".home_tutorial_box");
+        tut.classList.add("visible");
+        let slides = document.querySelectorAll(".home_tut_container");
+        let index = 0;
+        let prev_index = -1;
+
+
+        var display = (i)=>{
+            if(i >= 0 && i < slides.length){
+                
+                slides[index].classList.remove("visible");
+                
+                prev_index = index;
+                index = i;
+                slides[index].classList.add("visible");
+            }
+            if(index != 0){
+                prev.classList.remove("invisible");
+            }
+            else{
+                prev.classList.add("invisible");
+            }
+
+            if(index == slides.length-1){
+                next.classList.add("invisible");
+                end.classList.remove("invisible");
+            }
+            else{
+                next.classList.remove("invisible");
+                end.classList.add("invisible");
+            }
+        }
+        
+        var increment = function(){
+            display(index+1);
+        }
+        
+        var decrement = function(){
+            display(index-1);
+        }
+        
+        slides[index].classList.add("visible");
+                
+        var prev = document.querySelector("#tut_prev");
+        var next = document.querySelector("#tut_next");
+        var end = document.querySelector("#tut_end");
+
+        
+        next.addEventListener("click", increment);
+        prev.addEventListener("click", decrement);
+        end.addEventListener("click",()=>{
+            tut.classList.remove("visible");
+            prev.classList.add("invisible");
+            next.classList.remove("invisible");
+            end.classList.add("invisible");
+            for(let i =0; i < slides.length;i++){
+                slides[i].classList.remove("visible");
+                index = 0;
+            }
+        
+        })
+        
+        }
+    }
+    document.querySelector("#home_tutorial").addEventListener("click", home_tut )
+
+
+
 
 window.THREE = THREE
 
@@ -54,10 +126,24 @@ Demo.prototype.run = function () {
 
 window.testvariable = "";
 
+
+
 Demo.prototype.initScene = async function () {
 
     this.container = document.getElementById('container');
 
+
+
+    //Stats
+
+    
+    this.stats = new Stats();
+    this.stats.setMode(0);
+
+    this.stats.domElement.style.position = 'absolute';
+    this.stats.domElement.style.left = '0';
+    this.stats.domElement.style.top = '0';
+    document.body.appendChild( this.stats.domElement );
 
     //Renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -83,8 +169,9 @@ Demo.prototype.render = function () {
 
     const time = -performance.now() / 1000;
     //console.log(time);
+    this.scenario1.render(time);        
     if (demo.start && this.scenario1.loaded && this.scenario1.manager.ready) {
-        this.scenario1.render(time);
+
     } else {
         this.scenario1.blit();
     }

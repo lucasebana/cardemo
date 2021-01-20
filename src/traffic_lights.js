@@ -6,7 +6,8 @@ export class Traffic_Light {
 
     constructor(pointsPath) {
         this.poleMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0x333332,
+            //color: 0x333332,
+            color:0x000000,
             metalness: 0.6,
             roughness: 0.4,
             clearcoat: 0.05,
