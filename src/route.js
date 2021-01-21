@@ -157,7 +157,6 @@ Route.prototype.getNext = function (nth_segment) {
             return this.exitInfo.get(nth_segment)[exit];
         }
     }
-    
     return [-1,-1];
 }
 

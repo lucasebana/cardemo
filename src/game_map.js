@@ -45,7 +45,7 @@ GameMap.prototype.init = async function () {
   this.squareShape.lineTo(g, 0);
   this.squareShape.lineTo(0, 0);
 
-  this.geometry = new THREE.ShapeGeometry(this.squareShape, 20);
+  this.geometry = new THREE.ShapeGeometry(this.squareShape, 4);
   this.squareshape = new THREE.Shape();
   this.squareshape.moveTo(0,0)
   this.squareshape.lineTo(1*this.gridSize,0*this.gridSize)
@@ -54,7 +54,7 @@ GameMap.prototype.init = async function () {
   this.squareshape.lineTo(0*this.gridSize,0*this.gridSize)
 
   const extrudeSettings = {
-    steps: 10,
+    steps: 2,
     depth: 0.3,
     bevelEnabled: false
   };

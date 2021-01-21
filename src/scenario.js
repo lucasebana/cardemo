@@ -38,7 +38,7 @@ Scenario.prototype.load = async function () {
     this.scene.fog = new THREE.Fog(0xeeeeee, 10, 400);
     
     this.gridSize = 600;
-    this.grid = new THREE.GridHelper(this.gridSize, this.gridSize/4, 0x000000, 0x000000);
+    this.grid = new THREE.GridHelper(this.gridSize, this.gridSize/5, 0x000000, 0x000000);
     this.grid.material.opacity = 0.1;
     this.grid.material.depthWrite = false;
     this.grid.material.transparent = true;
@@ -335,9 +335,6 @@ Scenario.prototype.load = async function () {
 
 
     this.car = new Car(this.routes);
-    
-
-
     //
     window.r = demo.scenario1.car.routes;
     //
@@ -351,7 +348,7 @@ Scenario.prototype.load = async function () {
 
     const TLmodel = await this.traffic_light.loadModel(this.loader);
     this.traffic_light.model = TLmodel;
-    this.traffic_light.model.position.set(1,0,-5)
+    this.traffic_light.model.position.set(10.5*5,0,-24*5)
 
 
     this.carGroup = new THREE.Group();

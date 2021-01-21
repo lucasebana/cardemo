@@ -308,7 +308,7 @@ Car.prototype.switchRoute = function(i,game_event,questionDiv,answersDiv){
 Car.prototype.specialEvent = function(event){
     switch(event){
         case "*stopTrafficLights":
-            alert("stop bg");
+            alert("stop ");
         
         default:
             console.log("evenement inconnu");

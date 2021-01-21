@@ -13,12 +13,13 @@ export class Traffic_Light {
             clearcoat: 0.05,
             clearcoatRoughness: 0.05
         });
-        this.bodyMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xff0000,
+        this.greenMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x00ff00,
             metalness: 0.6,
             roughness: 0.4,
             clearcoat: 0.05,
-            clearcoatRoughness: 0.05
+            clearcoatRoughness: 0.05,
+            transmission:0.1
         });
 
         this.detailsMaterial = new THREE.MeshStandardMaterial({
@@ -47,7 +48,7 @@ Traffic_Light.prototype.loadModel = async function (loader) {
     return new Promise(async (resolve, reject) => {
 
         var poleMaterial_ = this.poleMaterial;
-        var bodyMaterial_ = this.bodyMaterial;
+        var greenMaterial_ = this.greenMaterial;
         var detailsMaterial_ = this.detailsMaterial;
         var glassMaterial_ = this.glassMaterial;
         var shadow_ = this.shadow;
@@ -60,7 +61,7 @@ Traffic_Light.prototype.loadModel = async function (loader) {
             model.name = "feu_tricolore";
 
             model.material = poleMaterial_;
-            model.getObjectByName('bulb1').material = bodyMaterial_;
+            model.getObjectByName('bulb1').material = greenMaterial_;
             model.getObjectByName('bulb2').material = glassMaterial_;
             model.getObjectByName('bulb3').material = glassMaterial_;
 
@@ -76,7 +77,10 @@ Traffic_Light.prototype.loadModel = async function (loader) {
             //mesh.rotation.x = -Math.PI / 2;
             mesh.renderOrder = 2;
             model.add(mesh);
-
+            /*window.spotlight = new THREE.SpotLight(0x00ff00);
+            spotlight.position.copy(model.getObjectByName('bulb1').position);
+            model.add(spotlight);
+            */
             resolve(model)
         });
     });
