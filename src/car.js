@@ -1,15 +1,21 @@
-import { Demo } from './demo.js';
+import {
+    Demo
+} from './demo.js';
 import * as THREE from '../node_modules/three/build/three.module.js';
 
-import { Route } from './route.js';
-import { GameEvent } from './game_event.js';
+import {
+    Route
+} from './route.js';
+import {
+    GameEvent
+} from './game_event.js';
 
 export class Car {
     carModel = undefined;
     wheels = [];
 
 
-    constructor(routes, nth_route = 0, nth_segment = 0/*, exits_list = [1]*/) {
+    constructor(routes, nth_route = 0, nth_segment = 0 /*, exits_list = [1]*/ ) {
 
 
         this.routes = routes;
@@ -26,8 +32,8 @@ export class Car {
         this.fraction = 0;
         this.stopCar = false;
 
-        this.lastTime = -1; 
-        this.speed = 8;// unité/s
+        this.lastTime = -1;
+        this.speed = 8; // unité/s
         this.slowmo_factor = 1;
 
         this.bodyMaterial = new THREE.MeshPhysicalMaterial({
@@ -107,8 +113,8 @@ Car.prototype.loadModel = async function (loader) {
             );
 
             mesh.rotation.x = -Math.PI / 2;
-            
-            
+
+
             mesh.renderOrder = 2;
             carModel.add(mesh);
 
@@ -119,22 +125,20 @@ Car.prototype.loadModel = async function (loader) {
 }
 
 Car.prototype.context = function (time) {
-    if(this.lastTime === -1){
-        var deltaTime = 1/60;
+    if (this.lastTime === -1) {
+        var deltaTime = 1 / 60;
         this.deltaTimeCount = 0;
-        this.deltaTimeAvg = 1/60;
+        this.deltaTimeAvg = 1 / 60;
         this.deltaTimeN = 0;
-    }
-    else{
-        var deltaTime =-time - this.lastTime;
+    } else {
+        var deltaTime = -time - this.lastTime;
     }
 
 
-    if(this.deltaTimeN<60*1000){
-    this.deltaTimeN++;
-    this.deltaTimeCount+=deltaTime;
-    }
-    else{
+    if (this.deltaTimeN < 60 * 1000) {
+        this.deltaTimeN++;
+        this.deltaTimeCount += deltaTime;
+    } else {
         this.deltaTimeAvg = this.deltaTimeCount / this.deltaTimeN;
         this.deltaTimeN = 0;
         this.deltaTimeCount = 0;
@@ -151,165 +155,180 @@ Car.prototype.context = function (time) {
     let segment = route.path.curves[this.nth_segment];
     let exitPoints = route.exitPoints;
 
-    
+
     this.newPosition = route.path.curves[this.nth_segment].getPoint(this.fraction);
     const tangent = route.path.curves[this.nth_segment].getTangent(this.fraction);
-    
+
 
     this.carModel.parent.position.copy(this.newPosition);
 
     axis.crossVectors(up, tangent).normalize();
-    if(axis.equals(new THREE.Vector3(0,0,0))){
-        axis = new THREE.Vector3(0,1,0);
+    if (axis.equals(new THREE.Vector3(0, 0, 0))) {
+        axis = new THREE.Vector3(0, 1, 0);
     }
-    
+
     //wheels rotation
     const radians = Math.acos(up.dot(tangent));
     this.carModel.parent.quaternion.setFromAxisAngle(axis, radians);
 
 
     //this.wheels[0].rotateOnWorldAxis(axe,1);
-    
 
-    if(!this.stopCar){
-    for (let i = 0; i < this.wheels.length; i++) {
-        this.wheels[i].rotation.x = time * this.speed * this.slowmo_factor/0.34;
-        //radius : 3.4
-        //this.wheels[i].rotation.x += this.fraction * segment.getLength() / (0.34*this.slowmo_factor)
 
+    if (!this.stopCar) {
+        for (let i = 0; i < this.wheels.length; i++) {
+            this.wheels[i].rotation.x = time * this.speed * this.slowmo_factor / 0.34;
+            //radius : 3.4
+            //this.wheels[i].rotation.x += this.fraction * segment.getLength() / (0.34*this.slowmo_factor)
+
+        }
     }
-    }
-    
-    
+
+
     if (route.callbacks[this.nth_segment] != undefined) {
-        let callback = route.callbacks[this.nth_segment];
-        
-        if (callback.triggered == false) {
-            let distance = callback.trigger_distance / segment.getLength();
+        var callbacks = route.callbacks[this.nth_segment];
+        for (let c = 0; c < callbacks.length; c++) {
+            let callback = callbacks[c];
+            if (callback.triggered == false) {
+                let distance = callback.trigger_distance / segment.getLength();
 
-            if (isNaN(segment.getUtoTmapping(this.fraction + distance, 0))) {
-                this.displayQuestion(callback);
-                callback.triggered = true;
-                callback.active = true;
-            }
-            if(callback.active && callback.slowmo){
-                if(this.slowmo_factor > 0.1){
-                    this.slowmo_factor /= 8
+                if (isNaN(segment.getUtoTmapping(this.fraction + distance + (1 - callback.ratio), 0))) {
+                    this.displayQuestion(callback);
+                    callback.triggered = true;
+                    callback.active = true;
+                }
+
+                if (callback.active && callback.slowmo) {
+                    if (this.slowmo_factor > 0.1) {
+                        this.slowmo_factor /= 8
+                    }
                 }
             }
-        }
 
-        if(callback.active == true){
-            //g(this.fraction)
-            if(this.fraction>=1-0.1){
-                this.stopCar = true;
+            if (callback.active == true) {
+                //g(this.fraction)
+                if (this.fraction >= 1 - 0.1) {
+                    if(callback.stop){
+                        this.stopCar = true;
+                    }
+                }
+
             }
-            
         }
-    
     }
 
-    
-    if(!this.stopCar){
+
+    if (!this.stopCar) {
         //console.log(deltaTime * this.speed * this.slowmo_factor / (segment.getLength()));
-        this.fraction += this.deltaTimeAvg * this.speed * this.slowmo_factor / (segment.getLength()) ;
+        this.fraction += this.deltaTimeAvg * this.speed * this.slowmo_factor / (segment.getLength());
         this.moved = true;
     }
 
 
 
-        if (this.fraction > 1) {
-            this.fraction = 0;
-            let next = route.getNext(this.nth_segment);
-            let next_route = next[0];
-            let next_segment = next[1];
-            if (next_route != null) {
-                if (next_route != -1) {
-                    this.nth_route = this.routes.indexOf(next_route);
-                    this.nth_segment = next_segment;
-                } else {
-                    this.nth_route = this.nth_route0;
-                }
+    if (this.fraction > 1) {
+        this.fraction = 0;
+        let next = route.getNext(this.nth_segment);
+        let next_route = next[0];
+        let next_segment = next[1];
+        if (next_route != null) {
+            if (next_route != -1) {
+                this.nth_route = this.routes.indexOf(next_route);
+                this.nth_segment = next_segment;
             } else {
-                if (this.nth_segment < route.controlPoints.length - 1) {
-                    this.nth_segment++;
-                } else {
-                    this.nth_segment = 0;
-                }
+                this.nth_route = this.nth_route0;
+            }
+        } else {
+            if (this.nth_segment < route.controlPoints.length - 1) {
+                this.nth_segment++;
+            } else {
+                this.nth_segment = 0;
             }
         }
-    
-
-    this.lastTime = - time;
-}
-
-Car.prototype.displayQuestion = function(game_event){
-    let questionDiv = document.createElement("div");
-    questionDiv.innerHTML = game_event.text;
-    questionDiv.classList.add("dialog_textbox");
-    let container = document.querySelector("#container");
-    document.body.insertBefore(questionDiv, container);
-
-    let answersDiv = document.createElement("div");
-    answersDiv.id = "answers_container";
-    for(let i=0; i < game_event.choices.length;i++){
-        let answerA = document.createElement("a");
-        answerA.style.setProperty('--idelay',i)
-
-        answerA.id = "answer_"+i
-        answerA.innerHTML = game_event.choices[i];
-        answerA.classList.add("answerA")
-        answerA.addEventListener("click",this.switchRoute(i,game_event,questionDiv,answersDiv));
-        answersDiv.appendChild(answerA);
     }
-    
-    document.body.insertBefore(answersDiv, container);
-    
 
-    /*
-    var div = document.createElement("div");
-    div.innerHTML = "Bienvenue dans IA vs. WILD!<br/>";
-    div.classList.add("dialog_textbox");
-    var container = document.querySelector("#container");
-    document.body.insertBefore(div, container);
-    */
+
+    this.lastTime = -time;
 }
 
+Car.prototype.displayQuestion = function (game_event) {
+    if (game_event.text != undefined) {
+        let questionDiv = document.createElement("div");
+        questionDiv.innerHTML = game_event.text;
+        questionDiv.classList.add("dialog_textbox");
+        let container = document.querySelector("#container");
+        document.body.insertBefore(questionDiv, container);
 
-Car.prototype.switchRoute = function(i,game_event,questionDiv,answersDiv){
-    
-    return (event)=>{
-    event.preventDefault();
-    this.stopCar = false;
+        let answersDiv = document.createElement("div");
+        answersDiv.id = "answers_container";
+        for (let i = 0; i < game_event.choices.length; i++) {
+            let answerA = document.createElement("a");
+            answerA.style.setProperty('--idelay', i)
 
-    game_event.active = false;
-    this.slowmo_factor = 1;
+            answerA.id = "answer_" + i
+            answerA.innerHTML = game_event.choices[i];
+            answerA.classList.add("answerA")
+            answerA.addEventListener("click", this.switchRoute(i, game_event, questionDiv, answersDiv));
+            answersDiv.appendChild(answerA);
+        }
+
+        document.body.insertBefore(answersDiv, container);
 
 
-    let r = game_event.route;
-    let exit = game_event.exits[i];
-    if(isNaN(exit)){
-        this.specialEvent(exit);
+        /*
+        var div = document.createElement("div");
+        div.innerHTML = "Bienvenue dans IA vs. WILD!<br/>";
+        div.classList.add("dialog_textbox");
+        var container = document.querySelector("#container");
+        document.body.insertBefore(div, container);
+        */
     }
     else{
-            r.defaultExits[game_event.segment] = exit;
+        if(game_event.log != undefined){
+            //alert(game_event.log["@value"]);
+            this.logDom = document.querySelector(".game_log .game_log_container span");
+            let d = document.createElement("div");
+            d.innerHTML = game_event.log["@value"];
+            this.logDom.after(d);
+        }
     }
 
-    questionDiv.classList.add("fadeout");
-    answersDiv.classList.add("fadeout");
-
-    setTimeout(()=>{
-        questionDiv.style.display="none";
-        answersDiv.style.display="none";
-    },1000)
-}
 }
 
-Car.prototype.specialEvent = function(event){
-    switch(event){
+
+Car.prototype.switchRoute = function (i, game_event, questionDiv, answersDiv) {
+
+    return (event) => {
+        event.preventDefault();
+        this.stopCar = false;
+
+        game_event.active = false;
+        this.slowmo_factor = 1;
+
+
+        let r = game_event.route;
+        let exit = game_event.exits[i];
+        if (isNaN(exit)) {
+            this.specialEvent(exit);
+        } else {
+            r.defaultExits[game_event.segment] = exit;
+        }
+
+        questionDiv.classList.add("fadeout");
+        answersDiv.classList.add("fadeout");
+
+        setTimeout(() => {
+            questionDiv.style.display = "none";
+            answersDiv.style.display = "none";
+        }, 1000)
+    }
+}
+
+Car.prototype.specialEvent = function (event) {
+    switch (event) {
         case "*stopTrafficLights":
             alert("stop ");
-        
+
         default:
             console.log("evenement inconnu");
     }

@@ -8,8 +8,8 @@
    "@tilewidth": "64",
    "@tileheight": "64",
    "@infinite": "0",
-   "@nextlayerid": "16",
-   "@nextobjectid": "46",
+   "@nextlayerid": "17",
+   "@nextobjectid": "58",
    "tileset": {
       "@firstgid": "1",
       "@name": "tileset",
@@ -90,6 +90,52 @@
                "@y": "2400",
                "polyline": {
                   "@points": "0,0 -512,0 -512,192 -1664,192"
+               }
+            }
+         ]
+      },
+      {
+         "@id": "16",
+         "@name": "sidewalk_lines",
+         "object": [
+            {
+               "@id": "53",
+               "@x": "640",
+               "@y": "3264",
+               "polygon": {
+                  "@points": "0,0 0,-1728 320,-1728 320,-2432 2752,-2432 2752,0"
+               }
+            },
+            {
+               "@id": "54",
+               "@x": "768",
+               "@y": "2560",
+               "polygon": {
+                  "@points": "0,0 0,-896 320,-896 320,-1600 1408,-1600 1408,-768 832,-768 832,0"
+               }
+            },
+            {
+               "@id": "55",
+               "@x": "768",
+               "@y": "3136",
+               "polygon": {
+                  "@points": "0,0 0,-448 2176,-448 2176,-640 2496,-640 2496,0"
+               }
+            },
+            {
+               "@id": "56",
+               "@x": "1728",
+               "@y": "2176",
+               "polygon": {
+                  "@points": "0,0 0,-256 448,-256 448,0"
+               }
+            },
+            {
+               "@id": "57",
+               "@x": "1728",
+               "@y": "2560",
+               "polygon": {
+                  "@points": "0,0 0,-256 576,-256 576,-1600 1536,-1600 1536,-192 1088,-192 1088,0"
                }
             }
          ]
@@ -285,6 +331,11 @@
                      "@name": "routeId",
                      "@type": "int",
                      "@value": "7"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "true"
                   }
                ],
                "point": []
@@ -323,6 +374,11 @@
                      "@name": "routeId",
                      "@type": "int",
                      "@value": "7"
+                  },
+                  {
+                     "@name": "slowmo",
+                     "@type": "bool",
+                     "@value": "true"
                   }
                ],
                "point": []
@@ -483,6 +539,201 @@
                      "@name": "routeId",
                      "@type": "int",
                      "@value": "24"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "46",
+               "@x": "2320",
+               "@y": "1456",
+               "properties": [
+                  {
+                     "@name": "e1",
+                     "@value": "*orangeTrafficLight"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "3"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.5"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "7"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "48",
+               "@x": "1696",
+               "@y": "2336",
+               "properties": [
+                  {
+                     "@name": "e1",
+                     "@value": ""
+                  },
+                  {
+                     "@name": "e2",
+                     "@value": ""
+                  },
+                  {
+                     "@name": "log",
+                     "@value": "Détection d'une intersection"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "0"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.8"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "7"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "49",
+               "@x": "2272",
+               "@y": "1648",
+               "properties": [
+                  {
+                     "@name": "log",
+                     "@value": "Feu rouge détecté à droite"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "3"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.2"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "7"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "50",
+               "@x": "2272",
+               "@y": "1456",
+               "properties": [
+                  {
+                     "@name": "log",
+                     "@value": "Feu orange détecté à droite"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "3"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.5"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "7"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "51",
+               "@x": "2320",
+               "@y": "1232",
+               "properties": [
+                  {
+                     "@name": "log",
+                     "@value": "Feu vert détecté à droite"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "3"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.7"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "7"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "52",
+               "@x": "2272",
+               "@y": "1232",
+               "properties": [
+                  {
+                     "@name": "e1",
+                     "@value": "*greenTrafficLight"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "3"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.7"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "7"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
                   }
                ],
                "point": []

@@ -27,6 +27,9 @@ GameMap.prototype.init = async function () {
   this.map = []
   this.routes = []
   this.routesMap = {}
+
+  this.sideWalkData = this.mapdata.objectgroup.find((el)=>{return el["@name"]=="sidewalk_lines"});
+
   for (let y = 0; y < this.height; y++) {
     this.map.push([]);
     for (let x = 0; x < this.width; x++) {
@@ -54,7 +57,7 @@ GameMap.prototype.init = async function () {
   this.squareshape.lineTo(0*this.gridSize,0*this.gridSize)
 
   const extrudeSettings = {
-    steps: 2,
+    steps: 1,
     depth: 0.3,
     bevelEnabled: false
   };
@@ -65,13 +68,12 @@ GameMap.prototype.init = async function () {
   });
   this.sideroad_material = new THREE.MeshPhongMaterial({
     color: 0x63635B,
-    shininess:0.1
+    shininess:0.1,
+    wireframe:false
     });
   this.mapGroup = new THREE.Group();
 
-
-  
-
+/*
   for (let y = 0; y < this.height; y++) {
     for (let x = 0; x < this.width; x++) {
 
@@ -92,20 +94,109 @@ GameMap.prototype.init = async function () {
         let squareMesh = new THREE.Mesh( this.geometry2, this.sideroad_material ) ;
         //let squareMesh = new THREE.ExtrudeGeometry( this.geometry ,extrudeSettings);
         squareMesh.position.set(-(x * g - (this.offsetX - 1) * g), y * g - (this.offsetY + 1) * g, 0);
-        this.mapGroup.add(squareMesh);
+        //this.mapGroup.add(squareMesh);
       }
 
     }
   }
 
+  */
+
+  
+  for(let i = 0; i< this.sideWalkData.object.length;i++){
+    let object = this.sideWalkData.object[i];
+    object.x = parseFloat(object["@x"]);
+    object.y = parseFloat(object["@y"]);
+    let origin = this.m2w(object.x,0,-object.y);
+
+    var results = object.polygon["@points"].matchAll(/(-?\d+),(-?\d+)/g)
+    var sidewalkShape = new THREE.Shape();
+    let initialX; 
+    let initialY;
+    let g = this.gridSize;
+    let j = 0;
+    console.log("---------");
+    for(let result of results){
+      let x = parseFloat(result[1])
+      let y = parseFloat(result[2])
+      let pos = this.m2w(object.x + x,0,-object.y -y);
+      if(j == 0){
+        initialX = x;
+        initialY = y;
+        sidewalkShape.moveTo(pos.x,pos.z)
+      }
+      else{
+        //let pos = this.m2w(result[1],0,-result[2]);
+      sidewalkShape.lineTo(pos.x, pos.z);
+      }
+      j++;
+    }
+    let pos = this.m2w(object.x+initialX,0,-object.y-initialY);
+    sidewalkShape.lineTo(pos.x, pos.z);
+    let squareMesh;
+    if(i == 0){
+      let hole = sidewalkShape.clone();
+      var sidewalkShape = new THREE.Shape();
+      let pos = this.m2w(0,0,0);
+      sidewalkShape.moveTo(pos.x,pos.z);
+       pos = this.m2w(this.height*64,0,0);
+       sidewalkShape.lineTo(pos.x,pos.z);
+       pos = this.m2w(this.height*64,0,-this.width*64);
+       sidewalkShape.lineTo(pos.x,pos.z);
+       pos = this.m2w(0,0,-this.width*64);
+       sidewalkShape.lineTo(pos.x,pos.z);
+       pos = this.m2w(0,0,0);
+       sidewalkShape.lineTo(pos.x,pos.z);
+
+       
+
+
+      sidewalkShape.holes.push(hole);
+      let sidewalkGeometry = new THREE.ExtrudeGeometry(sidewalkShape ,extrudeSettings);
+      squareMesh = new THREE.Mesh(sidewalkGeometry, this.sideroad_material);
+      
+      //this.mapGroup.add(squareMesh);
+    }
+    else{
+      let sidewalkGeometry = new THREE.ExtrudeGeometry( sidewalkShape ,extrudeSettings);
+      squareMesh = new THREE.Mesh(sidewalkGeometry, this.sideroad_material);
+    }
+    
+    this.mapGroup.add(squareMesh);
+  }    
+
+  /*let squareShape = new THREE.Shape();
+  let pos = this.m2w(0,0,0);
+ squareShape.moveTo(pos.x,pos.z);
+  pos = this.m2w(this.height*64,0,0);
+  squareShape.lineTo(pos.x,pos.z);
+  pos = this.m2w(this.height*64,0,-this.width*64);
+  squareShape.lineTo(pos.x,pos.z);
+  pos = this.m2w(0,0,-this.width*64);
+  squareShape.lineTo(pos.x,pos.z);
+  pos = this.m2w(0,0,0);
+  squareShape.lineTo(pos.x,pos.z);
+
+ this.geometry = new THREE.ShapeGeometry(squareShape, 4);
+ let squareMesh = new THREE.Mesh(this.geometry, this.road_material);
+ this.mapGroup.add(squareMesh);
+ */
+
+const geometry = new THREE.PlaneGeometry( 260, 260 );
+const plane = new THREE.Mesh( geometry, this.road_material );
+plane.rotation.x = -Math.PI/2;
+plane.position.y -=0.01
+plane.position.x+=40;
+plane.position.z -= 50;
+scene.add( plane );
+
+
   this.mapGroup.name = "map"
 
-  this.mapGroup.rotation.x = -Math.PI / 2;
+  this.mapGroup.rotation.x = Math.PI / 2;
+  
 
-
-  this.mapGroup.rotation.z = -Math.PI;
-
-  this.mapGroup.position.y = -0.01;
+  this.mapGroup.position.y = 0.3;
   scene.add(this.mapGroup);
 
   this.makeRoutes();
@@ -198,6 +289,7 @@ GameMap.prototype.makeRoutes = function () {
   for(let i = 0; i < this.questionsData.object.length;i++){
     let object = this.questionsData.object[i];
     let question = object.properties.find((el)=>{return el["@name"]=="question"});
+    let log = object.properties.find((el)=>{return el["@name"]=="log"});
     let nth_segment = object.properties.find((el)=>{return el["@name"]=="nth_segment"});
     let r1 = object.properties.find((el)=>{return el["@name"]=="r1"});
     let r2 = object.properties.find((el)=>{return el["@name"]=="r2"});
@@ -207,6 +299,10 @@ GameMap.prototype.makeRoutes = function () {
     let e1 = object.properties.find((el)=>{return el["@name"]=="e1"});
     let e2 = object.properties.find((el)=>{return el["@name"]=="e2"});
     let e3 = object.properties.find((el)=>{return el["@name"]=="e3"});
+
+    let ratio = object.properties.find((el)=>{return el["@name"]=="ratio"});
+    let stopEvent = object.properties.find((el)=>{return el["@name"]=="stop"});
+    let slowmo = object.properties.find((el)=>{return el["@name"]=="slowmo"});
 
 
     let routeId = object.properties.find((el)=>{return el["@name"]=="routeId"});
@@ -219,12 +315,20 @@ GameMap.prototype.makeRoutes = function () {
     var rep = []
     var quest = []
     if(checkUndefined(e1)){
-      r1 = (r1["@value"]);e1 = (e1["@value"]);rep.push(e1);quest.push(r1);
+      e1 = (e1["@value"]);rep.push(e1);
       if(checkUndefined(e2)){
-        r2 = (r2["@value"]);e2 = (e2["@value"]); rep.push(e2);quest.push(r2);
-        if(checkUndefined(e3)){ r3 = (r3["@value"]);e3 = (e3["@value"]);rep.push(e3);quest.push(r3); }
+        e2 = (e2["@value"]); rep.push(e2);
+        if(checkUndefined(e3)){ e3 = (e3["@value"]);rep.push(e3); }
       }
     }
+    if(checkUndefined(r1)){
+      r1 = (r1["@value"]);quest.push(r1);
+      if(checkUndefined(r2)){
+        r2 = (r2["@value"]);quest.push(r2);
+        if(checkUndefined(e3)){ r3 = (r3["@value"]);quest.push(r3); }
+    }
+  }
+    
 
     
     
@@ -264,11 +368,30 @@ GameMap.prototype.makeRoutes = function () {
       choices.push(quest[i]);
     }
     
-
-
-
     //let choix = [r1,r2]
-    let callback = new GameEvent(question,choices,events,10,true);
+
+    if(ratio != undefined){
+      ratio = parseFloat(ratio["@value"]);
+    }
+    else{
+      ratio = 1;
+    }
+
+    if(stopEvent != undefined){
+      stopEvent = (stopEvent["@value"]) == "true";
+    }
+    else{
+      stopEvent = false;
+    }
+
+    if(slowmo != undefined){
+      slowmo = (slowmo["@value"]) == "true";
+    }
+    else{
+      slowmo = false;
+    }
+
+    let callback = new GameEvent(question,log,choices,events,10,slowmo,stopEvent, ratio);
     this.routesMap[routeId].addCallback(nth_segment,callback);
 
     console.log(this.questionsData.object[i].properties)

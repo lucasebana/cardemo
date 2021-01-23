@@ -75,6 +75,9 @@ export class Route {
         }
 
         this.callbacks = new Array(this.path.curves.length);
+        for(let i = 0; i < this.callbacks.length;i++){
+            this.callbacks[i] = [];
+        }
 
     }
 
@@ -161,7 +164,7 @@ Route.prototype.getNext = function (nth_segment) {
 }
 
 Route.prototype.addCallback = function(i,callback){
-    this.callbacks[i] = callback;
+    this.callbacks[i].push(callback);
     callback.route = this;
     callback.segment = i;
 }

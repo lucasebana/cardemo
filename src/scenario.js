@@ -47,7 +47,7 @@ Scenario.prototype.load = async function () {
 
 
     //Main camera and camera controls
-    this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 600);
+    this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 200);
     
 
 
@@ -98,10 +98,25 @@ Scenario.prototype.load = async function () {
         }
     }];
 
+    let windowWidth = window.innerWidth;
+    let windowHeight = window.innerHeight;
+
+    this.logDom = document.querySelector(".game_log");
+    let leftlog = this.extra_views[0].left * windowWidth;
+    this.logDom.style.left = leftlog + "px" ;
+
+    let bottomlog = (1-this.extra_views[0].bottom) * windowHeight ;
+    this.logDom.style.top = bottomlog + "px" ;
+
+    let widthlog = this.extra_views[0].width * windowWidth;
+    this.logDom.style.width = widthlog + "px";
+
+    this.logDom.style.display="flex";
+
     for (let ii = 0; ii < this.extra_views.length; ++ii) {
 
         const view = this.extra_views[ii];
-        const camera = new THREE.PerspectiveCamera(view.fov, window.innerWidth / window.innerHeight, 1, 10000);
+        const camera = new THREE.PerspectiveCamera(view.fov, window.innerWidth / window.innerHeight, 1, 30);
         camera.position.fromArray(view.eye);
         camera.up.fromArray(view.up);
         camera.far = 100
@@ -127,7 +142,7 @@ Scenario.prototype.load = async function () {
 
     this.sky = new Sky();
     this.sky.scale.setScalar( 200000 );
-    this.scene.add( this.sky );
+    //this.scene.add(this.sky);
     this.sun = new THREE.Vector3();
     this.effectController = {
         turbidity: 5.5,
@@ -399,14 +414,15 @@ Scenario.prototype.render = function (time) {
         if (this.entryAnimation == false) {
             //this.cameraControls.dolly(70, true);
             this.entryAnimation = true;
-            let loading_bar = document.querySelector("#loading_bar");
-            if (!loading_bar.classList.contains("end_loadbar")){
-                loading_bar.classList.add("end_loadbar");
-            }
+
             
         }
         
         if(this.demo.start){
+            let loading_bar = document.querySelector("#loading_bar");
+            if (!loading_bar.classList.contains("end_loadbar")){
+                loading_bar.classList.add("end_loadbar");
+            }
             if (this.scene.getObjectByName("carGroup") != undefined) {
                 this.car.context.bind(this.car)(time);
                 this.adjustCamera()
@@ -441,8 +457,8 @@ Scenario.prototype.adjustCamera = function(){
         this.car.moved = false;
     }
 
-    if(this.camera.position.y < 0.4){
-        this.camera.position.y = 0.4;
+    if(this.camera.position.y < 0.7){
+        this.camera.position.y = 0.7;
         
         let dp = this.carGroup.position;
         this.cameraControls.setTarget(dp.x,dp.y-0.02,dp.z);
@@ -478,6 +494,7 @@ Scenario.prototype.blit = function () {
 
         view.updateCamera(camera2, scene);
 
+        
         const left = Math.floor(windowWidth * view.left);
         const bottom = Math.floor(windowHeight * view.bottom);
         const width = Math.floor(windowWidth * view.width);
