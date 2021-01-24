@@ -9,7 +9,7 @@
    "@tileheight": "64",
    "@infinite": "0",
    "@nextlayerid": "17",
-   "@nextobjectid": "61",
+   "@nextobjectid": "72",
    "tileset": {
       "@firstgid": "1",
       "@name": "tileset",
@@ -59,13 +59,14 @@
       {
          "@id": "7",
          "@name": "routes",
+         "@locked": "1",
          "object": [
             {
                "@id": "7",
                "@x": "1696",
                "@y": "2528",
                "polygon": {
-                  "@points": "0,0 0,-256 0,-640 576,-640 576,-1472 576,-1664 -704,-1664 -704,-1406.67 -704,-960 -1024,-960 -1024,128 0,128 0,64"
+                  "@points": "0,0 0,-256 0,-640 576,-640 576,-1472 576,-1664 -704,-1664 -704,-1415.88 -704,-1264 -704,-960 -1024,-960 -1024,128 0,128 0,64"
                }
             },
             {
@@ -81,7 +82,7 @@
                "@x": "672",
                "@y": "2656",
                "polyline": {
-                  "@points": "0,0 0,576 2688,576 2688,-256 2688,-1792 1600,-1792"
+                  "@points": "0,0 0,576 624,576 1008,576 2688,576 2688,-256 2688,-1792 1600,-1792"
                }
             },
             {
@@ -259,6 +260,7 @@
       {
          "@id": "14",
          "@name": "road_lines",
+         "@locked": "1",
          "object": [
             {
                "@id": "41",
@@ -361,11 +363,11 @@
                   },
                   {
                      "@name": "question",
-                     "@value": "Que faire ?"
+                     "@value": "Choisissez une action."
                   },
                   {
                      "@name": "r1",
-                     "@value": "Tourner à gauche ?"
+                     "@value": "Tourner à gauche"
                   },
                   {
                      "@name": "r2",
@@ -396,15 +398,11 @@
                "properties": [
                   {
                      "@name": "e1",
-                     "@value": ""
+                     "@value": "*runPedestrian"
                   },
                   {
                      "@name": "e2",
-                     "@value": ""
-                  },
-                  {
-                     "@name": "e3",
-                     "@value": ""
+                     "@value": "*stopPedestrian"
                   },
                   {
                      "@name": "nth_segment",
@@ -413,24 +411,34 @@
                   },
                   {
                      "@name": "question",
-                     "@value": "Que faire ? (piège)"
+                     "@value": "Choisissez un action"
                   },
                   {
                      "@name": "r1",
-                     "@value": "Continuer"
+                     "@value": "Ne rien faire"
                   },
                   {
                      "@name": "r2",
                      "@value": "Reprendre la main et s'arrêter au passage piéton"
                   },
                   {
-                     "@name": "r3",
-                     "@value": "Reprendre la main et prendre à droite"
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.3"
                   },
                   {
                      "@name": "routeId",
                      "@type": "int",
                      "@value": "7"
+                  },
+                  {
+                     "@name": "rr3",
+                     "@value": "Reprendre la main et prendre à droite"
+                  },
+                  {
+                     "@name": "slowmo",
+                     "@type": "bool",
+                     "@value": "true"
                   }
                ],
                "point": []
@@ -451,11 +459,11 @@
                   {
                      "@name": "nth_segment",
                      "@type": "int",
-                     "@value": "9"
+                     "@value": "10"
                   },
                   {
                      "@name": "question",
-                     "@value": "Que faire ?"
+                     "@value": "Choisissez une action"
                   },
                   {
                      "@name": "r1",
@@ -464,6 +472,11 @@
                   {
                      "@name": "r2",
                      "@value": "Reprendre la main et tourner à gauche"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.5"
                   },
                   {
                      "@name": "routeId",
@@ -480,20 +493,20 @@
                "properties": [
                   {
                      "@name": "e1",
-                     "@value": ""
+                     "@value": "0"
                   },
                   {
                      "@name": "e2",
-                     "@value": ""
+                     "@value": "-1"
                   },
                   {
                      "@name": "nth_segment",
                      "@type": "int",
-                     "@value": "2"
+                     "@value": "4"
                   },
                   {
                      "@name": "question",
-                     "@value": "Que faire ?"
+                     "@value": "Choisissez une action"
                   },
                   {
                      "@name": "r1",
@@ -501,12 +514,22 @@
                   },
                   {
                      "@name": "r2",
-                     "@value": "Prendre à gauche"
+                     "@value": "Continuer tout droit"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.7"
                   },
                   {
                      "@name": "routeId",
                      "@type": "int",
                      "@value": "24"
+                  },
+                  {
+                     "@name": "slowmo",
+                     "@type": "bool",
+                     "@value": "true"
                   }
                ],
                "point": []
@@ -527,7 +550,7 @@
                   {
                      "@name": "nth_segment",
                      "@type": "int",
-                     "@value": "3"
+                     "@value": "5"
                   },
                   {
                      "@name": "question",
@@ -745,38 +768,6 @@
                "point": []
             },
             {
-               "@id": "58",
-               "@x": "992",
-               "@y": "1072",
-               "properties": [
-                  {
-                     "@name": "log",
-                     "@value": "Marquage au sol 50km/h detecté"
-                  },
-                  {
-                     "@name": "nth_segment",
-                     "@type": "int",
-                     "@value": "6"
-                  },
-                  {
-                     "@name": "ratio",
-                     "@type": "float",
-                     "@value": "0.1"
-                  },
-                  {
-                     "@name": "routeId",
-                     "@type": "int",
-                     "@value": "7"
-                  },
-                  {
-                     "@name": "stop",
-                     "@type": "bool",
-                     "@value": "false"
-                  }
-               ],
-               "point": []
-            },
-            {
                "@id": "59",
                "@x": "1200",
                "@y": "816",
@@ -825,12 +816,220 @@
                   {
                      "@name": "ratio",
                      "@type": "float",
-                     "@value": "0.7"
+                     "@value": "0.4"
                   },
                   {
                      "@name": "routeId",
                      "@type": "int",
                      "@value": "7"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "61",
+               "@x": "2064",
+               "@y": "848",
+               "properties": [
+                  {
+                     "@name": "e1",
+                     "@value": "*redTrafficLight"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "5"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.65"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "7"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "63",
+               "@x": "2544",
+               "@y": "3200",
+               "properties": [
+                  {
+                     "@name": "log",
+                     "@value": "Détection d'une commande vocale, itinéraire modifié"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "3"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.7"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "24"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "65",
+               "@x": "880",
+               "@y": "3232",
+               "properties": [
+                  {
+                     "@name": "e1",
+                     "@value": ""
+                  },
+                  {
+                     "@name": "e2",
+                     "@value": ""
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "1"
+                  },
+                  {
+                     "@name": "question",
+                     "@value": "Choisissez une action"
+                  },
+                  {
+                     "@name": "r1",
+                     "@value": "S'arrêter"
+                  },
+                  {
+                     "@name": "r2",
+                     "@value": "Continuer"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.3"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "24"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "66",
+               "@x": "832",
+               "@y": "3232",
+               "properties": [
+                  {
+                     "@name": "log",
+                     "@value": "Passage piéton détecté"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "1"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.25"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "24"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "70",
+               "@x": "3040",
+               "@y": "2400",
+               "properties": [
+                  {
+                     "@name": "e1",
+                     "@value": "*failGPS"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "0"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.45"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "25"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "71",
+               "@x": "3360",
+               "@y": "2528",
+               "properties": [
+                  {
+                     "@name": "log",
+                     "@value": "Intersection détectée"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "4"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.5"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "24"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
                   }
                ],
                "point": []

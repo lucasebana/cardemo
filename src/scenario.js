@@ -461,10 +461,10 @@ Scenario.prototype.adjustCamera = function(){
 
        this.cameraControls.moveTo(dp.x,dp.y,dp.z);
         let dist = this.camera.position.distanceTo(this.carGroup.position);
-        if( dist > 25 ){
+        if( dist > 20 ){
             if(dist < 5){}
             else{
-            this.cameraControls.dolly(dist-26);
+            this.cameraControls.dolly(dist-21);
             }
         }
         if(dist> 35){
@@ -494,7 +494,6 @@ Scenario.prototype.blit = function () {
     
     if (demo.scenario1.manager != undefined) {
         if (this.demo.scenario1.manager.ready) {
-
             if (this.glitchEffect) {
                 this.composer.render();
             } else {
@@ -513,15 +512,12 @@ Scenario.prototype.blit = function () {
         const view = this.extra_views[ii];
         const camera2 = view.camera;
 
-
         view.updateCamera(camera2, scene);
 
-        
         const left = Math.floor(windowWidth * view.left);
         const bottom = Math.floor(windowHeight * view.bottom);
         const width = Math.floor(windowWidth * view.width);
         const height = Math.floor(windowHeight * view.height);
-
 
         demo.renderer.setViewport(left, bottom, width, height);
         demo.renderer.setScissor(left, bottom, width, height);
@@ -532,7 +528,6 @@ Scenario.prototype.blit = function () {
         camera2.aspect = width / height;
         camera2.updateProjectionMatrix();
 
-        
         demo.renderer.render(this.scene, camera2);
     }
 }

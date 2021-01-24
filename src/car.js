@@ -6,7 +6,7 @@ import {GameEvent} from './game_event.js';
 export class Car {
     carModel = undefined;
     wheels = [];
-    constructor(routes, nth_route = 0, nth_segment = 3 /*, exits_list = [1]*/ ) {
+    constructor(routes, nth_route = 0, nth_segment = 0/*, exits_list = [1]*/ ) {
 
 
         this.routes = routes;
@@ -24,7 +24,7 @@ export class Car {
         this.stopCar = false;
 
         this.lastTime = -1;
-        this.speed = 55; // unité/s
+        this.speed = 9; // unité/s
         this.slowmo_factor = 1;
 
         this.bodyMaterial = new THREE.MeshPhysicalMaterial({
@@ -126,7 +126,7 @@ Car.prototype.context = function (time) {
         var deltaTime = -time - this.lastTime;
     }
 
-
+    /*
     if (this.deltaTimeN < 60 * 1000) {
         this.deltaTimeN++;
         this.deltaTimeCount += deltaTime;
@@ -135,6 +135,7 @@ Car.prototype.context = function (time) {
         this.deltaTimeN = 0;
         this.deltaTimeCount = 0;
     }
+    */
 
 
     //// Update car position
@@ -145,8 +146,6 @@ Car.prototype.context = function (time) {
 
     let route = this.routes[this.nth_route];
     let segment = route.path.curves[this.nth_segment];
-    let exitPoints = route.exitPoints;
-
 
     this.newPosition = route.path.curves[this.nth_segment].getPoint(this.fraction);
     const tangent = route.path.curves[this.nth_segment].getTangent(this.fraction);
@@ -192,7 +191,7 @@ Car.prototype.context = function (time) {
                 }
 
                 if (callback.active && callback.slowmo) {
-                    if (this.slowmo_factor > 0.14) {
+                    if (this.slowmo_factor > 0.18) {
                         this.slowmo_factor /= 5
                     }
                 }
@@ -318,7 +317,14 @@ Car.prototype.displayQuestion = function (game_event) {
             //alert(game_event.log["@value"]);
             this.logDom = document.querySelector(".game_log .game_log_container span");
             let d = document.createElement("div");
-            d.innerHTML = game_event.log["@value"];
+            var v;
+            if(game_event.log["@value"] == undefined){
+                v = game_event.log;
+            }
+            else{
+                v = game_event.log["@value"]
+            }
+            d.innerHTML = v;
             this.logDom.after(d);
         }
         if(game_event.exits[0] != undefined){
@@ -362,12 +368,16 @@ Car.prototype.specialEvent = function (event) {
     let TL = window.demo.scenario1.traffic_light;
     switch (event) {
         case "*stopTrafficLights":
-            
-            
+            var callback = new GameEvent(undefined,"Arrêt au feu",[],["*stopEvent"],1,false,false, 1);
+            this.routes[this.nth_route].addCallback(this.nth_segment,callback);
+            break;
+        case "*stopEvent":
+            window.demo.paused = true;
+            setTimeout(()=>{window.demo.paused = false;},4000)
             break;
             
         case "*runTrafficLights":
-            let callback = new GameEvent(undefined,"crash",[],["*crashStop"],1,false,false, 1);
+            var callback = new GameEvent(undefined,"Alerte : feu grillé",[],["*crashStop"],1,false,false, 1);
             this.routes[this.nth_route].addCallback(this.nth_segment+1,callback);
             break;
         case "*crashStop":
@@ -375,6 +385,9 @@ Car.prototype.specialEvent = function (event) {
             window.demo.paused = true;
             
             this.gameover("trafficlight");
+            break;
+        case "*redTrafficLight":
+            TL.switchLights(TL.model,3,"red");
             break;
         case "*orangeTrafficLight":
             TL.switchLights(TL.model,2,"orange");
