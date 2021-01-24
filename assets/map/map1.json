@@ -9,7 +9,7 @@
    "@tileheight": "64",
    "@infinite": "0",
    "@nextlayerid": "17",
-   "@nextobjectid": "58",
+   "@nextobjectid": "61",
    "tileset": {
       "@firstgid": "1",
       "@name": "tileset",
@@ -97,6 +97,7 @@
       {
          "@id": "16",
          "@name": "sidewalk_lines",
+         "@locked": "1",
          "object": [
             {
                "@id": "53",
@@ -347,7 +348,7 @@
                "properties": [
                   {
                      "@name": "e1",
-                     "@value": ""
+                     "@value": "*runTrafficLights"
                   },
                   {
                      "@name": "e2",
@@ -369,6 +370,11 @@
                   {
                      "@name": "r2",
                      "@value": "Reprendre la main et s'arrêter au feu"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.8"
                   },
                   {
                      "@name": "routeId",
@@ -560,7 +566,7 @@
                   {
                      "@name": "ratio",
                      "@type": "float",
-                     "@value": "0.5"
+                     "@value": "0.45"
                   },
                   {
                      "@name": "routeId",
@@ -723,7 +729,7 @@
                   {
                      "@name": "ratio",
                      "@type": "float",
-                     "@value": "0.7"
+                     "@value": "0.65"
                   },
                   {
                      "@name": "routeId",
@@ -734,6 +740,97 @@
                      "@name": "stop",
                      "@type": "bool",
                      "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "58",
+               "@x": "992",
+               "@y": "1072",
+               "properties": [
+                  {
+                     "@name": "log",
+                     "@value": "Marquage au sol 50km/h detecté"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "6"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.1"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "7"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "59",
+               "@x": "1200",
+               "@y": "816",
+               "properties": [
+                  {
+                     "@name": "log",
+                     "@value": "Panneau 30km/h detecté à droite"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "5"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.2"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "7"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "60",
+               "@x": "672",
+               "@y": "2352",
+               "properties": [
+                  {
+                     "@name": "log",
+                     "@value": "Détection d'une intersection"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "9"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "0.7"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "7"
                   }
                ],
                "point": []

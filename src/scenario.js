@@ -7,6 +7,10 @@ import { RoomEnvironment } from '../node_modules/three/examples/jsm/environments
 import CameraControls from '../node_modules/camera-controls/dist/camera-controls.module.js';
 import { Sky } from '../node_modules/three/examples/jsm/objects/Sky.js';
 
+import { EffectComposer } from '../node_modules/three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from '../node_modules/three/examples/jsm/postprocessing/RenderPass.js';
+import { GlitchPass } from '../node_modules/three/examples/jsm/postprocessing/GlitchPass.js';
+
 //import * as MW from '../node_modules/meshwalk/dist/meshwalk.module.js';
 
 import { Car } from './car.js'
@@ -39,7 +43,7 @@ Scenario.prototype.load = async function () {
     
     this.gridSize = 600;
     this.grid = new THREE.GridHelper(this.gridSize, this.gridSize/5, 0x000000, 0x000000);
-    this.grid.material.opacity = 0.1;
+    this.grid.material.opacity = 0.05;
     this.grid.material.depthWrite = false;
     this.grid.material.transparent = true;
     
@@ -47,7 +51,7 @@ Scenario.prototype.load = async function () {
 
 
     //Main camera and camera controls
-    this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 200);
+    this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 400);
     
 
 
@@ -126,6 +130,16 @@ Scenario.prototype.load = async function () {
         view.camera = camera;
     }
 
+    //Post-processing
+
+    this.composer = new EffectComposer( this.demo.renderer );
+    this.composer.addPass( new RenderPass( this.scene, this.camera ) );
+
+    this.glitchPass = new GlitchPass();
+    this.composer.addPass( this.glitchPass );
+    this.glitchPass.goWild = false;
+
+    this.glitchEffect = false;
 
     //Lights, environments, materials & shadows
     const light = new THREE.AmbientLight(0x404040); // soft white light
@@ -142,7 +156,7 @@ Scenario.prototype.load = async function () {
 
     this.sky = new Sky();
     this.sky.scale.setScalar( 200000 );
-    //this.scene.add(this.sky);
+    this.scene.add(this.sky);
     this.sun = new THREE.Vector3();
     this.effectController = {
         turbidity: 5.5,
@@ -363,8 +377,8 @@ Scenario.prototype.load = async function () {
 
     const TLmodel = await this.traffic_light.loadModel(this.loader);
     this.traffic_light.model = TLmodel;
-    this.traffic_light.model.position.set(10.5*5,0,-24*5)
-
+    this.traffic_light.model.position.set(10.2*5,0,-24*5)
+    window.TLmodel = TLmodel;
 
     this.carGroup = new THREE.Group();
     this.carGroup.name = "carGroup"
@@ -424,8 +438,10 @@ Scenario.prototype.render = function (time) {
                 loading_bar.classList.add("end_loadbar");
             }
             if (this.scene.getObjectByName("carGroup") != undefined) {
+                if(!this.demo.paused){
                 this.car.context.bind(this.car)(time);
                 this.adjustCamera()
+                }
             }
 
         }
@@ -466,6 +482,7 @@ Scenario.prototype.adjustCamera = function(){
     }
 }
 
+
 Scenario.prototype.blit = function () {
     demo.renderer.setViewport(this.default_viewport);
     demo.renderer.setScissor(this.default_viewport);
@@ -475,9 +492,14 @@ Scenario.prototype.blit = function () {
 
     //demo.renderer.setScissorTest( true );
     
-    if(demo.scenario1.manager !=undefined){
-        if(this.demo.scenario1.manager.ready){
-        demo.renderer.render(this.scene, this.camera);
+    if (demo.scenario1.manager != undefined) {
+        if (this.demo.scenario1.manager.ready) {
+
+            if (this.glitchEffect) {
+                this.composer.render();
+            } else {
+                demo.renderer.render(this.scene, this.camera);
+            }
         }
     }
     
@@ -517,3 +539,15 @@ Scenario.prototype.blit = function () {
     demo.stats.update();
 }
 
+Scenario.prototype.reset = function(){
+    this.car.fraction = 0;
+    this.car.nth_route = this.car.nth_route0;
+    this.car.nth_segment = this.car.nth_segment0;
+
+    let tlm = this.traffic_light.model;
+    this.traffic_light.switchLights(tlm,3,"red");
+
+    /* reset all events... */
+    /* reset all routes... */
+    /* clear all callbacks (dom) */
+}

@@ -21,6 +21,22 @@ export class Traffic_Light {
             clearcoatRoughness: 0.05,
             transmission:0.1
         });
+        this.redMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xff0000,
+            metalness: 0.6,
+            roughness: 0.4,
+            clearcoat: 0.05,
+            clearcoatRoughness: 0.05,
+            transmission:0.1
+        });
+        this.orangeMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xff4402,
+            metalness: 0.6,
+            roughness: 0.4,
+            clearcoat: 0.05,
+            clearcoatRoughness: 0.05,
+            transmission:0.1
+        });
 
         this.detailsMaterial = new THREE.MeshStandardMaterial({
             color: 0xffffff,
@@ -49,6 +65,8 @@ Traffic_Light.prototype.loadModel = async function (loader) {
 
         var poleMaterial_ = this.poleMaterial;
         var greenMaterial_ = this.greenMaterial;
+        var redMaterial_ = this.redMaterial;
+        var orangeMaterial_ = this.orangeMaterial;
         var detailsMaterial_ = this.detailsMaterial;
         var glassMaterial_ = this.glassMaterial;
         var shadow_ = this.shadow;
@@ -61,9 +79,9 @@ Traffic_Light.prototype.loadModel = async function (loader) {
             model.name = "feu_tricolore";
 
             model.material = poleMaterial_;
-            model.getObjectByName('bulb1').material = greenMaterial_;
+            model.getObjectByName('bulb3').material = redMaterial_;
             model.getObjectByName('bulb2').material = glassMaterial_;
-            model.getObjectByName('bulb3').material = glassMaterial_;
+            model.getObjectByName('bulb1').material = glassMaterial_;
 
             // shadow
             const mesh = new THREE.Mesh(
@@ -88,4 +106,79 @@ Traffic_Light.prototype.loadModel = async function (loader) {
 
 Traffic_Light.prototype.context = function (car, time) {
 
+}
+
+Traffic_Light.prototype.switchLights = function(model,n,color){
+    let c = 0;
+    switch(color){
+        case "red":
+            c = 0;
+            break;
+        case "orange":
+            c = 1;
+            break;
+        case "green":
+            c = 2;
+            break;
+        default:
+            ;
+    }
+
+    //from top to bottom
+    let colorsArray = [
+        
+    new THREE.MeshPhysicalMaterial({
+        color: 0xff0000,
+        metalness: 0.6,
+        roughness: 0.4,
+        clearcoat: 0.05,
+        clearcoatRoughness: 0.05,
+        transmission:0.1
+    }),
+    new THREE.MeshPhysicalMaterial({
+        color: 0xff4402,
+        metalness: 0.6,
+        roughness: 0.4,
+        clearcoat: 0.05,
+        clearcoatRoughness: 0.05,
+        transmission:0.1
+    }),    
+    new THREE.MeshPhysicalMaterial({
+        color: 0x00ff00,
+        metalness: 0.6,
+        roughness: 0.4,
+        clearcoat: 0.05,
+        clearcoatRoughness: 0.05,
+        transmission:0.1
+    }),
+    new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        metalness: .4,
+        roughness: 0.1,
+        transmission: 0.5,
+        transparent: true,
+        clearcoat: 1
+    })
+    ];
+
+
+    switch(n){
+        case 1:
+            model.getObjectByName('bulb1').material = colorsArray[c];
+            model.getObjectByName('bulb2').material = colorsArray[3];
+            model.getObjectByName('bulb3').material = colorsArray[3];
+            return;
+        case 2:
+            model.getObjectByName('bulb1').material = colorsArray[3];
+            model.getObjectByName('bulb2').material = colorsArray[c];
+            model.getObjectByName('bulb3').material = colorsArray[3];
+            return;
+        case 3:
+            model.getObjectByName('bulb1').material = colorsArray[3];
+            model.getObjectByName('bulb2').material = colorsArray[3];
+            model.getObjectByName('bulb3').material = colorsArray[c];
+            return;
+        default:
+            return;
+    }
 }

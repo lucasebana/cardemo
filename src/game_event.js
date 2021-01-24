@@ -14,6 +14,7 @@ export class GameEvent{
         this.slowmo = slowmo;
         this.triggered = false;
         this.active = false;
+        this.answered = false;
         this.stop = stop;
         this.ratio = ratio;
     }

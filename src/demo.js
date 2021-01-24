@@ -17,14 +17,45 @@ CameraControls.install( { THREE: THREE } );
 let debug = false;
 
 let clearScreen = () => {
+    /* remove the menu */
+    document.querySelector(".home_container").classList.remove("fadein");
     document.querySelector(".home_container").classList.add("fadeout");
-    //document.querySelector(".home_filter").classList.add("fadeout2");
-
     setTimeout(()=>{
-        //document.querySelector(".home_container").remove();
-        //document.querySelector(".home_filter").remove();
+        document.querySelector(".home_container").style.display="none";
     },200);
+    /* add the menu button */
+    document.querySelector(".home_menu_btn").style.display="inline";
+    document.querySelector(".home_menu_btn").classList.add("fadein");
 }
+
+let resume = () => {
+    document.querySelector(".home_menu_btn").innerHTML="Menu"
+    demo.paused = false;
+    clearScreen();
+    document.querySelector(".home_menu_btn").addEventListener("click",popMenu);
+    document.querySelector(".home_menu_btn").removeEventListener("click",resume);
+    document.querySelector(".home_menu_btn").addEventListener("click",popMenu);
+}
+
+let popMenu = ()=>{
+    /* add the menu */
+    document.querySelector(".home_container").classList.remove("fadeout");
+    document.querySelector(".home_container").style.display="flex";
+    document.querySelector(".home_container").classList.add("fadein");
+    /* remove the button */
+    document.querySelector(".home_menu_btn").innerHTML="Reprendre"
+
+    document.querySelector("#home_start").innerHTML = "Redémarrer le mode normal";
+
+    demo.paused = true;
+    document.querySelector("#home_start").removeEventListener("click",home_start);
+    document.querySelector("#home_start").addEventListener("click",()=>{
+        demo.scenario1.reset();
+    });
+    document.querySelector(".home_menu_btn").removeEventListener("click",popMenu);
+    document.querySelector(".home_menu_btn").addEventListener("click",resume);
+}
+
 if (debug) {
     clearScreen();
     demo.start = true;
@@ -37,6 +68,7 @@ if (debug) {
         document.removeEventListener("#home_start",home_start);
     }
     document.querySelector("#home_start").addEventListener("click",home_start);
+    document.querySelector(".home_menu_btn").addEventListener("click",popMenu)
     var home_tut = function () {
 
         //clearScreen();
@@ -114,6 +146,7 @@ window.THREE = THREE
 export class Demo {
     constructor() {
         this.car = undefined;
+
     }
 };
 Demo.prototype.run = function () {
@@ -121,6 +154,7 @@ Demo.prototype.run = function () {
     //this.ready = false; // all objects initialized = false
     this.sceneComplete = false;
     this.start = false;
+    this.paused = false;
     this.entryAnimation = false;
     this.initScene()}
 
@@ -156,7 +190,7 @@ Demo.prototype.initScene = async function () {
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 0.85;
     this.container.appendChild(this.renderer.domElement);
-
+    
     //Scene 1
     this.scenario1 = new Scenario(this);
     this.scenario1.load();

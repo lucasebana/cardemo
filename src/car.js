@@ -1,21 +1,12 @@
-import {
-    Demo
-} from './demo.js';
+import {Demo} from './demo.js';
 import * as THREE from '../node_modules/three/build/three.module.js';
-
-import {
-    Route
-} from './route.js';
-import {
-    GameEvent
-} from './game_event.js';
+import {Route} from './route.js';
+import {GameEvent} from './game_event.js';
 
 export class Car {
     carModel = undefined;
     wheels = [];
-
-
-    constructor(routes, nth_route = 0, nth_segment = 0 /*, exits_list = [1]*/ ) {
+    constructor(routes, nth_route = 0, nth_segment = 3 /*, exits_list = [1]*/ ) {
 
 
         this.routes = routes;
@@ -33,7 +24,7 @@ export class Car {
         this.stopCar = false;
 
         this.lastTime = -1;
-        this.speed = 8; // unité/s
+        this.speed = 55; // unité/s
         this.slowmo_factor = 1;
 
         this.bodyMaterial = new THREE.MeshPhysicalMaterial({
@@ -130,6 +121,7 @@ Car.prototype.context = function (time) {
         this.deltaTimeCount = 0;
         this.deltaTimeAvg = 1 / 60;
         this.deltaTimeN = 0;
+        this.currentCallbacks = [];
     } else {
         var deltaTime = -time - this.lastTime;
     }
@@ -196,11 +188,12 @@ Car.prototype.context = function (time) {
                     this.displayQuestion(callback);
                     callback.triggered = true;
                     callback.active = true;
+                    this.currentCallbacks.push(callback);
                 }
 
                 if (callback.active && callback.slowmo) {
-                    if (this.slowmo_factor > 0.1) {
-                        this.slowmo_factor /= 8
+                    if (this.slowmo_factor > 0.14) {
+                        this.slowmo_factor /= 5
                     }
                 }
             }
@@ -227,6 +220,30 @@ Car.prototype.context = function (time) {
 
 
     if (this.fraction > 1) {
+
+        for(let ii = 0; ii < this.currentCallbacks.length; ii++){
+            if(!this.currentCallbacks[ii].answered){
+                if(this.currentCallbacks[ii].questionDiv != undefined){
+                    this.currentCallbacks[ii].questionDiv.classList.add("fadeout");
+                    this.currentCallbacks[ii].answersDiv.classList.add("fadeout");
+                    
+                    this.currentCallbacks[ii].questionDiv.style.display="none";
+                    this.currentCallbacks[ii].answersDiv.style.display="none";
+                    /*setTimeout((()=>{
+                        this.currentCallbacks[ii].questionDiv.style.display="none";
+                        this.currentCallbacks[ii].answersDiv.style.display="none";
+                    }).bind(this),200);
+                    */
+                }
+                if(this.currentCallbacks[ii].exits[0]!=undefined){
+                    if(this.currentCallbacks[ii].exits[0][0] == "*"){
+                        this.specialEvent(this.currentCallbacks[ii].exits[0]);
+                        this.currentCallbacks[ii].answered = true;
+                    }
+                }
+            }
+        }
+
         this.fraction = 0;
         let next = route.getNext(this.nth_segment);
         let next_route = next[0];
@@ -245,6 +262,10 @@ Car.prototype.context = function (time) {
                 this.nth_segment = 0;
             }
         }
+
+        
+        this.slowmo_factor = 1;
+        this.currentCallbacks = [];
     }
 
 
@@ -268,6 +289,12 @@ Car.prototype.displayQuestion = function (game_event) {
             answerA.id = "answer_" + i
             answerA.innerHTML = game_event.choices[i];
             answerA.classList.add("answerA")
+
+            //set default exit if defined...
+            if(game_event.exits[0] != undefined){
+                    game_event.route.defaultExits[game_event.segment] = game_event.exits[0];
+            }
+            
             answerA.addEventListener("click", this.switchRoute(i, game_event, questionDiv, answersDiv));
             answersDiv.appendChild(answerA);
         }
@@ -282,6 +309,9 @@ Car.prototype.displayQuestion = function (game_event) {
         var container = document.querySelector("#container");
         document.body.insertBefore(div, container);
         */
+
+       game_event.questionDiv = questionDiv;
+       game_event.answersDiv = answersDiv;
     }
     else{
         if(game_event.log != undefined){
@@ -290,6 +320,10 @@ Car.prototype.displayQuestion = function (game_event) {
             let d = document.createElement("div");
             d.innerHTML = game_event.log["@value"];
             this.logDom.after(d);
+        }
+        if(game_event.exits[0] != undefined){
+            this.specialEvent(game_event.exits[0]);
+            game_event.answered = true;
         }
     }
 
@@ -310,26 +344,75 @@ Car.prototype.switchRoute = function (i, game_event, questionDiv, answersDiv) {
         let exit = game_event.exits[i];
         if (isNaN(exit)) {
             this.specialEvent(exit);
+            game_event.answered = true;
         } else {
             r.defaultExits[game_event.segment] = exit;
         }
 
         questionDiv.classList.add("fadeout");
-        answersDiv.classList.add("fadeout");
-
+        answersDiv.style.display = "none";
         setTimeout(() => {
             questionDiv.style.display = "none";
-            answersDiv.style.display = "none";
+            
         }, 1000)
     }
 }
 
 Car.prototype.specialEvent = function (event) {
+    let TL = window.demo.scenario1.traffic_light;
     switch (event) {
         case "*stopTrafficLights":
-            alert("stop ");
+            
+            
+            break;
+            
+        case "*runTrafficLights":
+            let callback = new GameEvent(undefined,"crash",[],["*crashStop"],1,false,false, 1);
+            this.routes[this.nth_route].addCallback(this.nth_segment+1,callback);
+            break;
+        case "*crashStop":
+            
+            window.demo.paused = true;
+            
+            this.gameover("trafficlight");
+            break;
+        case "*orangeTrafficLight":
+            TL.switchLights(TL.model,2,"orange");
+            break;
+        case "*greenTrafficLight":
+            TL.switchLights(TL.model,1,"green");
+            break;
 
         default:
             console.log("evenement inconnu");
+            break;
+    }
+}
+
+Car.prototype.gameover = function(arg){
+    if(arg == "trafficlight"){
+        let gameover = document.createElement("div");
+        gameover.classList.add("gameover");
+        gameover.classList.add("fadein");
+        gameover.innerHTML = "gameover + explication...";
+
+        
+
+        let continue_btn = document.createElement("a");
+        continue_btn.innerHTML="Continuer";
+        
+              
+
+        let container = document.querySelector("#container");
+        container.appendChild(gameover);
+        gameover.appendChild(continue_btn);
+        window.demo.scenario1.glitchEffect = true;
+
+
+        continue_btn.addEventListener("click",()=>{
+            window.demo.scenario1.glitchEffect = false;
+            gameover.style.display="none";
+            window.demo.paused = false;
+        })
     }
 }

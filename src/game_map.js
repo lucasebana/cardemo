@@ -330,8 +330,6 @@ GameMap.prototype.makeRoutes = function () {
   }
     
 
-    
-    
 
     routeId = parseInt(routeId["@value"]);
 

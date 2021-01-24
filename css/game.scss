@@ -75,6 +75,26 @@ html,body{
     display:flex;
     flex-direction:column;
     
+    .home_portal{
+        background-color:white;
+        font-size:0.8rem;
+        padding:7px 16px;
+        border-radius:30px;
+        font-weight:bold;
+        text-decoration:none;
+        color: black;
+        font-family: 'Oxygen', sans-serif;
+        box-shadow:rgba(0,0,0,0.04) 0 2px 3px;
+        transition:.3s opacity ease-in-out;
+        text-align:center;
+        transition:opacity 0.2s;
+        pointer-events: all;
+        margin:5px 5px 0 auto;
+    }
+    .home_portal:hover{
+        opacity:0.8;
+    }
+
     .home_logo{
         @extend .noselect;
         display:block;
@@ -263,14 +283,23 @@ html,body{
 .fadeout{
     animation:fadeout .3s;
     animation-fill-mode: forwards;
-
+}
+.fadein{
+    animation:fadein .3s;
+    animation-fill-mode: forwards;
 }
 
 @keyframes fadeout {
     0% {opacity:1;
     }
-    100% {opacity:0;}
+    100% {opacity:0;
+    display:none !important;}
+}
 
+@keyframes fadein {
+    0% {opacity:0;
+    }
+    100% {opacity:1;}
 }
 
 .fadeout2{
@@ -356,6 +385,28 @@ html,body{
     display:none !important;
 }
 
+.home_menu_btn{
+    display:none;
+    position:absolute;
+    bottom:0;
+    z-index:5;
+    margin:0 0 5px 5px;
+    font-weight:bold;
+    /*text-transform: all-caps,SPP_/ROD;*/
+    background-color:white;
+    font-size:1.1rem;
+    padding:3px 10px;
+    border-radius:3px;
+    text-decoration:none;
+    color: black;
+    font-family: 'Oxygen', sans-serif;
+    box-shadow:rgba(0,0,0,0.04) 0 2px 3px;
+    transition:.3s opacity ease-in-out;
+    text-align:center;
+    transition:opacity 0.2s;
+    pointer-events: all;
+}
+
 .game_log{
     position:absolute;
     display:none;
@@ -404,4 +455,40 @@ html,body{
     }
     }
     
+}
+
+.gameover{
+    position:absolute;
+    top:50%;
+    left:40%;
+    transform:translate(-50%,-50%);
+    backdrop-filter: blur(15px);
+    background-color:rgba(255,255,255,0.7);
+    border-radius:20px;
+    box-shadow:rgba(0,0,0,0.1) 0 0px 7px 0px;
+    font-family: 'Oxygen', sans-serif;
+    padding:10px;
+    font-size:1.1rem;
+    text-align:justify;
+    width:40%;
+    height:70%;
+    pointer-events:all;
+    a{
+        position:absolute;
+        bottom:0;
+        background-color:#FFF;
+        border-radius:20px;
+        line-height:40px;
+        text-decoration: none;
+        color:#000;
+        font-weight:bold;
+        display:inline-block;
+        text-align:center;
+        height:40px;
+        padding:0 25px;
+        cursor:pointer;
+        left:50%;
+        transform: translate(-50%,0);
+        margin-bottom:5px;
+    }
 }
