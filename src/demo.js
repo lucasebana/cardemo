@@ -81,6 +81,8 @@ if (debug) {
     window.home_tut = function () {
 
         //clearScreen();
+        let endscreen = document.querySelector(".home_ending_box");
+        endscreen.classList.remove("visible");
         let tut = document.querySelector(".home_tutorial_box");
         tut.classList.add("visible");
         let slides = document.querySelectorAll(".home_tut_container");
@@ -258,5 +260,4 @@ Demo.prototype.openFullscreen = function () {
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     demo.renderer.setSize(window.innerWidth, window.innerHeight);
-
 }

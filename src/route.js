@@ -125,11 +125,11 @@ Route.prototype.getLine = function (material) {
     });
     var dotGeometry = new THREE.Geometry();
     dotGeometry.vertices.push(this.controlPoints[s1][s2]);
-    L.add(new THREE.Points(dotGeometry, dotMaterial));
+    //L.add(new THREE.Points(dotGeometry, dotMaterial));
 
     var dotGeometry = new THREE.Geometry();
     dotGeometry.vertices.push(this.controlPoints[0][0]);
-    L.add(new THREE.Points(dotGeometry, dotMaterial));
+    //L.add(new THREE.Points(dotGeometry, dotMaterial));
 
 
     var dotMaterial = new THREE.PointsMaterial({
@@ -141,7 +141,7 @@ Route.prototype.getLine = function (material) {
         var dotGeometry = new THREE.Geometry();
         dotGeometry.vertices.push(p);
 
-        L.add(new THREE.Points(dotGeometry, dotMaterial));
+        //L.add(new THREE.Points(dotGeometry, dotMaterial));
     });
     return L;
 }

@@ -6,7 +6,7 @@ import {GameEvent} from './game_event.js';
 export class Car {
     carModel = undefined;
     wheels = [];
-    constructor(routes, nth_route = 0, nth_segment = 0/*, exits_list = [1]*/ ) {
+    constructor(routes, nth_route = 2, nth_segment = 2/*, exits_list = [1]*/ ) {
 
 
         this.routes = routes;
@@ -24,7 +24,7 @@ export class Car {
         this.stopCar = false;
 
         this.lastTime = -1;
-        this.speed = 39; // unité/s
+        this.speed = 9; // unité/s
         this.slowmo_factor = 1;
 
         this.bodyMaterial = new THREE.MeshPhysicalMaterial({
@@ -195,7 +195,7 @@ Car.prototype.context = function (time) {
                 }
 
                 if (callback.active && callback.slowmo) {
-                    if (this.slowmo_factor > 0.18) {
+                    if (this.slowmo_factor > 0.2) {
                         this.slowmo_factor /= 5
                     }
                 }
@@ -208,7 +208,6 @@ Car.prototype.context = function (time) {
                         this.stopCar = true;
                     }
                 }
-
             }
         }
     }
@@ -379,6 +378,7 @@ Car.prototype.specialEvent = function (event) {
             break;
         case "*stopEvent":
             window.demo.paused = true;
+            setTimeout(()=>{TL.switchLights(TL.model,3,"red");},3000)
             setTimeout(()=>{window.demo.paused = false;},4000)
             break;
             
@@ -392,6 +392,24 @@ Car.prototype.specialEvent = function (event) {
             
             this.gameover("trafficlight");
             break;
+
+        case "*runPedestrian":
+            var callback = new GameEvent(undefined,"Alerte : passage piéton non respecté",[],["*crashPedestrian"],1,false,false, 1);
+            this.routes[this.nth_route].addCallback(this.nth_segment+1,callback);
+            break;
+        case "*crashPedestrian":
+            window.demo.paused = true;
+            this.gameover("pedestrianrun");
+            break;
+
+        case "*stopPedestrian":
+            var callback = new GameEvent(undefined,"Arrêt",[],["*stopPedestrianEvent"],1,false,false, 1);
+            this.routes[this.nth_route].addCallback(this.nth_segment,callback);
+            break;
+        case "*stopPedestrianEvent":
+            window.demo.paused = true;
+            setTimeout(()=>{window.demo.paused = false;},4000)
+            break;            
         case "*redTrafficLight":
             TL.switchLights(TL.model,3,"red");
             break;
@@ -419,6 +437,10 @@ Car.prototype.specialEvent = function (event) {
             window.popMenu();
             window.end_screen();
             break;
+        case "*failGPS":
+            window.demo.paused = true;
+            this.gameover("gpsfail");
+            break;
         default:
             console.log("evenement inconnu");
             break;
@@ -426,13 +448,26 @@ Car.prototype.specialEvent = function (event) {
 }
 
 Car.prototype.gameover = function(arg){
-    if(arg == "trafficlight"){
         let gameover = document.createElement("div");
         gameover.classList.add("gameover");
         gameover.classList.add("fadein");
-        gameover.innerHTML = "gameover + explication...";
-
         
+        if(arg == "trafficlight"){
+        gameover.innerHTML = `<p><b>Attention, vous venez de griller le feu !</b><br>
+         En effet, le feu juste à droite est un feu piraté sur lequel les lumières rouges et vertes
+         ont été inversées. L'IA a mal interprété cette différence, mais vous aussi !</p>`;
+        }
+        if(arg == "pedestrianrun"){
+            gameover.innerHTML = `<p><b>Attention, vous n'avez pas respecté le passage piéton !</b><br>
+             Le passage piéton que vous venez de traverser a été modifié d'une façon telle que l'IA ne l'interprête pas
+             comme elle le devrait. Il s'agit d'une attaque adversoriale contre l'IA votre véhicule.</p>`;
+        }
+        if(arg == "gpsfail"){
+            gameover.innerHTML = `<p><b>Attention, votre trajectoire a été modifiée !</b><br>
+             Le chemin enregistré par le GPS de votre voiture a été alteré par le son du véhicule que vous venez de croiser.
+             Ce véhicule a en fait émis des sons spécifiquement modifiés dans le but de tromper l'IA responsable de la reconnaissance de commandes
+             vocales dans votre véhicule. Il s'agissait une nouvelle fois d'une attaque adversoriale.</p>`;
+        }
 
         let continue_btn = document.createElement("a");
         continue_btn.innerHTML="Continuer";
@@ -450,5 +485,5 @@ Car.prototype.gameover = function(arg){
             gameover.style.display="none";
             window.demo.paused = false;
         })
-    }
+    
 }

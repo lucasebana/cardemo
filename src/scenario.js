@@ -14,6 +14,7 @@ import { GlitchPass } from '../node_modules/three/examples/jsm/postprocessing/Gl
 //import * as MW from '../node_modules/meshwalk/dist/meshwalk.module.js';
 
 import { Car } from './car.js'
+import { HCar } from './horn_car.js'
 import { Traffic_Light } from './traffic_lights.js';
 import { Segment } from './segment.js';
 import { Route } from './route.js';
@@ -157,7 +158,7 @@ Scenario.prototype.load = async function () {
 
     this.sky = new Sky();
     this.sky.scale.setScalar( 200000 );
-    this.scene.add(this.sky);
+    //this.scene.add(this.sky);
     this.sun = new THREE.Vector3();
     this.effectController = {
         turbidity: 5.5,
@@ -180,124 +181,31 @@ Scenario.prototype.load = async function () {
     this.sun.y = Math.sin( phi ) * Math.sin( theta );
     this.sun.z = Math.sin( phi ) * Math.cos( theta );
     this.uniforms[ "sunPosition" ].value.copy( this.sun );
-    //*
-    //const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
-    //hemiLight.color.setHSL( 0.6, 1, 0.6 );
-    //hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-    //hemiLight.position.set( 0, 50, 0 );
-    //this.scene.add( hemiLight );
-    //*/
 
     //Axes
     this.axesHelper = new THREE.AxesHelper(5);
-    //this.axesHelper.translateX(1);
-    this.scene.add(this.axesHelper);
-
-    //Path Builder
-    let vec3 = THREE.Vector3;
-    let a = [
-        [[0, 0, 0], [0, 0, -5]],
-        [[0, 0, -5], [0, 0, -10]],
-        [[0, 0, -10],[0, 0, -12],[5.0, 0, -13],[5, 0, -15]],
-        [[5, 0, -15], [5, 0, -25]]
-    ];
     
-    let b = [
-        [[0,0,-5], [0,0,-10], [0,0,-10], [5,0,-10]]
-    ]
-    let c = [
-        [[0,0,-5], [0,0,(-10 + -5)/2], [(0 + 5) / 2,0,-10], [5,0,-10]],
-        [[5,0,-10],[20,0,-10]]
-    ]
-    //this.pathbuilder = new PathBuilder(a);
-
-    //this.path1 = makePath();
-
-    
-    //Car Path
-    /*
-    let chemin = Route.makePath(a);//exportable avec curves.toJson();
-    let chemin2 = Route.makePath(b);
-    */
-    
-
     //Create map
-    let options = {
-        road_keyPoints:[]
-    }
 
-    this.map = new GameMap();
+
+    this.map = new GameMap(this);
     await this.map.init();
-
-    this.segment = new Segment(options);
-    //let segment2 = new Segment();
-    /*
-    segment2.roadmesh.position.z = -4*5
-    segment2.sidewalkmesh1.position.z = -4*5
-    segment2.sidewalkmesh2.position.z = -4*5
-    */
-
     this.routes = this.map.routes;
-
-    //this.routes.push(this.segment.route);
-    //this.routes.push(this.map.routes[0])
-
-    /*
-    let route1 = new Route(a);
-    let route2 = new Route(b,route1,[],[]);
-    let route3 = new Route(c,route1,[],[]);
-    */
-
-    /*
-    let question1 = new GameEvent("Question 1",
-    ["Continuer","Tourner1","Tourner2"],
-    [-1,0,1],
-    2,
-    true
-    );
-
-    route1.addCallback(0,question1);
-    */
-
-    /*
-    route1.addExit(route2);
-    route1.addExit(route3);
-    */
-
-    //this.routes = [route1,route2,route3];
-    //let r = new Route();
-    
-
     const material = new THREE.LineBasicMaterial({
-        color: 0x9132a8
+        color: 0x8A8A8A
     });
     
-    /*
-    var points = route2.path.curves.reduce((p, d) => [...p, ...d.getPoints(20)], []);
-
-    var geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-    var path = new THREE.Line(geometry, material);
-    this.scene.add(path);
-    */
-
-
-    // => pour connaitre la distance entre la voiture et un point : curve.getUtoTmapping()
-
     //setting up the loading manager
 
     function loadModel() {
         console.log("object loaded");
     }
 
-    this.loadedObject = undefined;
     this.manager = new THREE.LoadingManager(loadModel.bind(this));
     this.manager.ready = false;
     this.manager.onProgress = function (item, n_loaded, total) {
-        //console.log( item, n_loaded, total );
         let loading_bar = document.querySelector("#loading_bar");
         loading_bar.style.width = (n_loaded / total) * 100 + "%";
-        //console.log( (n_loaded / total) * 100 + "%");
     }
     this.manager.onLoad = function () {
         this.ready = true;
@@ -315,20 +223,12 @@ Scenario.prototype.load = async function () {
 
     //Scene 1 specific
 
-    
-    /*
-    this.scene.add(route1.getLine(material));
-    this.scene.add(route2.getLine(material));
-    this.scene.add(route3.getLine(material));
-    */
-    
+     
     
     this.routes.forEach((route)=>{
         this.scene.add(route.getLine(material));
     });
     
-    
-
     const pointsPath = new THREE.CurvePath();
     const firstLine = new THREE.LineCurve3(
         new THREE.Vector3(0, 0, 0),
@@ -353,8 +253,6 @@ Scenario.prototype.load = async function () {
 
     const points = pointsPath.curves.reduce((p, d) => [...p, ...d.getPoints(20)], []);
 
-
-    /*  */
     var dotMaterial = new THREE.PointsMaterial( { size: 4, sizeAttenuation: false,color:0xff0a0f } );
 
     var dotGeometry = new THREE.Geometry();
@@ -365,7 +263,7 @@ Scenario.prototype.load = async function () {
 
 
     this.car = new Car(this.routes);
-    //
+    
     window.r = demo.scenario1.car.routes;
     //
     this.traffic_light = new Traffic_Light();
@@ -373,13 +271,24 @@ Scenario.prototype.load = async function () {
     var model;
 
 
-    const carModel = await this.car.loadModel.bind(this.car)(this.loader)
+    const carModel = await this.car.loadModel.bind(this.car)(this.loader);
     this.car.carModel = carModel;
 
     const TLmodel = await this.traffic_light.loadModel(this.loader);
     this.traffic_light.model = TLmodel;
     this.traffic_light.model.position.set(10.2*5,0,-24*5)
     window.TLmodel = TLmodel;
+
+    if(this.HornCar != undefined){
+    this.hcar = new HCar(this.HornCar);
+    let HornCarModels = await this.hcar.loadModel(carModel.clone(),this.loader);
+    this.scene.add(HornCarModels[0])
+    this.scene.add(HornCarModels[1])
+    let horn2 = HornCarModels[1].clone();
+    horn2.position.x-=4;
+    this.scene.add(horn2);
+    }
+
 
     this.carGroup = new THREE.Group();
     this.carGroup.name = "carGroup"
@@ -394,10 +303,6 @@ Scenario.prototype.load = async function () {
 
     this.scene.add(this.carGroup);
 
-
-
-
-
     this.scene.add(this.traffic_light.model);
 
     this.loaded = true;
@@ -406,7 +311,7 @@ Scenario.prototype.load = async function () {
 
     this.cameraControls.fitToBox( this.car.carModel, true, { paddingLeft: 0, paddingRight: 2, paddingBottom: 1, paddingTop: 6 } )
     let dp = this.carGroup.position;
-    this.cameraControls.setTarget(dp.x,dp.y-0.02,dp.z);
+    this.cameraControls.setTarget(dp.x,dp.y-0.035,dp.z);
     // TODO DEPLACER CIR AUX ROUES AVANT
     // IE DEPLACER CENTRE (AUTOUR DUQUEL ON PIVOTE) A UN POINT MILLIEU DE LAXE DES ROUES
     //AU LIEU DU CENTRE DE GRAVITE
@@ -586,9 +491,10 @@ Scenario.prototype.reset = function(){
     }
 
     this.car.currentCallbacks = [];
-
     this.demo.paused = false;
     this.car.stopCar = false;
+    this.car.slowmo_factor = 1;
     window.demo.scenario1.toReset = false;
     window.resume();
+    console.log("Scenario reset")
 }
