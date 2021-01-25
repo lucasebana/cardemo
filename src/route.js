@@ -173,6 +173,7 @@ Route.prototype.addCallback = function(i,callback){
     callback.route = this;
     callback.segment = i;
 }
+
 /*
 Route.prototype.getNext = function(n){
     return this.exits[n];

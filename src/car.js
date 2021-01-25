@@ -24,7 +24,7 @@ export class Car {
         this.stopCar = false;
 
         this.lastTime = -1;
-        this.speed = 9; // unité/s
+        this.speed = 39; // unité/s
         this.slowmo_factor = 1;
 
         this.bodyMaterial = new THREE.MeshPhysicalMaterial({
@@ -175,6 +175,10 @@ Car.prototype.context = function (time) {
         }
     }
 
+    //reset callbacks if needed
+    if(window.demo.scenario1.toReset){
+        window.demo.scenario1.reset();
+    }
 
     if (route.callbacks[this.nth_segment] != undefined) {
         var callbacks = route.callbacks[this.nth_segment];
@@ -317,6 +321,7 @@ Car.prototype.displayQuestion = function (game_event) {
             //alert(game_event.log["@value"]);
             this.logDom = document.querySelector(".game_log .game_log_container span");
             let d = document.createElement("div");
+            d.classList.toggle("newLog");
             var v;
             if(game_event.log["@value"] == undefined){
                 v = game_event.log;
@@ -326,6 +331,7 @@ Car.prototype.displayQuestion = function (game_event) {
             }
             d.innerHTML = v;
             this.logDom.after(d);
+            
         }
         if(game_event.exits[0] != undefined){
             this.specialEvent(game_event.exits[0]);
@@ -395,7 +401,24 @@ Car.prototype.specialEvent = function (event) {
         case "*greenTrafficLight":
             TL.switchLights(TL.model,1,"green");
             break;
-
+        case "*resetGame":
+            var callback = new GameEvent(undefined,"Calcul de l'itinéraire",[],["*resetEvent"],1,false,false, 1);
+            this.routes[this.nth_route].addCallback(this.nth_segment,callback);
+            break;
+        case "*resetEvent":
+            //window.demo.paused = false;
+            //window.demo.scenario1.reset();
+            window.demo.scenario1.toReset = true;
+        break;
+        case "*endGame":
+            var callback = new GameEvent(undefined,"Arrivée à destination",[],["*endEvent"],1,false,false, 1);
+            this.routes[this.nth_route].addCallback(this.nth_segment,callback);
+            break;
+        case "*endEvent":            
+            window.demo.paused = true;
+            window.popMenu();
+            window.end_screen();
+            break;
         default:
             console.log("evenement inconnu");
             break;

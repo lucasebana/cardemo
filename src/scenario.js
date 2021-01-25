@@ -26,6 +26,7 @@ import { GameEvent } from './game_event.js';
 export class Scenario{
     constructor(demo){
         this.demo = demo;
+        this.toReset = false;
         this.entryAnimation = false;
     }
 }   
@@ -442,6 +443,11 @@ Scenario.prototype.render = function (time) {
                 this.car.context.bind(this.car)(time);
                 this.adjustCamera()
                 }
+                else{
+                    if(this.toReset){
+                        this.reset();
+                    }
+                }
             }
 
         }
@@ -461,10 +467,10 @@ Scenario.prototype.adjustCamera = function(){
 
        this.cameraControls.moveTo(dp.x,dp.y,dp.z);
         let dist = this.camera.position.distanceTo(this.carGroup.position);
-        if( dist > 20 ){
+        if( dist > 24 ){
             if(dist < 5){}
             else{
-            this.cameraControls.dolly(dist-21);
+            this.cameraControls.dolly(dist-25);
             }
         }
         if(dist> 35){
@@ -542,7 +548,47 @@ Scenario.prototype.reset = function(){
     let tlm = this.traffic_light.model;
     this.traffic_light.switchLights(tlm,3,"red");
 
+    window.demo.scenario1.glitchEffect = false;
+    
+    let r = this.car.routes;
+    for(let i = 0; i < r.length; i++){
+        //r[i].callbacks = r[i].callbacks.filter(c=>c.fromMap==true);
+        r[i].defaultExits = new Array(r[i].controlPoints.length).fill(-1);
+        var array_callback = [];
+        for(let j = 0; j < r[i].callbacks.length;j++){
+            array_callback = r[i].callbacks[j].filter(e=>e.fromMap == true);
+            r[i].callbacks[j].forEach(e=>e.active = false)
+            r[i].callbacks[j].forEach(e=>e.answered = false)
+            r[i].callbacks[j].forEach(e=>e.triggered = false)
+            
+            r[i].callbacks[j] = array_callback;
+            array_callback = [];
+        }
+    }
+
+    let logDom = document.querySelector(".game_log .game_log_container");
+    logDom.innerHTML = "";
+    logDom.appendChild(document.createElement("span"));
+    
+
     /* reset all events... */
     /* reset all routes... */
+    /* reset logs */
     /* clear all callbacks (dom) */
+
+    for(let ii = 0; ii < this.car.currentCallbacks.length; ii++){
+        if(!this.car.currentCallbacks[ii].answered){
+            if(this.car.currentCallbacks[ii].questionDiv != undefined){
+                this.car.currentCallbacks[ii].questionDiv.style.display="none";
+                this.car.currentCallbacks[ii].answersDiv.style.display="none";
+            }
+        }
+    }
+
+    this.car.currentCallbacks = [];
+
+    this.demo.paused = false;
+    this.car.stopCar = false;
+    window.demo.scenario1.toReset = false;
+    window.resume();
 }

@@ -390,10 +390,12 @@ GameMap.prototype.makeRoutes = function () {
     }
 
     let callback = new GameEvent(question,log,choices,events,10,slowmo,stopEvent, ratio);
+    callback.fromMap = true;
     this.routesMap[routeId].addCallback(nth_segment,callback);
-
     console.log(this.questionsData.object[i].properties)
   }
+
+
 
 }
 

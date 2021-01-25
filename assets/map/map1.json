@@ -9,7 +9,7 @@
    "@tileheight": "64",
    "@infinite": "0",
    "@nextlayerid": "17",
-   "@nextobjectid": "72",
+   "@nextobjectid": "74",
    "tileset": {
       "@firstgid": "1",
       "@name": "tileset",
@@ -376,7 +376,7 @@
                   {
                      "@name": "ratio",
                      "@type": "float",
-                     "@value": "0.8"
+                     "@value": "0.85"
                   },
                   {
                      "@name": "routeId",
@@ -541,28 +541,12 @@
                "properties": [
                   {
                      "@name": "e1",
-                     "@value": ""
-                  },
-                  {
-                     "@name": "e2",
-                     "@value": ""
+                     "@value": "*endGame"
                   },
                   {
                      "@name": "nth_segment",
                      "@type": "int",
                      "@value": "5"
-                  },
-                  {
-                     "@name": "question",
-                     "@value": "ARRIVEE"
-                  },
-                  {
-                     "@name": "r1",
-                     "@value": "fin"
-                  },
-                  {
-                     "@name": "r2",
-                     "@value": "fin"
                   },
                   {
                      "@name": "routeId",
@@ -918,7 +902,7 @@
                   },
                   {
                      "@name": "r2",
-                     "@value": "Continuer"
+                     "@value": "Reprendre la main et continuer"
                   },
                   {
                      "@name": "ratio",
@@ -1025,6 +1009,70 @@
                      "@name": "routeId",
                      "@type": "int",
                      "@value": "24"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "72",
+               "@x": "2416",
+               "@y": "2592",
+               "properties": [
+                  {
+                     "@name": "e1",
+                     "@value": "*resetGame"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "2"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "1"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "25"
+                  },
+                  {
+                     "@name": "stop",
+                     "@type": "bool",
+                     "@value": "false"
+                  }
+               ],
+               "point": []
+            },
+            {
+               "@id": "73",
+               "@x": "1696",
+               "@y": "2640",
+               "properties": [
+                  {
+                     "@name": "e1",
+                     "@value": "*resetGame"
+                  },
+                  {
+                     "@name": "nth_segment",
+                     "@type": "int",
+                     "@value": "12"
+                  },
+                  {
+                     "@name": "ratio",
+                     "@type": "float",
+                     "@value": "1"
+                  },
+                  {
+                     "@name": "routeId",
+                     "@type": "int",
+                     "@value": "7"
                   },
                   {
                      "@name": "stop",

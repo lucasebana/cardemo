@@ -16,60 +16,69 @@ CameraControls.install( { THREE: THREE } );
 /* DEBUG */
 let debug = false;
 
-let clearScreen = () => {
-    /* remove the menu */
+window.clearScreen = () => {
+    /* remove menus */
     document.querySelector(".home_container").classList.remove("fadein");
     document.querySelector(".home_container").classList.add("fadeout");
     setTimeout(()=>{
         document.querySelector(".home_container").style.display="none";
     },200);
+
+    let end = document.querySelector(".home_ending_box");
+    end.classList.remove("visible");
+
+    let tut = document.querySelector(".home_tutorial_box");
+    tut.classList.remove("visible");
     /* add the menu button */
     document.querySelector(".home_menu_btn").style.display="inline";
     document.querySelector(".home_menu_btn").classList.add("fadein");
 }
 
-let resume = () => {
+window.resume = () => {
     document.querySelector(".home_menu_btn").innerHTML="Menu"
     demo.paused = false;
-    clearScreen();
-    document.querySelector(".home_menu_btn").addEventListener("click",popMenu);
-    document.querySelector(".home_menu_btn").removeEventListener("click",resume);
-    document.querySelector(".home_menu_btn").addEventListener("click",popMenu);
+    window.clearScreen();
+    document.querySelector(".home_menu_btn").addEventListener("click",window.popMenu);
+    document.querySelector(".home_menu_btn").removeEventListener("click",window.resume);
+    document.querySelector(".home_menu_btn").addEventListener("click",window.popMenu);
 }
 
-let popMenu = ()=>{
+window.popMenu = ()=>{
     /* add the menu */
     document.querySelector(".home_container").classList.remove("fadeout");
     document.querySelector(".home_container").style.display="flex";
     document.querySelector(".home_container").classList.add("fadein");
     /* remove the button */
-    document.querySelector(".home_menu_btn").innerHTML="Reprendre"
+    document.querySelector(".home_menu_btn").innerHTML="Reprendre";
 
-    document.querySelector("#home_start").innerHTML = "Redémarrer le mode normal";
+    document.querySelector("#home_start").innerHTML = "Recommencer le mode normal";
 
     demo.paused = true;
-    document.querySelector("#home_start").removeEventListener("click",home_start);
+    document.querySelector("#home_start").removeEventListener("click",window.home_start);
     document.querySelector("#home_start").addEventListener("click",()=>{
-        demo.scenario1.reset();
+        demo.scenario1.toReset = true;
     });
-    document.querySelector(".home_menu_btn").removeEventListener("click",popMenu);
-    document.querySelector(".home_menu_btn").addEventListener("click",resume);
+    document.querySelector(".home_menu_btn").removeEventListener("click",window.popMenu);
+    document.querySelector(".home_menu_btn").addEventListener("click",window.resume);
+
+
 }
 
 if (debug) {
-    clearScreen();
+    window.clearScreen();
     demo.start = true;
 } else {
-    var home_start = function () {
+    window.home_start = function () {
         if (demo.scenario1.loaded) {
-            clearScreen();
+            window.clearScreen();
             demo.start = true;
         }
-        document.removeEventListener("#home_start",home_start);
+        document.removeEventListener("#home_start",window.home_start);
     }
-    document.querySelector("#home_start").addEventListener("click",home_start);
-    document.querySelector(".home_menu_btn").addEventListener("click",popMenu)
-    var home_tut = function () {
+    document.querySelector("#home_start").addEventListener("click",window.home_start);
+    document.querySelector(".home_menu_btn").addEventListener("click",window.popMenu);
+
+    window.home_tut = function () {
 
         //clearScreen();
         let tut = document.querySelector(".home_tutorial_box");
@@ -80,10 +89,11 @@ if (debug) {
 
 
         var display = (i)=>{
+            
+            for(let j = 0; j< slides.length;j++){
+                slides[j].classList.remove("visible");
+            }
             if(i >= 0 && i < slides.length){
-                
-                slides[index].classList.remove("visible");
-                
                 prev_index = index;
                 index = i;
                 slides[index].classList.add("visible");
@@ -95,6 +105,7 @@ if (debug) {
                 prev.classList.add("invisible");
             }
 
+
             if(index == slides.length-1){
                 next.classList.add("invisible");
                 end.classList.remove("invisible");
@@ -105,23 +116,24 @@ if (debug) {
             }
         }
         
-        var increment = function(){
+        window.increment = function(){
             display(index+1);
         }
         
-        var decrement = function(){
+        window.decrement = function(){
             display(index-1);
         }
         
-        slides[index].classList.add("visible");
                 
         var prev = document.querySelector("#tut_prev");
         var next = document.querySelector("#tut_next");
         var end = document.querySelector("#tut_end");
 
         
-        next.addEventListener("click", increment);
-        prev.addEventListener("click", decrement);
+        display(index);
+        
+        next.addEventListener("click", window.increment);
+        prev.addEventListener("click", window.decrement);
         end.addEventListener("click",()=>{
             tut.classList.remove("visible");
             prev.classList.add("invisible");
@@ -135,8 +147,16 @@ if (debug) {
         })
         
         }
+
+    window.end_screen = function(){
+        let end = document.querySelector(".home_ending_box");
+        end.classList.add("visible");
     }
-    document.querySelector("#home_tutorial").addEventListener("click", home_tut )
+
+
+
+    }
+    document.querySelector("#home_tutorial").addEventListener("click", window.home_tut )
 
 
 
