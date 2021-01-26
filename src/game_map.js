@@ -170,7 +170,7 @@ GameMap.prototype.init = async function () {
     this.mapGroup.add(squareMesh);
   }
 
-  const geometry = new THREE.PlaneGeometry(260, 260);
+  const geometry = new THREE.PlaneGeometry(280, 260);
   const plane = new THREE.Mesh(geometry, this.road_material);
   plane.rotation.x = -Math.PI / 2;
   plane.position.y -= 0.01

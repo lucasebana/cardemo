@@ -6,7 +6,7 @@ import {GameEvent} from './game_event.js';
 export class Car {
     carModel = undefined;
     wheels = [];
-    constructor(routes, nth_route = 2, nth_segment = 0/*, exits_list = [1]*/ ) {
+    constructor(routes, nth_route = 0, nth_segment = 0/*, exits_list = [1]*/ ) {
 
 
         this.routes = routes;
@@ -24,7 +24,7 @@ export class Car {
         this.stopCar = false;
 
         this.lastTime = -1;
-        this.speed = 9; // unité/s
+        this.speed = 11; // unité/s
         this.slowmo_factor = 1;
 
         this.bodyMaterial = new THREE.MeshPhysicalMaterial({
@@ -440,6 +440,12 @@ Car.prototype.specialEvent = function (event) {
         case "*failGPS":
             window.demo.paused = true;
             this.gameover("gpsfail");
+            break;
+        case "*startAudio":
+            demo.scenario1.sound.play();
+            break;
+        case "*stopAudio":
+            demo.scenario1.sound.stop();
             break;
         default:
             console.log("evenement inconnu");

@@ -158,10 +158,10 @@ if (debug) {
     }
 
     document.querySelector("#audio_btn").addEventListener("click",()=>{
-        if(window.demo.scenario1.sound.playing){
+        if(window.demo.scenario1.sound.unmuted){
             window.demo.scenario1.sound.setVolume(0);
             document.querySelector("#audio_btn").classList.add("audio_off");
-            window.demo.scenario1.sound.playing = false;
+            window.demo.scenario1.sound.unmuted = false;
             document.querySelector("#audio_btn").innerHTML="Audio désactivé";
             //window.demo.scenario1.sound.stop();
         }
@@ -171,7 +171,7 @@ if (debug) {
             
             document.querySelector("#audio_btn").innerHTML="Audio activé";
             //window.demo.scenario1.sound.stop();
-            window.demo.scenario1.sound.playing = true;
+            window.demo.scenario1.sound.unmuted = true;
         }
     });
 
@@ -211,7 +211,7 @@ Demo.prototype.initScene = async function () {
 
     //Stats
 
-    
+    /*
     this.stats = new Stats();
     this.stats.setMode(0);
 
@@ -219,6 +219,7 @@ Demo.prototype.initScene = async function () {
     this.stats.domElement.style.left = '0';
     this.stats.domElement.style.top = '0';
     document.body.appendChild( this.stats.domElement );
+    */
 
     //Renderer
     this.renderer = new THREE.WebGLRenderer({

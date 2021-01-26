@@ -159,7 +159,7 @@ Scenario.prototype.load = async function () {
 
     this.sky = new Sky();
     this.sky.scale.setScalar( 200000 );
-    //this.scene.add(this.sky);
+    this.scene.add(this.sky);
     this.sun = new THREE.Vector3();
     this.effectController = {
         turbidity: 5.5,
@@ -277,7 +277,7 @@ Scenario.prototype.load = async function () {
 
     const TLmodel = await this.traffic_light.loadModel(this.loader);
     this.traffic_light.model = TLmodel;
-    this.traffic_light.model.position.set(10.2*5,0,-24*5)
+    this.traffic_light.model.position.set(10.2*6,0,-24*6)
     window.TLmodel = TLmodel;
 
     if(this.HornCar != undefined){
@@ -302,8 +302,8 @@ Scenario.prototype.load = async function () {
         s.setVolume(0.15);
         s.setRefDistance( 1 );
         s.setRolloffFactor( 0.8 );
-        s.play();
-        s.playing = true;
+        //s.play();
+        s.unmuted = true;
     });
 
     HornCarModels[0].add(this.sound);
@@ -462,7 +462,7 @@ Scenario.prototype.blit = function () {
         demo.renderer.render(this.scene, camera2);
     }
 }
-    demo.stats.update();
+    //  demo.stats.update();
 }
 
 Scenario.prototype.reset = function(){

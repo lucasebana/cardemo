@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="left-up" width="64" height="64" tilewidth="64" tileheight="64" infinite="0" nextlayerid="17" nextobjectid="72">
+<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="left-up" width="64" height="64" tilewidth="64" tileheight="64" infinite="0" nextlayerid="18" nextobjectid="81">
  <tileset firstgid="1" name="tileset" tilewidth="64" tileheight="64" tilecount="9" columns="3">
   <image source="tileset.png" width="192" height="192"/>
  </tileset>
@@ -207,15 +207,15 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="7" name="routes" locked="1">
+ <objectgroup id="7" name="routes">
   <object id="7" x="1696" y="2528">
-   <polygon points="0,0 0,-256 0,-640 576,-640 576,-1472 576,-1664 -704,-1664 -704,-1415.88 -704,-1264 -704,-960 -1024,-960 -1024,128 0,128 0,64"/>
+   <polygon points="0,0 0,-256 0,-640 576,-640 576,-1472 576,-1664 -704,-1664 -704,-1440 -704,-1264 -704,-960 -1024,-960 -1024,128 0,128 0,64"/>
   </object>
   <object id="16" x="1696" y="2272">
    <polyline points="0,0 576,0 576,-384"/>
   </object>
   <object id="24" x="672" y="2656">
-   <polyline points="0,0 0,576 624,576 1008,576 2688,576 2688,-256 2688,-1792 1600,-1792"/>
+   <polyline points="0,0 0,576 640,576 912,576 2688,576 2688,-256 2688,-1792 1600,-1792"/>
   </object>
   <object id="25" x="3360" y="2400">
    <polyline points="0,0 -512,0 -512,192 -1664,192"/>
@@ -318,7 +318,7 @@
     <property name="question" value="Choisissez une action."/>
     <property name="r1" value="Tourner à gauche"/>
     <property name="r2" value="Reprendre la main et s'arrêter au feu"/>
-    <property name="ratio" type="float" value="0.8"/>
+    <property name="ratio" type="float" value="0.85"/>
     <property name="routeId" type="int" value="7"/>
     <property name="slowmo" type="bool" value="true"/>
    </properties>
@@ -329,7 +329,7 @@
     <property name="e1" value="*runPedestrian"/>
     <property name="e2" value="*stopPedestrian"/>
     <property name="nth_segment" type="int" value="6"/>
-    <property name="question" value="Choisissez un action"/>
+    <property name="question" value="Choisissez un action."/>
     <property name="r1" value="Ne rien faire"/>
     <property name="r2" value="Reprendre la main et s'arrêter au passage piéton"/>
     <property name="ratio" type="float" value="0.3"/>
@@ -344,7 +344,7 @@
     <property name="e1" value="0"/>
     <property name="e2" value="-1"/>
     <property name="nth_segment" type="int" value="10"/>
-    <property name="question" value="Choisissez une action"/>
+    <property name="question" value="Choisissez une action."/>
     <property name="r1" value="Se fier au GPS"/>
     <property name="r2" value="Reprendre la main et tourner à gauche"/>
     <property name="ratio" type="float" value="0.5"/>
@@ -357,7 +357,7 @@
     <property name="e1" value="0"/>
     <property name="e2" value="-1"/>
     <property name="nth_segment" type="int" value="4"/>
-    <property name="question" value="Choisissez une action"/>
+    <property name="question" value="Choisissez une action."/>
     <property name="r1" value="Se fier au GPS"/>
     <property name="r2" value="Continuer tout droit"/>
     <property name="ratio" type="float" value="0.7"/>
@@ -368,12 +368,8 @@
   </object>
   <object id="39" x="3360" y="864">
    <properties>
-    <property name="e1" value=""/>
-    <property name="e2" value=""/>
+    <property name="e1" value="*endGame"/>
     <property name="nth_segment" type="int" value="5"/>
-    <property name="question" value="ARRIVEE"/>
-    <property name="r1" value="fin"/>
-    <property name="r2" value="fin"/>
     <property name="routeId" type="int" value="24"/>
    </properties>
    <point/>
@@ -452,7 +448,7 @@
   <object id="60" x="672" y="2352">
    <properties>
     <property name="log" value="Détection d'une intersection"/>
-    <property name="nth_segment" type="int" value="9"/>
+    <property name="nth_segment" type="int" value="10"/>
     <property name="ratio" type="float" value="0.4"/>
     <property name="routeId" type="int" value="7"/>
    </properties>
@@ -480,20 +476,22 @@
   </object>
   <object id="65" x="880" y="3232">
    <properties>
-    <property name="e1" value=""/>
-    <property name="e2" value=""/>
+    <property name="e1" value="*stopPedestrianEvent"/>
+    <property name="e2" value="*runPedestrian"/>
     <property name="nth_segment" type="int" value="1"/>
-    <property name="question" value="Choisissez une action"/>
+    <property name="question" value="Choisissez une action."/>
     <property name="r1" value="S'arrêter"/>
     <property name="r2" value="Reprendre la main et continuer"/>
-    <property name="ratio" type="float" value="0.3"/>
+    <property name="ratio" type="float" value="0.82"/>
     <property name="routeId" type="int" value="24"/>
+    <property name="slowmo" type="bool" value="true"/>
     <property name="stop" type="bool" value="false"/>
    </properties>
    <point/>
   </object>
   <object id="66" x="832" y="3232">
    <properties>
+    <property name="e1" value="*startAudio"/>
     <property name="log" value="Passage piéton détecté"/>
     <property name="nth_segment" type="int" value="1"/>
     <property name="ratio" type="float" value="0.25"/>
@@ -519,6 +517,59 @@
     <property name="ratio" type="float" value="0.5"/>
     <property name="routeId" type="int" value="24"/>
     <property name="stop" type="bool" value="false"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="72" x="2416" y="2592">
+   <properties>
+    <property name="e1" value="*resetGame"/>
+    <property name="nth_segment" type="int" value="2"/>
+    <property name="ratio" type="float" value="1"/>
+    <property name="routeId" type="int" value="25"/>
+    <property name="stop" type="bool" value="false"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="73" x="1696" y="2640">
+   <properties>
+    <property name="e1" value="*resetGame"/>
+    <property name="nth_segment" type="int" value="12"/>
+    <property name="ratio" type="float" value="1"/>
+    <property name="routeId" type="int" value="7"/>
+    <property name="stop" type="bool" value="false"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="80" x="3360" y="2192">
+   <properties>
+    <property name="e1" value="*stopAudio"/>
+    <property name="nth_segment" type="int" value="5"/>
+    <property name="ratio" type="float" value="0.8"/>
+    <property name="routeId" type="int" value="24"/>
+    <property name="stop" type="bool" value="false"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="17" name="special_objects">
+  <object id="74" x="1024" y="1191">
+   <properties>
+    <property name="rotated" type="bool" value="false"/>
+    <property name="type" value="crossing"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="77" x="1504" y="3201">
+   <properties>
+    <property name="rotated" type="bool" value="true"/>
+    <property name="type" value="crossing"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="79" x="3072" y="3344">
+   <properties>
+    <property name="rotated" type="bool" value="false"/>
+    <property name="type" value="truck"/>
    </properties>
    <point/>
   </object>
