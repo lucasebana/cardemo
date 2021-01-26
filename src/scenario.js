@@ -159,7 +159,7 @@ Scenario.prototype.load = async function () {
 
     this.sky = new Sky();
     this.sky.scale.setScalar( 200000 );
-    this.scene.add(this.sky);
+    //this.scene.add(this.sky);
     this.sun = new THREE.Vector3();
     this.effectController = {
         turbidity: 5.5,
@@ -300,8 +300,8 @@ Scenario.prototype.load = async function () {
         s.setBuffer( buffer );
         s.setLoop( true );
         s.setVolume(0.15);
-        s.setRefDistance( 1 );
-        s.setRolloffFactor( 0.8 );
+        s.setRefDistance( 8 );
+        s.setRolloffFactor( 0.2 );
         //s.play();
         s.unmuted = true;
     });
