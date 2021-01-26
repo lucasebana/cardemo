@@ -630,6 +630,36 @@ html, body {
   pointer-events: all;
 }
 
+.home_audio_btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 5;
+  margin: 5px;
+  font-weight: bold;
+  /*text-transform: all-caps,SPP_/ROD;*/
+  background-color: white;
+  font-size: 1.1rem;
+  padding: 3px 10px;
+  border-radius: 3px;
+  text-decoration: none;
+  color: black;
+  font-family: 'Oxygen', sans-serif;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.04) 0 2px 3px;
+          box-shadow: rgba(0, 0, 0, 0.04) 0 2px 3px;
+  -webkit-transition: .3s opacity ease-in-out;
+  transition: .3s opacity ease-in-out;
+  text-align: center;
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+  pointer-events: all;
+}
+
+.audio_off {
+  color: #6b6b6b;
+  opacity: 0.4;
+}
+
 .game_log {
   position: absolute;
   display: none;

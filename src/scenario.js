@@ -43,8 +43,9 @@ Scenario.prototype.load = async function () {
     this.scene.background = new THREE.Color(0xeeeeee);
     this.scene.fog = new THREE.Fog(0xeeeeee, 10, 400);
     
-    this.gridSize = 600;
-    this.grid = new THREE.GridHelper(this.gridSize, this.gridSize/5, 0x000000, 0x000000);
+    this.gridSize = 720;
+    //this.gridSize / alpha(6) = cst et alpha(6) = game_map.gridSize
+    this.grid = new THREE.GridHelper(this.gridSize, this.gridSize/6, 0x000000, 0x000000);
     this.grid.material.opacity = 0.05;
     this.grid.material.depthWrite = false;
     this.grid.material.transparent = true;
@@ -287,6 +288,25 @@ Scenario.prototype.load = async function () {
     let horn2 = HornCarModels[1].clone();
     horn2.position.x-=4;
     this.scene.add(horn2);
+
+    this.listener = new THREE.AudioListener();
+    this.camera.add( this.listener );
+    this.sound = new THREE.PositionalAudio( this.listener );
+    
+    // load a sound and set it as the PositionalAudio object's buffer
+    this.audioLoader = new THREE.AudioLoader(this.manager);
+    var s = this.sound;
+    this.audioLoader.load( './assets/audio/take5.ogg', function(buffer) {
+        s.setBuffer( buffer );
+        s.setLoop( true );
+        s.setVolume(0.15);
+        s.setRefDistance( 1 );
+        s.setRolloffFactor( 0.8 );
+        s.play();
+        s.playing = true;
+    });
+
+    HornCarModels[0].add(this.sound);
     }
 
 

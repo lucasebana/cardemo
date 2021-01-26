@@ -23,10 +23,7 @@ GameMap.prototype.init = async function () {
 
   });
 
-  //await this.loadModels(this.demo.loader);
-
-
-  this.gridSize = 5;
+  this.gridSize = 6;
   this.data = JSON.parse("[" + this.mapdata.layer[0].data["#text"] + "]");
   this.extras = JSON.parse("[" + this.mapdata.layer[1].data["#text"] + "]");
   this.sidewalk = JSON.parse("[" + this.mapdata.layer[2].data["#text"] + "]");
@@ -172,23 +169,6 @@ GameMap.prototype.init = async function () {
 
     this.mapGroup.add(squareMesh);
   }
-
-  /*let squareShape = new THREE.Shape();
-  let pos = this.m2w(0,0,0);
- squareShape.moveTo(pos.x,pos.z);
-  pos = this.m2w(this.height*64,0,0);
-  squareShape.lineTo(pos.x,pos.z);
-  pos = this.m2w(this.height*64,0,-this.width*64);
-  squareShape.lineTo(pos.x,pos.z);
-  pos = this.m2w(0,0,-this.width*64);
-  squareShape.lineTo(pos.x,pos.z);
-  pos = this.m2w(0,0,0);
-  squareShape.lineTo(pos.x,pos.z);
-
- this.geometry = new THREE.ShapeGeometry(squareShape, 4);
- let squareMesh = new THREE.Mesh(this.geometry, this.road_material);
- this.mapGroup.add(squareMesh);
- */
 
   const geometry = new THREE.PlaneGeometry(260, 260);
   const plane = new THREE.Mesh(geometry, this.road_material);

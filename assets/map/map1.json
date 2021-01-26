@@ -59,7 +59,6 @@
       {
          "@id": "7",
          "@name": "routes",
-         "@locked": "1",
          "object": [
             {
                "@id": "7",
@@ -933,6 +932,10 @@
                "@y": "3232",
                "properties": [
                   {
+                     "@name": "e1",
+                     "@value": "*startAudio"
+                  },
+                  {
                      "@name": "log",
                      "@value": "Passage piéton détecté"
                   },
@@ -996,6 +999,10 @@
                "@x": "3360",
                "@y": "2528",
                "properties": [
+                  {
+                     "@name": "e1",
+                     "@value": "*stopAudio"
+                  },
                   {
                      "@name": "log",
                      "@value": "Intersection détectée"

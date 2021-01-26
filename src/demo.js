@@ -61,6 +61,8 @@ window.popMenu = ()=>{
     document.querySelector(".home_menu_btn").removeEventListener("click",window.popMenu);
     document.querySelector(".home_menu_btn").addEventListener("click",window.resume);
 
+    
+
 
 }
 
@@ -155,6 +157,23 @@ if (debug) {
         end.classList.add("visible");
     }
 
+    document.querySelector("#audio_btn").addEventListener("click",()=>{
+        if(window.demo.scenario1.sound.playing){
+            window.demo.scenario1.sound.setVolume(0);
+            document.querySelector("#audio_btn").classList.add("audio_off");
+            window.demo.scenario1.sound.playing = false;
+            document.querySelector("#audio_btn").innerHTML="Audio désactivé";
+            //window.demo.scenario1.sound.stop();
+        }
+        else{
+            window.demo.scenario1.sound.setVolume(0.15);
+            document.querySelector("#audio_btn").classList.remove("audio_off");
+            
+            document.querySelector("#audio_btn").innerHTML="Audio activé";
+            //window.demo.scenario1.sound.stop();
+            window.demo.scenario1.sound.playing = true;
+        }
+    });
 
 
     }
