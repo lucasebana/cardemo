@@ -15,6 +15,7 @@ CameraControls.install( { THREE: THREE } );
 
 /* DEBUG */
 let debug = false;
+window.showfps = false;
 
 window.clearScreen = () => {
     /* remove menus */
@@ -211,15 +212,15 @@ Demo.prototype.initScene = async function () {
 
     //Stats
 
-    /*
+    if(window.showfps){
     this.stats = new Stats();
     this.stats.setMode(0);
 
     this.stats.domElement.style.position = 'absolute';
     this.stats.domElement.style.left = '0';
     this.stats.domElement.style.top = '0';
-    document.body.appendChild( this.stats.domElement );
-    */
+    document.body.appendChild( this.stats.domElement );  
+    }
 
     //Renderer
     this.renderer = new THREE.WebGLRenderer({

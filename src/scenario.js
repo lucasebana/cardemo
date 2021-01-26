@@ -462,7 +462,9 @@ Scenario.prototype.blit = function () {
         demo.renderer.render(this.scene, camera2);
     }
 }
-    //  demo.stats.update();
+    if(window.showfps){
+        demo.stats.update();
+    } 
 }
 
 Scenario.prototype.reset = function(){
