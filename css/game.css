@@ -464,6 +464,12 @@ html, body {
   padding: 5px;
 }
 
+.home_tutorial_box .tutbox .home_tut_container img {
+  max-width: 70%;
+  margin: auto;
+  display: block;
+}
+
 .home_tutorial_box .tutbox .home_tut_next {
   display: -webkit-box;
   display: -ms-flexbox;

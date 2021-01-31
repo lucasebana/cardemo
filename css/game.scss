@@ -351,6 +351,11 @@ html,body{
             p{
                 padding:5px;
             }
+            img{
+                max-width:70%;
+                margin:auto;
+                display: block;
+            }
         }
         .home_tut_next{
             display:flex;
