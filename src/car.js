@@ -155,6 +155,7 @@ Car.prototype.context = function (time) {
 
     axis.crossVectors(up, tangent).normalize();
     if (axis.equals(new THREE.Vector3(0, 0, 0))) {
+        //when the angle is too close to a specific value, axis isnt computed properly
         axis = new THREE.Vector3(0, 1, 0);
     }
 
@@ -169,7 +170,7 @@ Car.prototype.context = function (time) {
     if (!this.stopCar) {
         for (let i = 0; i < this.wheels.length; i++) {
             this.wheels[i].rotation.x = time * this.speed * this.slowmo_factor / 0.34;
-            //radius : 3.4
+            //wheel radius : 0.34?
             //this.wheels[i].rotation.x += this.fraction * segment.getLength() / (0.34*this.slowmo_factor)
 
         }
@@ -202,7 +203,6 @@ Car.prototype.context = function (time) {
             }
 
             if (callback.active == true) {
-                //g(this.fraction)
                 if (this.fraction >= 1 - 0.1) {
                     if(callback.stop){
                         this.stopCar = true;
@@ -214,7 +214,6 @@ Car.prototype.context = function (time) {
 
 
     if (!this.stopCar) {
-        //console.log(deltaTime * this.speed * this.slowmo_factor / (segment.getLength()));
         this.fraction += this.deltaTimeAvg * this.speed * this.slowmo_factor / (segment.getLength());
         this.moved = true;
     }
@@ -222,7 +221,7 @@ Car.prototype.context = function (time) {
 
 
     if (this.fraction > 1) {
-
+        //all callbacks that were never triggered and have to be are being called here
         for(let ii = 0; ii < this.currentCallbacks.length; ii++){
             if(!this.currentCallbacks[ii].answered){
                 if(this.currentCallbacks[ii].questionDiv != undefined){
@@ -231,11 +230,6 @@ Car.prototype.context = function (time) {
                     
                     this.currentCallbacks[ii].questionDiv.style.display="none";
                     this.currentCallbacks[ii].answersDiv.style.display="none";
-                    /*setTimeout((()=>{
-                        this.currentCallbacks[ii].questionDiv.style.display="none";
-                        this.currentCallbacks[ii].answersDiv.style.display="none";
-                    }).bind(this),200);
-                    */
                 }
                 if(this.currentCallbacks[ii].exits[0]!=undefined){
                     if(this.currentCallbacks[ii].exits[0][0] == "*"){
@@ -304,20 +298,12 @@ Car.prototype.displayQuestion = function (game_event) {
         document.body.insertBefore(answersDiv, container);
 
 
-        /*
-        var div = document.createElement("div");
-        div.innerHTML = "Bienvenue dans IA vs. WILD!<br/>";
-        div.classList.add("dialog_textbox");
-        var container = document.querySelector("#container");
-        document.body.insertBefore(div, container);
-        */
 
        game_event.questionDiv = questionDiv;
        game_event.answersDiv = answersDiv;
     }
     else{
         if(game_event.log != undefined){
-            //alert(game_event.log["@value"]);
             this.logDom = document.querySelector(".game_log .game_log_container span");
             let d = document.createElement("div");
             d.classList.toggle("newLog");
@@ -337,9 +323,7 @@ Car.prototype.displayQuestion = function (game_event) {
             game_event.answered = true;
         }
     }
-
 }
-
 
 Car.prototype.switchRoute = function (i, game_event, questionDiv, answersDiv) {
 
@@ -349,7 +333,6 @@ Car.prototype.switchRoute = function (i, game_event, questionDiv, answersDiv) {
 
         game_event.active = false;
         this.slowmo_factor = 1;
-
 
         let r = game_event.route;
         let exit = game_event.exits[i];
@@ -424,8 +407,6 @@ Car.prototype.specialEvent = function (event) {
             this.routes[this.nth_route].addCallback(this.nth_segment,callback);
             break;
         case "*resetEvent":
-            //window.demo.paused = false;
-            //window.demo.scenario1.reset();
             window.demo.scenario1.toReset = true;
         break;
         case "*endGame":

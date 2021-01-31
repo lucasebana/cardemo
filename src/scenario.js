@@ -159,7 +159,7 @@ Scenario.prototype.load = async function () {
 
     this.sky = new Sky();
     this.sky.scale.setScalar( 200000 );
-    //this.scene.add(this.sky);
+    this.scene.add(this.sky);
     this.sun = new THREE.Vector3();
     this.effectController = {
         turbidity: 5.5,
@@ -224,53 +224,14 @@ Scenario.prototype.load = async function () {
 
     //Scene 1 specific
 
-     
-    
     this.routes.forEach((route)=>{
         //this.scene.add(route.getLine(material));
     });
     
-    const pointsPath = new THREE.CurvePath();
-    const firstLine = new THREE.LineCurve3(
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(0, 0, -10)
-    );
-    const lastLine = new THREE.LineCurve3(
-        new THREE.Vector3(5, 0, -15),
-        new THREE.Vector3(5, 0, -25)
-    );
-
-    const bezierLine =
-        new THREE.CubicBezierCurve3(
-            new THREE.Vector3(0, 0, 
-                -10),
-            new THREE.Vector3(0, 0, -12),
-            new THREE.Vector3(5.0, 0, -13),
-            new THREE.Vector3(5, 0, -15)
-        );
-    pointsPath.add(firstLine);
-    pointsPath.add(bezierLine);
-    pointsPath.add(lastLine);
-
-    const points = pointsPath.curves.reduce((p, d) => [...p, ...d.getPoints(20)], []);
-
-    var dotMaterial = new THREE.PointsMaterial( { size: 4, sizeAttenuation: false,color:0xff0a0f } );
-
-    var dotGeometry = new THREE.Geometry();
-    dotGeometry.vertices.push(new THREE.Vector3());
-    let p = new THREE.Points( dotGeometry, dotMaterial )
-    window.pos = p.position;
-    //this.scene.add(p);
-
-
     this.car = new Car(this.routes);
     
-    window.r = demo.scenario1.car.routes;
-    //
     this.traffic_light = new Traffic_Light();
-
     var model;
-
 
     const carModel = await this.car.loadModel.bind(this.car)(this.loader);
     this.car.carModel = carModel;
@@ -312,7 +273,6 @@ Scenario.prototype.load = async function () {
 
     this.carGroup = new THREE.Group();
     this.carGroup.name = "carGroup"
-    //this.carGroup.position.z = -1.15531
     this.carGroup.add(carModel)
 
     this.carGroup.add(this.extra_views[0].camera);
@@ -332,12 +292,8 @@ Scenario.prototype.load = async function () {
     this.cameraControls.fitToBox( this.car.carModel, true, { paddingLeft: 0, paddingRight: 2, paddingBottom: 1, paddingTop: 6 } )
     let dp = this.carGroup.position;
     this.cameraControls.setTarget(dp.x,dp.y-0.035,dp.z);
-    // TODO DEPLACER CIR AUX ROUES AVANT
-    // IE DEPLACER CENTRE (AUTOUR DUQUEL ON PIVOTE) A UN POINT MILLIEU DE LAXE DES ROUES
-    //AU LIEU DU CENTRE DE GRAVITE
-    //CALCULER LA DEVELOPEE DE LA COURBE DE BEZIER
-    //EN DEDUIRE LANGLE DES ROUES AVANT
-    //IMPORTER LES FEUX TRICOLORES
+    this.cameraControls.fitToBox( this.car.carModel, true, { paddingLeft: 4, paddingRight: 0, paddingBottom: 2, paddingTop: 4 } )
+    this.cameraControls.setTarget(dp.x,dp.y-0.035,dp.z);
 }
 
 
@@ -354,8 +310,6 @@ Scenario.prototype.render = function (time) {
         if (this.entryAnimation == false) {
             //this.cameraControls.dolly(70, true);
             this.entryAnimation = true;
-
-            
         }
         
         if(this.demo.start){
@@ -378,8 +332,6 @@ Scenario.prototype.render = function (time) {
         }
 
     }
-
-    //this.grid.position.z = - ( time ) % 5;
 
     this.blit.bind(this)();
 }
@@ -415,6 +367,7 @@ Scenario.prototype.adjustCamera = function(){
 
 
 Scenario.prototype.blit = function () {
+    //Sets up both viewports and renders to them
     demo.renderer.setViewport(this.default_viewport);
     demo.renderer.setScissor(this.default_viewport);
 
@@ -468,6 +421,11 @@ Scenario.prototype.blit = function () {
 }
 
 Scenario.prototype.reset = function(){
+    /* reset all events... */
+    /* reset all routes... */
+    /* reset logs */
+    /* clear all callbacks (dom) */
+
     this.car.fraction = 0;
     this.car.nth_route = this.car.nth_route0;
     this.car.nth_segment = this.car.nth_segment0;
@@ -497,11 +455,6 @@ Scenario.prototype.reset = function(){
     logDom.innerHTML = "";
     logDom.appendChild(document.createElement("span"));
     
-
-    /* reset all events... */
-    /* reset all routes... */
-    /* reset logs */
-    /* clear all callbacks (dom) */
 
     for(let ii = 0; ii < this.car.currentCallbacks.length; ii++){
         if(!this.car.currentCallbacks[ii].answered){

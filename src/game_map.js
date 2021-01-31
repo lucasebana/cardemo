@@ -120,6 +120,9 @@ GameMap.prototype.init = async function () {
     sidewalkShape.lineTo(pos.x, pos.z);
     let squareMesh;
     if (i == 0) {
+      //premiere forme = contour de tous les trottoirs
+      // => on ajoute cette forme en tant que trou à 
+      //la forme de la map entiere
       let hole = sidewalkShape.clone();
       var sidewalkShape = new THREE.Shape();
       let pos = this.m2w(0, 0, 0);
@@ -132,9 +135,6 @@ GameMap.prototype.init = async function () {
       sidewalkShape.lineTo(pos.x, pos.z);
       pos = this.m2w(0, 0, 0);
       sidewalkShape.lineTo(pos.x, pos.z);
-
-
-
 
       sidewalkShape.holes.push(hole);
       let sidewalkGeometry = new THREE.ExtrudeGeometry(sidewalkShape, extrudeSettings);
@@ -157,11 +157,9 @@ GameMap.prototype.init = async function () {
   plane.position.z -= 50;
   scene.add(plane);
 
-
   this.mapGroup.name = "map"
 
   this.mapGroup.rotation.x = Math.PI / 2;
-
 
   this.mapGroup.position.y = 0.3;
   scene.add(this.mapGroup);
@@ -209,14 +207,14 @@ GameMap.prototype.makeRoutes = function () {
       color: 0x0000ff
     });
 
-    let L = []
-    let previous = []
+    let L = [];
+    let previous = [];
     for (let result of results) {
-      let x = parseFloat(result[1])
-      let y = parseFloat(result[2])
+      let x = parseFloat(result[1]);
+      let y = parseFloat(result[2]);
 
       let pos = this.m2w(object.x + x, 0, -object.y - y);
-      let current = [pos.x, 0, pos.z]
+      let current = [pos.x, 0, pos.z];
       if (previous.length == 0) {
         previous = (current);
       } else {
@@ -226,7 +224,6 @@ GameMap.prototype.makeRoutes = function () {
       }
       var dotGeometry = new THREE.Geometry();
       dotGeometry.vertices.push(pos);
-
 
       //route points ...
       //new THREE.Points(dotGeometry, dotMaterial));
@@ -246,8 +243,6 @@ GameMap.prototype.makeRoutes = function () {
     this.routes.push(R);
 
   }
-
-
   for (let i = 0; i < this.exitsData.object.length; i++) {
     let object = this.exitsData.object;
     let from = parseFloat(object[i].properties.find((el) => {
@@ -320,8 +315,6 @@ GameMap.prototype.makeRoutes = function () {
       }
     }
 
-
-
     routeId = parseInt(routeId["@value"]);
 
     var events = [];
@@ -359,8 +352,8 @@ GameMap.prototype.makeRoutes = function () {
 
     let callback = new GameEvent(question, log, choices, events, 10, slowmo, stopEvent, ratio);
     callback.fromMap = true;
+    //callbacks with fromMap attribute set to true wont get resetted by scenario.reset();
     this.routesMap[routeId].addCallback(nth_segment, callback);
-    //console.log(this.questionsData.object[i].properties)
   }
 
   const lineMaterial = new THREE.LineBasicMaterial({
@@ -387,7 +380,6 @@ GameMap.prototype.makeRoutes = function () {
     fakeShape.bezierCurveTo( 0, this.gridSize * 1.5,0,this.gridSize * 1.5-rad,0,this.gridSize * 1.5-rad)
     fakeShape.lineTo(0,rad);
     fakeShape.bezierCurveTo( 0, 0,rad,0,rad,0)
-    //fakeShape.bezierTo()
     fakeShape.lineTo(rad,0);
     const fakeGeometryCross = new THREE.ShapeGeometry( fakeShape );
 

@@ -12,7 +12,6 @@ import { Scenario } from './scenario.js';
 
 CameraControls.install( { THREE: THREE } );
 
-
 /* DEBUG */
 let debug = false;
 window.showfps = false;
@@ -21,9 +20,9 @@ window.clearScreen = () => {
     /* remove menus */
     document.querySelector(".home_container").classList.remove("fadein");
     document.querySelector(".home_container").classList.add("fadeout");
-    setTimeout(()=>{
-        document.querySelector(".home_container").style.display="none";
-    },200);
+    setTimeout(() => {
+        document.querySelector(".home_container").style.display = "none";
+    }, 200);
 
     let end = document.querySelector(".home_ending_box");
     end.classList.remove("visible");
@@ -31,39 +30,36 @@ window.clearScreen = () => {
     let tut = document.querySelector(".home_tutorial_box");
     tut.classList.remove("visible");
     /* add the menu button */
-    document.querySelector(".home_menu_btn").style.display="inline";
+    document.querySelector(".home_menu_btn").style.display = "inline";
     document.querySelector(".home_menu_btn").classList.add("fadein");
 }
 
 window.resume = () => {
-    document.querySelector(".home_menu_btn").innerHTML="Menu"
+    document.querySelector(".home_menu_btn").innerHTML = "Menu"
     demo.paused = false;
     window.clearScreen();
-    document.querySelector(".home_menu_btn").addEventListener("click",window.popMenu);
-    document.querySelector(".home_menu_btn").removeEventListener("click",window.resume);
-    document.querySelector(".home_menu_btn").addEventListener("click",window.popMenu);
+    document.querySelector(".home_menu_btn").addEventListener("click", window.popMenu);
+    document.querySelector(".home_menu_btn").removeEventListener("click", window.resume);
+    document.querySelector(".home_menu_btn").addEventListener("click", window.popMenu);
 }
 
-window.popMenu = ()=>{
+window.popMenu = () => {
     /* add the menu */
     document.querySelector(".home_container").classList.remove("fadeout");
-    document.querySelector(".home_container").style.display="flex";
+    document.querySelector(".home_container").style.display = "flex";
     document.querySelector(".home_container").classList.add("fadein");
     /* remove the button */
-    document.querySelector(".home_menu_btn").innerHTML="Reprendre";
+    document.querySelector(".home_menu_btn").innerHTML = "Reprendre";
 
     document.querySelector("#home_start").innerHTML = "Recommencer le mode normal";
 
     demo.paused = true;
-    document.querySelector("#home_start").removeEventListener("click",window.home_start);
-    document.querySelector("#home_start").addEventListener("click",()=>{
+    document.querySelector("#home_start").removeEventListener("click", window.home_start);
+    document.querySelector("#home_start").addEventListener("click", () => {
         demo.scenario1.toReset = true;
     });
-    document.querySelector(".home_menu_btn").removeEventListener("click",window.popMenu);
-    document.querySelector(".home_menu_btn").addEventListener("click",window.resume);
-
-    
-
+    document.querySelector(".home_menu_btn").removeEventListener("click", window.popMenu);
+    document.querySelector(".home_menu_btn").addEventListener("click", window.resume);
 
 }
 
@@ -76,10 +72,10 @@ if (debug) {
             window.clearScreen();
             demo.start = true;
         }
-        document.removeEventListener("#home_start",window.home_start);
+        document.removeEventListener("#home_start", window.home_start);
     }
-    document.querySelector("#home_start").addEventListener("click",window.home_start);
-    document.querySelector(".home_menu_btn").addEventListener("click",window.popMenu);
+    document.querySelector("#home_start").addEventListener("click", window.home_start);
+    document.querySelector(".home_menu_btn").addEventListener("click", window.popMenu);
 
     window.home_tut = function () {
 
@@ -93,92 +89,86 @@ if (debug) {
         let prev_index = -1;
 
 
-        var display = (i)=>{
-            
-            for(let j = 0; j< slides.length;j++){
+        var display = (i) => {
+
+            for (let j = 0; j < slides.length; j++) {
                 slides[j].classList.remove("visible");
             }
-            if(i >= 0 && i < slides.length){
+            if (i >= 0 && i < slides.length) {
                 prev_index = index;
                 index = i;
                 slides[index].classList.add("visible");
             }
-            if(index != 0){
+            if (index != 0) {
                 prev.classList.remove("invisible");
-            }
-            else{
+            } else {
                 prev.classList.add("invisible");
             }
 
 
-            if(index == slides.length-1){
+            if (index == slides.length - 1) {
                 next.classList.add("invisible");
                 end.classList.remove("invisible");
-            }
-            else{
+            } else {
                 next.classList.remove("invisible");
                 end.classList.add("invisible");
             }
         }
-        
-        window.increment = function(){
-            display(index+1);
+
+        window.increment = function () {
+            display(index + 1);
         }
-        
-        window.decrement = function(){
-            display(index-1);
+
+        window.decrement = function () {
+            display(index - 1);
         }
-        
-                
+
+
         var prev = document.querySelector("#tut_prev");
         var next = document.querySelector("#tut_next");
         var end = document.querySelector("#tut_end");
 
-        
+
         display(index);
-        
+
         next.addEventListener("click", window.increment);
         prev.addEventListener("click", window.decrement);
-        end.addEventListener("click",()=>{
+        end.addEventListener("click", () => {
             tut.classList.remove("visible");
             prev.classList.add("invisible");
             next.classList.remove("invisible");
             end.classList.add("invisible");
-            for(let i =0; i < slides.length;i++){
+            for (let i = 0; i < slides.length; i++) {
                 slides[i].classList.remove("visible");
                 index = 0;
             }
-        
+
         })
-        
+
         }
 
-    window.end_screen = function(){
-        let end = document.querySelector(".home_ending_box");
-        end.classList.add("visible");
-    }
-
-    document.querySelector("#audio_btn").addEventListener("click",()=>{
-        if(window.demo.scenario1.sound.unmuted){
-            window.demo.scenario1.sound.setVolume(0);
-            document.querySelector("#audio_btn").classList.add("audio_off");
-            window.demo.scenario1.sound.unmuted = false;
-            document.querySelector("#audio_btn").innerHTML="Audio désactivé";
-            //window.demo.scenario1.sound.stop();
+        window.end_screen = function () {
+            let end = document.querySelector(".home_ending_box");
+            end.classList.add("visible");
         }
-        else{
-            window.demo.scenario1.sound.setVolume(0.15);
-            document.querySelector("#audio_btn").classList.remove("audio_off");
-            
-            document.querySelector("#audio_btn").innerHTML="Audio activé";
-            //window.demo.scenario1.sound.stop();
-            window.demo.scenario1.sound.unmuted = true;
+
+        document.querySelector("#audio_btn").addEventListener("click", () => {
+            if (window.demo.scenario1.sound.unmuted) {
+                window.demo.scenario1.sound.setVolume(0);
+                document.querySelector("#audio_btn").classList.add("audio_off");
+                window.demo.scenario1.sound.unmuted = false;
+                document.querySelector("#audio_btn").innerHTML = "Audio désactivé";
+                //window.demo.scenario1.sound.stop();
+            } else {
+                window.demo.scenario1.sound.setVolume(0.15);
+                document.querySelector("#audio_btn").classList.remove("audio_off");
+                document.querySelector("#audio_btn").innerHTML = "Audio activé";
+                //window.demo.scenario1.sound.stop();
+                window.demo.scenario1.sound.unmuted = true;
+            }
+        });
         }
-    });
-
-
-    }
-    document.querySelector("#home_tutorial").addEventListener("click", window.home_tut )
+        document.querySelector("#home_tutorial").addEventListener("click", window.home_tut)
 
 
 
@@ -207,8 +197,6 @@ window.testvariable = "";
 Demo.prototype.initScene = async function () {
 
     this.container = document.getElementById('container');
-
-
 
     //Stats
 
