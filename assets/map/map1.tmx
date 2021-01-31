@@ -435,16 +435,6 @@
    </properties>
    <point/>
   </object>
-  <object id="59" x="1200" y="816">
-   <properties>
-    <property name="log" value="Panneau 30km/h detecté à droite"/>
-    <property name="nth_segment" type="int" value="5"/>
-    <property name="ratio" type="float" value="0.2"/>
-    <property name="routeId" type="int" value="7"/>
-    <property name="stop" type="bool" value="false"/>
-   </properties>
-   <point/>
-  </object>
   <object id="60" x="672" y="2352">
    <properties>
     <property name="log" value="Détection d'une intersection"/>
@@ -477,7 +467,7 @@
   <object id="65" x="880" y="3232">
    <properties>
     <property name="e1" value="*stopPedestrianEvent"/>
-    <property name="e2" value="*runPedestrian"/>
+    <property name="e2" value="*runPedestrian2"/>
     <property name="nth_segment" type="int" value="1"/>
     <property name="question" value="Choisissez une action."/>
     <property name="r1" value="S'arrêter"/>
@@ -555,7 +545,7 @@
   <object id="74" x="1024" y="1191">
    <properties>
     <property name="rotated" type="bool" value="false"/>
-    <property name="type" value="crossing"/>
+    <property name="type" value="crossingFake"/>
    </properties>
    <point/>
   </object>

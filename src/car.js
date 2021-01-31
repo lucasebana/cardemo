@@ -6,7 +6,7 @@ import {GameEvent} from './game_event.js';
 export class Car {
     carModel = undefined;
     wheels = [];
-    constructor(routes, nth_route = 0, nth_segment = 0/*, exits_list = [1]*/ ) {
+    constructor(routes, nth_route = 2, nth_segment = 1/*, exits_list = [1]*/ ) {
 
 
         this.routes = routes;
@@ -380,11 +380,18 @@ Car.prototype.specialEvent = function (event) {
             var callback = new GameEvent(undefined,"Alerte : passage piéton non respecté",[],["*crashPedestrian"],1,false,false, 1);
             this.routes[this.nth_route].addCallback(this.nth_segment+1,callback);
             break;
+        case "*runPedestrian2":
+            var callback = new GameEvent(undefined,"Alerte : passage piéton non respecté",[],["*crashPedestrian2"],1,false,false, 1);
+            this.routes[this.nth_route].addCallback(this.nth_segment+1,callback);
+            break;
         case "*crashPedestrian":
             window.demo.paused = true;
             this.gameover("pedestrianrun");
             break;
-
+        case "*crashPedestrian2":
+            window.demo.paused = true;
+            this.gameover("pedestrianrun2");
+            break;
         case "*stopPedestrian":
             var callback = new GameEvent(undefined,"Arrêt",[],["*stopPedestrianEvent"],1,false,false, 1);
             this.routes[this.nth_route].addCallback(this.nth_segment,callback);
@@ -448,6 +455,12 @@ Car.prototype.gameover = function(arg){
             gameover.innerHTML = `<p><b>Attention, vous n'avez pas respecté le passage piéton !</b><br>
              Le passage piéton que vous venez de traverser a été modifié d'une façon telle que l'IA ne l'interprête pas
              comme elle le devrait. Il s'agit d'une attaque adversoriale contre l'IA votre véhicule.</p>`;
+        }
+        if(arg == "pedestrianrun2"){
+            gameover.innerHTML = `<p><b>Attention, vous n'avez pas respecté le passage piéton !</b><br>
+             Le passage piéton que vous venez de traverser était un passage piéton ordinaire que votre voiture avait correctement identifié.
+             Faites bien attention à ce que détecte votre véhicule avant de reprendre la main.
+             </p>`;
         }
         if(arg == "gpsfail"){
             gameover.innerHTML = `<p><b>Attention, votre trajectoire a été modifiée !</b><br>

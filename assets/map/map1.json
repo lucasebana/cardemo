@@ -852,7 +852,7 @@
                   },
                   {
                      "@name": "e2",
-                     "@value": "*runPedestrian"
+                     "@value": "*runPedestrian2"
                   },
                   {
                      "@name": "nth_segment",
