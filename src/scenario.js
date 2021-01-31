@@ -50,7 +50,7 @@ Scenario.prototype.load = async function () {
     this.grid.material.depthWrite = false;
     this.grid.material.transparent = true;
     
-    this.scene.add(this.grid);
+    //this.scene.add(this.grid);
 
 
     //Main camera and camera controls
@@ -227,7 +227,7 @@ Scenario.prototype.load = async function () {
      
     
     this.routes.forEach((route)=>{
-        this.scene.add(route.getLine(material));
+        //this.scene.add(route.getLine(material));
     });
     
     const pointsPath = new THREE.CurvePath();
@@ -260,7 +260,7 @@ Scenario.prototype.load = async function () {
     dotGeometry.vertices.push(new THREE.Vector3());
     let p = new THREE.Points( dotGeometry, dotMaterial )
     window.pos = p.position;
-    this.scene.add(p);
+    //this.scene.add(p);
 
 
     this.car = new Car(this.routes);

@@ -1,4 +1,5 @@
 import * as THREE from '../node_modules/three/build/three.module.js';
+
 import { GameEvent } from './game_event.js';
 
 import { Route } from './route.js';
@@ -23,6 +24,12 @@ GameMap.prototype.init = async function () {
 
   });
 
+  //TODO : ajouter lignes de route
+  // données dans le calque road_lines
+  // avec https://threejs.org/examples/webgl_lines_fat par ex.
+  
+  //This method loads map elements from a .json file
+
   this.gridSize = 6;
   this.data = JSON.parse("[" + this.mapdata.layer[0].data["#text"] + "]");
   this.extras = JSON.parse("[" + this.mapdata.layer[1].data["#text"] + "]");
@@ -42,6 +49,7 @@ GameMap.prototype.init = async function () {
     for (let x = 0; x < this.width; x++) {
       this.map[y].push(this.data[y * this.width + x]);
       if (this.extras[y * this.width + x] == 9) {
+        //Origin tile in the map file(painted in a different color)
         this.offsetX = x
         this.offsetY = y
       }
@@ -79,35 +87,6 @@ GameMap.prototype.init = async function () {
     wireframe: false
   });
   this.mapGroup = new THREE.Group();
-
-  /*
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-
-        //if(this.map[y][x] == 1){
-        if (this.data[y * this.width + x] == 1) {
-
-          let squareMesh = new THREE.Mesh(this.geometry, this.road_material);
-
-          //let squareMesh = new THREE.ExtrudeGeometry( this.squareshape ,extrudeSettings);
-          squareMesh.position.set(-(x * g - (this.offsetX - 1) * g), y * g - (this.offsetY + 1) * g, 0);
-          this.mapGroup.add(squareMesh);
-        }
-
-        if (this.sidewalk[y * this.width + x] == 2) {
-
-          //let squareMesh = new THREE.Mesh(this.geometry, this.sideroad_material);
-
-          let squareMesh = new THREE.Mesh( this.geometry2, this.sideroad_material ) ;
-          //let squareMesh = new THREE.ExtrudeGeometry( this.geometry ,extrudeSettings);
-          squareMesh.position.set(-(x * g - (this.offsetX - 1) * g), y * g - (this.offsetY + 1) * g, 0);
-          //this.mapGroup.add(squareMesh);
-        }
-
-      }
-    }
-
-    */
 
 
   for (let i = 0; i < this.sideWalkData.object.length; i++) {
@@ -397,7 +376,22 @@ GameMap.prototype.makeRoutes = function () {
     //const geometry = new THREE.BufferGeometry().setFromPoints( points );
 
     let number = 8;
-    const geometry = new THREE.PlaneGeometry(this.gridSize * 2.2 / number, this.gridSize * 1.5, 4);
+    let rad = 0.6 ;
+    const fakeShape = new THREE.Shape();
+    fakeShape.moveTo( rad, 0 );
+    fakeShape.lineTo( this.gridSize * 2.2 / number - rad, 0 );
+    fakeShape.bezierCurveTo( this.gridSize * 2.2 / number,0,this.gridSize * 2.2 / number,rad, this.gridSize * 2.2 / number ,rad)
+    fakeShape.lineTo( this.gridSize * 2.2 / number, this.gridSize * 1.5-rad );
+    fakeShape.bezierCurveTo( this.gridSize * 2.2 / number,this.gridSize * 1.5-rad,this.gridSize * 2.2 / number-rad,this.gridSize * 1.5, this.gridSize * 2.2 / number-rad,this.gridSize * 1.5)
+    fakeShape.lineTo( rad, this.gridSize * 1.5 );
+    fakeShape.bezierCurveTo( 0, this.gridSize * 1.5,0,this.gridSize * 1.5-rad,0,this.gridSize * 1.5-rad)
+    fakeShape.lineTo(0,rad);
+    fakeShape.bezierCurveTo( 0, 0,rad,0,rad,0)
+    //fakeShape.bezierTo()
+    fakeShape.lineTo(rad,0);
+    const fakeGeometryCross = new THREE.ShapeGeometry( fakeShape );
+
+    const geometryCross = new THREE.PlaneGeometry(this.gridSize * 2.2 / number, this.gridSize * 1.5, 4);
     const material = new THREE.MeshBasicMaterial({
       color: 0xffffff,
       side: THREE.DoubleSide
@@ -405,11 +399,33 @@ GameMap.prototype.makeRoutes = function () {
     //truck, crossing
     let type = object.properties.find((el) => {return el["@name"] == "type"});
     switch (type["@value"]) {
+      case "crossingFake":
+        let sidewalkF = new THREE.Group();
+        for (let i = 0; i < number; i++) {
+          if (i % 2) {
+            const plane = new THREE.Mesh(fakeGeometryCross, material);
+
+            plane.position.set((this.gridSize * 2 / number) * i - 0.6, 0, 0);
+            sidewalkF.add(plane);
+          }
+        }
+        scene.add(sidewalkF);
+  
+        sidewalkF.position.set(origin.x - this.gridSize, origin.y + 0.01, origin.z);
+        sidewalkF.rotation.x = Math.PI / 2;
+        var rotated = object.properties.find((el) => {return el["@name"] == "rotated"});
+        if (rotated != undefined) {
+          if (rotated["@value"] == "true") {
+            sidewalkF.rotation.z = Math.PI / 2;
+            sidewalkF.position.z -= this.gridSize;
+          }
+        }
+        break;
       case "crossing":
       let sidewalk = new THREE.Group();
       for (let i = 0; i < number; i++) {
         if (i % 2) {
-          const plane = new THREE.Mesh(geometry, material);
+          const plane = new THREE.Mesh(geometryCross, material);
           plane.position.set((this.gridSize * 2 / number) * i, 0, 0);
           sidewalk.add(plane);
         }
@@ -418,14 +434,13 @@ GameMap.prototype.makeRoutes = function () {
 
       sidewalk.position.set(origin.x - this.gridSize, origin.y + 0.01, origin.z);
       sidewalk.rotation.x = Math.PI / 2;
-      let rotated = object.properties.find((el) => {return el["@name"] == "rotated"});
+      var rotated = object.properties.find((el) => {return el["@name"] == "rotated"});
       if (rotated != undefined) {
         if (rotated["@value"] == "true") {
           sidewalk.rotation.z = Math.PI / 2;
           sidewalk.position.z -= this.gridSize;
         }
       }
-      window.sidewalk = sidewalk;
       break;
       case "truck":
         //this.loadObjects();

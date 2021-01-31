@@ -751,38 +751,6 @@
                "point": []
             },
             {
-               "@id": "59",
-               "@x": "1200",
-               "@y": "816",
-               "properties": [
-                  {
-                     "@name": "log",
-                     "@value": "Panneau 30km/h detecté à droite"
-                  },
-                  {
-                     "@name": "nth_segment",
-                     "@type": "int",
-                     "@value": "5"
-                  },
-                  {
-                     "@name": "ratio",
-                     "@type": "float",
-                     "@value": "0.2"
-                  },
-                  {
-                     "@name": "routeId",
-                     "@type": "int",
-                     "@value": "7"
-                  },
-                  {
-                     "@name": "stop",
-                     "@type": "bool",
-                     "@value": "false"
-                  }
-               ],
-               "point": []
-            },
-            {
                "@id": "60",
                "@x": "672",
                "@y": "2352",
@@ -1140,7 +1108,7 @@
                   },
                   {
                      "@name": "type",
-                     "@value": "crossing"
+                     "@value": "crossingFake"
                   }
                ],
                "point": []
