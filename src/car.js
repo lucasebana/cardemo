@@ -240,7 +240,7 @@ Car.prototype.context = function (time) {
             }
         }
 
-        this.fraction = 0;
+        this.fraction = 1-this.fraction;
         let next = route.getNext(this.nth_segment);
         let next_route = next[0];
         let next_segment = next[1];
