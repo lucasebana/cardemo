@@ -11,7 +11,7 @@
    
    
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost:8000/test2.html",
+            "url": "http://localhost:8000/",
             "webRoot": "${workspaceFolder}"
         }
         "liveSassCompile.settings.formats": [

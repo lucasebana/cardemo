@@ -156,7 +156,6 @@ Scenario.prototype.load = async function () {
     this.scene.environment = pmremGenerator.fromScene(environment).texture;
 
 
-
     this.sky = new Sky();
     this.sky.scale.setScalar( 200000 );
     this.scene.add(this.sky);
@@ -286,8 +285,6 @@ Scenario.prototype.load = async function () {
     this.scene.add(this.traffic_light.model);
 
     this.loaded = true;
-
-
 
     this.cameraControls.fitToBox( this.car.carModel, true, { paddingLeft: 0, paddingRight: 2, paddingBottom: 1, paddingTop: 6 } )
     let dp = this.carGroup.position;
@@ -469,7 +466,8 @@ Scenario.prototype.reset = function(){
     this.demo.paused = false;
     this.car.stopCar = false;
     this.car.slowmo_factor = 1;
-    window.demo.scenario1.toReset = false;
+    this.demo.scenario1.toReset = false;
+    this.demo.scenario1.sound.stop();
     window.resume();
     console.log("Scenario reset")
 }

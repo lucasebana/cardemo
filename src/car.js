@@ -6,7 +6,7 @@ import {GameEvent} from './game_event.js';
 export class Car {
     carModel = undefined;
     wheels = [];
-    constructor(routes, nth_route = 0, nth_segment = 0/*, exits_list = [1]*/ ) {
+    constructor(routes, nth_route = 0, nth_segment = 0) {
 
 
         this.routes = routes;
