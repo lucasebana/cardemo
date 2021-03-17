@@ -3,7 +3,7 @@ Interactive 3D game developped for CEA Paris-Saclay.
 Developped in javascript using ThreeJS.
 
 Demo : http://lucas.ebana.fr:8080/  
-Demo(commit 1ce5a0bc360027feea5a443633f9c4eb545896a1) : http://lucas.ebana.fr:8080/debug/cardemo
+Older demo (commit 1ce5a0bc360027feea5a443633f9c4eb545896a1) : http://lucas.ebana.fr:8080/debug/cardemo
 
 ## Installation instructions
 
